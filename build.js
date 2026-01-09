@@ -11,7 +11,9 @@ const siteDir = process.argv[2] || 'sites/what_is_galaxy';
 // Configuration
 const FRAMEWORK_DIR = __dirname;
 const SLIDES_FILE = path.join(siteDir, 'slides.md');
-const TEMPLATE_FILE = path.join(FRAMEWORK_DIR, 'template.html');
+// Check for site-specific template first, fall back to framework template
+const SITE_TEMPLATE = path.join(siteDir, 'template.html');
+const TEMPLATE_FILE = fs.existsSync(SITE_TEMPLATE) ? SITE_TEMPLATE : path.join(FRAMEWORK_DIR, 'template.html');
 const OUTPUT_DIR = path.join(siteDir, 'dist');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'index.html');
 
@@ -20,6 +22,7 @@ const SLIDE_TYPES = {
   stats: /\|\s*Stat\s*\|\s*Label\s*\|/i,
   split: /^>\s*split/m,
   wordcloud: /^>\s*type:\s*wordcloud/m,
+  sunburst: /^>\s*type:\s*sunburst/m,
   ecosystem: /^>\s*type:\s*ecosystem/m,
   galaxies: /^>\s*type:\s*galaxies/m,
   links: /^>\s*type:\s*links/m,
@@ -103,6 +106,8 @@ function parseSlide(content, index) {
     for (const match of listMatches) {
       slide.items.push({ text: match[1], url: match[2] });
     }
+  } else if (SLIDE_TYPES.sunburst.test(content)) {
+    slide.type = 'sunburst';
   } else if (SLIDE_TYPES.ecosystem.test(content)) {
     slide.type = 'ecosystem';
     // Parse ecosystem panels (## headers with images and descriptions)
@@ -164,6 +169,8 @@ function generateSlideHTML(slide) {
       return generateSplitSlide(slide, activeClass);
     case 'wordcloud':
       return generateWordcloudSlide(slide, activeClass);
+    case 'sunburst':
+      return generateSunburstSlide(slide, activeClass);
     case 'ecosystem':
       return generateEcosystemSlide(slide, activeClass);
     case 'galaxies':
@@ -243,6 +250,44 @@ function generateWordcloudSlide(slide, activeClass) {
     <section class="slide slide-wordcloud${activeClass}" data-section="${slide.section}">
       <h1 class="slide-title">${slide.title}</h1>
       <div id="wordcloud-container"></div>
+    </section>`;
+}
+
+function generateSunburstSlide(slide, activeClass) {
+  return `
+    <!-- Slide ${slide.index + 1}: ${slide.title} -->
+    <section class="slide slide-sunburst${activeClass}" data-section="${slide.section}">
+      <h1 class="slide-title">${slide.title}</h1>
+      <p class="slide-subtitle">${slide.subtitle}</p>
+      <div class="sunburst-wrapper">
+        <div id="sunburst-container"></div>
+        <div id="sunburst-panel">
+          <div class="sunburst-panel-card">
+            <div class="sunburst-panel-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+              </svg>
+              <a id="sunburst-browse-link" href="https://brc-analytics.org/organisms" target="_blank">Browse All Assemblies</a>
+            </div>
+            <div class="sunburst-panel-title-row">
+              <h4 class="sunburst-panel-title">Subcategories</h4>
+              <div id="sunburst-back-btn" class="sunburst-back-btn" style="display: none;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div id="sunburst-children-list" class="sunburst-children-list"></div>
+          </div>
+          <p id="sunburst-hint" class="sunburst-hint">Click the visualization to explore available assemblies</p>
+        </div>
+      </div>
     </section>`;
 }
 
@@ -350,6 +395,7 @@ function copyDir(src, dest) {
 // Main build function
 function build() {
   console.log(`Building site from ${siteDir}...`);
+  console.log(`Using template: ${TEMPLATE_FILE}`);
 
   // Read slides.md
   if (!fs.existsSync(SLIDES_FILE)) {
@@ -407,6 +453,13 @@ function build() {
   if (fs.existsSync(faviconPath)) {
     fs.copyFileSync(faviconPath, path.join(OUTPUT_DIR, 'favicon.svg'));
     console.log('Copied favicon.svg to dist/');
+  }
+
+  // Copy taxonomy data (for sunburst) to dist if exists
+  const taxonomyPath = path.join(siteDir, 'ncbi-taxa-tree.json');
+  if (fs.existsSync(taxonomyPath)) {
+    fs.copyFileSync(taxonomyPath, path.join(OUTPUT_DIR, 'ncbi-taxa-tree.json'));
+    console.log('Copied ncbi-taxa-tree.json to dist/');
   }
 }
 

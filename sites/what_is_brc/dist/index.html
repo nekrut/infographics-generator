@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BRC Analytics</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       Apple-Style Design System
+       ======================================== */
+
+    :root {
+      /* Colors from BRC Analytics branding */
+      --color-primary: #28285B;
+      --color-accent: #FFEB78;
+      --color-text-light: #f8f9fa;
+      --color-text-dark: #1d1d1f;
+      --color-bg-light: #ffffff;
+      --color-bg-subtle: #f5f5f7;
+      --color-border: rgba(0, 0, 0, 0.1);
+
+      /* Accent colormap */
+      --color-orange: #fe7f02;
+      --color-orange-light: #fdbf6f;
+      --color-blue: #2077b3;
+      --color-blue-light: #a3cbdf;
+      --color-green: #74c376;
+      --color-green-light: #9fd99a;
+      --color-red: #e31a1e;
+      --color-red-light: #fb9998;
+      --color-yellow: #ffd602;
+
+      /* Typography */
+      --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-heading: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+
+      /* Transitions */
+      --transition-slide: 0.6s ease-out;
+      --transition-fast: 0.2s ease;
+
+      /* Spacing */
+      --spacing-xl: 80px;
+      --spacing-lg: 48px;
+      --spacing-md: 24px;
+      --spacing-sm: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--color-bg-light);
+      color: var(--color-text-dark);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background 0.6s ease;
+    }
+
+    body.wordcloud-active {
+      background: linear-gradient(135deg, #1F1F47 0%, var(--color-primary) 100%);
+    }
+
+    /* ========================================
+       Masthead Navigation
+       ======================================== */
+
+    .masthead {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: var(--color-bg-light);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-lg);
+      z-index: 1000;
+    }
+
+    .masthead-logo {
+      position: absolute;
+      left: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-primary);
+      letter-spacing: -0.5px;
+    }
+
+    .masthead-logo img {
+      height: 26px;
+      width: auto;
+    }
+
+    .masthead-nav {
+      display: flex;
+      gap: var(--spacing-lg);
+    }
+
+    .masthead-link {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .masthead-link:hover {
+      color: var(--color-primary);
+      background: rgba(40, 40, 91, 0.08);
+    }
+
+    .masthead-link.active {
+      color: var(--color-primary);
+      background: rgba(40, 40, 91, 0.12);
+    }
+
+    /* ========================================
+       Slide Container
+       ======================================== */
+
+    .slides-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding-top: 56px;
+    }
+
+    .slide {
+      position: absolute;
+      top: 56px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-slide), visibility var(--transition-slide);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-xl);
+      overflow: hidden;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ========================================
+       Slide Layouts
+       ======================================== */
+
+    /* Base title styling */
+    .slide-title {
+      font-family: var(--font-heading);
+    }
+
+    /* Intro Slides Layout */
+    .slide-intro {
+      flex-direction: column;
+      text-align: center;
+      background: var(--color-bg-subtle);
+    }
+
+    .slide-intro .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text-dark);
+    }
+
+    .slide-intro .slide-subtitle {
+      font-size: 24px;
+      font-weight: 400;
+      color: #86868b;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .slide-intro .slide-image {
+      max-width: 90%;
+      max-height: 65vh;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    /* Stats Layout */
+    .slide-stats {
+      flex-direction: column;
+      text-align: center;
+      background: var(--color-bg-subtle);
+    }
+
+    .slide-stats .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-dark);
+    }
+
+    .slide-stats .slide-subtitle {
+      font-size: 21px;
+      font-weight: 400;
+      color: #86868b;
+      margin-bottom: var(--spacing-lg);
+      max-width: 700px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
+      max-width: 900px;
+    }
+
+    .stats-grid.two-col {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 600px;
+    }
+
+    .stats-grid.four-col {
+      grid-template-columns: repeat(4, 1fr);
+      max-width: 1000px;
+    }
+
+    .stat-card {
+      background: var(--color-bg-light);
+      border-radius: 18px;
+      padding: var(--spacing-lg) var(--spacing-md);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+      border-top: 5px solid var(--card-color, var(--color-primary));
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card:nth-child(1) { --card-color: #fe7f02; }
+    .stat-card:nth-child(2) { --card-color: #2077b3; }
+    .stat-card:nth-child(3) { --card-color: #74c376; }
+    .stat-card:nth-child(4) { --card-color: #ffd602; }
+    .stat-card:nth-child(5) { --card-color: #e31a1e; }
+    .stat-card:nth-child(6) { --card-color: #2c3143; }
+
+    .stat-number {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      color: var(--card-color, var(--color-primary));
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #86868b;
+      font-weight: 500;
+    }
+
+    /* Split Layout */
+    .slide-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-xl);
+      max-width: 1400px;
+      width: 100%;
+    }
+
+    .slide-split.reverse {
+      direction: rtl;
+    }
+
+    .slide-split.reverse > * {
+      direction: ltr;
+    }
+
+    .slide-split .content-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 var(--spacing-md);
+    }
+
+    .slide-split .slide-title {
+      font-size: 44px;
+      font-weight: 600;
+      letter-spacing: -1.5px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-dark);
+    }
+
+    .slide-split .slide-text {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #1d1d1f;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .slide-split .slide-highlight {
+      font-size: 16px;
+      color: var(--color-primary);
+      font-weight: 500;
+      padding: var(--spacing-md);
+      background: var(--color-bg-subtle);
+      border-radius: 12px;
+      border-left: 4px solid var(--color-accent);
+    }
+
+    .slide-split .image-side {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide-split .image-side img {
+      max-width: 100%;
+      max-height: 65vh;
+      border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Center Layout */
+    .slide-center {
+      flex-direction: column;
+      text-align: center;
+      background: var(--color-bg-subtle);
+    }
+
+    .slide-center .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-dark);
+    }
+
+    .slide-center .slide-subtitle {
+      font-size: 21px;
+      font-weight: 400;
+      color: #86868b;
+      margin-bottom: var(--spacing-lg);
+      max-width: 700px;
+    }
+
+    .slide-center .center-image {
+      max-width: 90%;
+      max-height: 55vh;
+      border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Ecosystem Card Layout */
+    .slide-ecosystem {
+      flex-direction: column;
+      text-align: center;
+      background: linear-gradient(135deg, var(--color-primary) 0%, #1a1f2e 100%);
+    }
+
+    .slide-ecosystem .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text-light);
+    }
+
+    .slide-ecosystem .slide-subtitle {
+      font-size: 21px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: var(--spacing-lg);
+      max-width: 700px;
+    }
+
+    .ecosystem-stats {
+      display: flex;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .ecosystem-stat {
+      text-align: center;
+    }
+
+    .ecosystem-stat-number {
+      font-size: 48px;
+      font-weight: 600;
+      color: var(--color-accent);
+      letter-spacing: -2px;
+    }
+
+    .ecosystem-stat-label {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .ecosystem-description {
+      font-size: 18px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 800px;
+      text-align: center;
+    }
+
+    .ecosystem-logo {
+      width: auto;
+      height: 100px;
+      max-width: 300px;
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ecosystem-logo img {
+      max-height: 100px;
+      max-width: 300px;
+      object-fit: contain;
+    }
+
+    /* Ecosystem Grid Layout */
+    .ecosystem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
+      max-width: 1100px;
+    }
+
+    .ecosystem-panel {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: var(--spacing-md);
+      text-align: center;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .ecosystem-panel:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .ecosystem-panel .panel-logo {
+      height: 60px;
+      margin-bottom: var(--spacing-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ecosystem-panel .panel-logo img {
+      max-height: 60px;
+      max-width: 150px;
+      object-fit: contain;
+    }
+
+    .ecosystem-panel .panel-logo img[alt="TPV"] {
+      max-height: 80px;
+      max-width: 200px;
+    }
+
+    .ecosystem-panel .panel-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--color-text-light);
+      margin-bottom: 8px;
+    }
+
+    .ecosystem-panel .panel-description {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.4;
+    }
+
+    /* Word Cloud Layout */
+    .slide-wordcloud {
+      background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
+      flex-direction: column;
+      padding: 30px 50px;
+    }
+
+    .slide-wordcloud .slide-title {
+      font-size: 38px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: 16px;
+      color: var(--color-text-light);
+      z-index: 10;
+      position: relative;
+    }
+
+    #wordcloud-container {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 18px;
+      max-width: 1400px;
+      width: 95%;
+    }
+
+    .wordcloud-word {
+      padding: 18px 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.3s ease;
+      font-weight: 500;
+      font-family: var(--font-family);
+      text-decoration: none;
+      text-align: center;
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .wordcloud-word:hover {
+      transform: scale(1.08);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .wordcloud-word.sparkle {
+      animation: sparkle 0.5s ease-in-out;
+    }
+
+    @keyframes sparkle {
+      0%, 100% {
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: none;
+      }
+      50% {
+        background: var(--sparkle-color, rgba(255, 215, 0, 0.4));
+        box-shadow: 0 0 20px var(--sparkle-color, rgba(255, 215, 0, 0.5));
+      }
+    }
+
+    /* Sunburst Phylogeny Layout */
+    .slide-sunburst {
+      background: var(--color-bg-subtle);
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 50px;
+    }
+
+    .slide-sunburst .slide-title {
+      font-size: 42px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: 8px;
+      color: var(--color-text-dark);
+    }
+
+    .slide-sunburst .slide-subtitle {
+      font-size: 18px;
+      color: #86868b;
+      margin-bottom: 16px;
+    }
+
+    .sunburst-wrapper {
+      display: flex;
+      width: 100%;
+      max-width: 1100px;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    #sunburst-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 0 0 65%;
+      aspect-ratio: 1;
+    }
+
+    #sunburst-container svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    #sunburst-panel {
+      flex: 0 0 32%;
+      font-family: var(--font-heading);
+    }
+
+    .sunburst-panel-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .sunburst-panel-header {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid #e0e0e0;
+      gap: 8px;
+    }
+
+    .sunburst-panel-header a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .sunburst-panel-header a:hover {
+      text-decoration: underline;
+    }
+
+    .sunburst-panel-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 16px 8px;
+    }
+
+    .sunburst-panel-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0;
+      color: var(--color-text-dark);
+    }
+
+    .sunburst-back-btn {
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      color: #666;
+    }
+
+    .sunburst-back-btn:hover {
+      color: var(--color-primary);
+    }
+
+    .sunburst-children-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .sunburst-child-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-top: 1px solid #eee;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .sunburst-child-item:hover {
+      background: #f5f5f7;
+    }
+
+    .sunburst-child-name {
+      font-weight: 500;
+      color: var(--color-text-dark);
+    }
+
+    .sunburst-child-count {
+      color: #666;
+      font-size: 0.9em;
+      margin-left: 8px;
+    }
+
+    .sunburst-child-arrow {
+      color: #666;
+    }
+
+    .sunburst-hint {
+      color: #666;
+      font-size: 0.85em;
+      font-style: italic;
+      text-align: right;
+      margin-top: 16px;
+    }
+
+    .sunburst-tooltip {
+      position: absolute;
+      text-align: center;
+      padding: 8px 12px;
+      font: 12px 'Inter Tight', sans-serif;
+      background: #f5f5f7;
+      border-radius: 8px;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Global Instances - Background Image Layout */
+    .slide-galaxies {
+      background-color: var(--color-primary);
+      background-image: url('images/galaxies.svg');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .slide-galaxies .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-light);
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+    }
+
+    .slide-galaxies .slide-subtitle {
+      font-size: 21px;
+      font-weight: 400;
+      color: var(--color-text-light);
+      margin-bottom: var(--spacing-lg);
+      max-width: 800px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    }
+
+    .slide-galaxies .galaxies-description {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--color-text-light);
+      max-width: 700px;
+      text-align: center;
+      background: rgba(44, 49, 67, 0.5);
+      padding: var(--spacing-lg);
+      border-radius: 16px;
+    }
+
+    /* ========================================
+       Links Slide
+       ======================================== */
+
+    .slide-links {
+      background: var(--color-bg-light);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide-links .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-primary);
+    }
+
+    .slide-links .slide-subtitle {
+      font-size: 24px;
+      color: #666;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-md);
+      max-width: 1200px;
+      width: 90%;
+    }
+
+    .link-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-lg) var(--spacing-md);
+      background: var(--color-bg-subtle);
+      border-radius: 16px;
+      text-decoration: none;
+      transition: var(--transition-fast);
+      border: 2px solid transparent;
+    }
+
+    .link-card:hover {
+      background: var(--color-primary);
+      border-color: var(--color-accent);
+    }
+
+    .link-card:hover .link-label,
+    .link-card:hover .link-url {
+      color: var(--color-text-light);
+    }
+
+    .link-label {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 8px;
+    }
+
+    .link-url {
+      font-size: 18px;
+      color: var(--color-blue);
+      word-break: break-all;
+      text-align: center;
+    }
+
+    /* ========================================
+       QR Code Slide
+       ======================================== */
+
+    .slide-qr {
+      background: var(--color-bg-light);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .slide-qr .slide-title {
+      font-size: 64px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-lg);
+      color: var(--color-primary);
+    }
+
+    .slide-qr .qr-code {
+      width: 400px;
+      height: 400px;
+      max-width: 50vh;
+      max-height: 50vh;
+    }
+
+    /* ========================================
+       Progress Bar
+       ======================================== */
+
+    .progress-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(0, 0, 0, 0.1);
+      z-index: 1001;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--color-accent);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ========================================
+       Controls
+       ======================================== */
+
+    .controls-hint {
+      position: fixed;
+      bottom: var(--spacing-md);
+      right: var(--spacing-md);
+      font-size: 12px;
+      color: #86868b;
+      background: var(--color-bg-light);
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      opacity: 0.8;
+      transition: opacity var(--transition-fast);
+      z-index: 1001;
+    }
+
+    .controls-hint:hover {
+      opacity: 1;
+    }
+
+    .controls-hint kbd {
+      display: inline-block;
+      background: var(--color-bg-subtle);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: var(--font-family);
+      font-size: 11px;
+      margin: 0 2px;
+    }
+
+    .slide-dots {
+      position: fixed;
+      bottom: var(--spacing-md);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 1001;
+    }
+
+    .slide-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .slide-dot.active {
+      background: var(--color-primary);
+      transform: scale(1.25);
+    }
+
+    .slide-dot:hover {
+      background: var(--color-accent);
+    }
+
+    .pause-indicator {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 20px 40px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 500;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+      pointer-events: none;
+      z-index: 1002;
+    }
+
+    .pause-indicator.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* ========================================
+       Slide Counter
+       ======================================== */
+
+    .slide-counter {
+      position: fixed;
+      bottom: var(--spacing-md);
+      left: var(--spacing-md);
+      font-size: 12px;
+      color: #86868b;
+      background: var(--color-bg-light);
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      z-index: 1001;
+    }
+  </style>
+</head>
+<body>
+  <!-- Masthead -->
+  <nav class="masthead">
+    <div class="masthead-logo">
+      <img src="images/brc-logo.svg" alt="BRC Analytics">
+    </div>
+    <div class="masthead-nav">
+      <a class="masthead-link active" data-section="intro">1-2-3</a>
+      <a class="masthead-link" data-section="platform">Platform</a>
+      <a class="masthead-link" data-section="capabilities">Capabilities</a>
+      <a class="masthead-link" data-section="resources">Resources</a>
+    </div>
+  </nav>
+
+  <!-- Slides -->
+  <div class="slides-container">
+
+
+    <!-- Slide 1: BRC Analytics -->
+    <section class="slide slide-stats active" data-section="platform">
+      <h1 class="slide-title">BRC Analytics</h1>
+      <p class="slide-subtitle">From raw reads to publication-ready results in your browser</p>
+      <div class="stats-grid four-col">
+
+        <div class="stat-card orange">
+          <div class="stat-number">5,060</div>
+          <div class="stat-label">genome assemblies</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-number">1,920</div>
+          <div class="stat-label">pathogen taxa</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-number">26+</div>
+          <div class="stat-label">priority pathogens</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-number">FREE</div>
+          <div class="stat-label">cloud compute</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Find Your Pathogen Data -->
+    <section class="slide" data-section="intro">
+      <div class="slide-split">
+        <div class="content-side">
+          <h1 class="slide-title">Find Your Pathogen Data</h1>
+          <p class="slide-text">Browse NCBI Datasets, EBI ENA, or upload your own sequencing data. Access over 5,000 reference genomes and assemblies for bacterial and viral pathogens.</p>
+          <div class="slide-highlight">Integrated access to NCBI, UCSC, and ENA</div>
+        </div>
+        <div class="image-side">
+          <img src="images/data-browser.png" alt="Data browser">
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Select a Workflow -->
+    <section class="slide" data-section="intro">
+      <div class="slide-split reverse">
+        <div class="content-side">
+          <h1 class="slide-title">Select a Workflow</h1>
+          <p class="slide-text">Choose from curated best-practice analysis pipelines maintained by the Intergalactic Workflow Commission (IWC). Each workflow is versioned and validated.</p>
+          <div class="slide-highlight">9+ workflow categories</div>
+        </div>
+        <div class="image-side">
+          <img src="images/workflow-selection.png" alt="Workflow selection">
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Run Your Analysis -->
+    <section class="slide" data-section="intro">
+      <div class="slide-split">
+        <div class="content-side">
+          <h1 class="slide-title">Run Your Analysis</h1>
+          <p class="slide-text">BRC Analytics runs on Texas Advanced Computing Center (TACC) infrastructure powered by ACCESS-CI. No local compute needed - everything runs in the cloud.</p>
+          <div class="slide-highlight">Powered by ACCESS-CI</div>
+        </div>
+        <div class="image-side">
+          <img src="images/analysis-running.png" alt="Analysis running">
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Interpret & Publish -->
+    <section class="slide" data-section="intro">
+      <div class="slide-split reverse">
+        <div class="content-side">
+          <h1 class="slide-title">Interpret & Publish</h1>
+          <p class="slide-text">Explore results with Jupyter notebooks, interactive visualizations, and AI-powered code assistance. Export publication-ready figures and data.</p>
+          <div class="slide-highlight">Reproducible research</div>
+        </div>
+        <div class="image-side">
+          <img src="images/results-viz.png" alt="Results visualization">
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Integrated Data Sources -->
+    <section class="slide slide-stats" data-section="platform">
+      <h1 class="slide-title">Integrated Data Sources</h1>
+      <p class="slide-subtitle">Comprehensive pathogen genomics data at your fingertips</p>
+      <div class="stats-grid four-col">
+
+        <div class="stat-card orange">
+          <div class="stat-number">NCBI</div>
+          <div class="stat-label">Datasets & assemblies</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-number">UCSC</div>
+          <div class="stat-label">Genome annotations</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-number">ENA</div>
+          <div class="stat-label">Public sequencing data</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-number">Local</div>
+          <div class="stat-label">Upload your own</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Cloud-Powered Infrastructure -->
+    <section class="slide" data-section="platform">
+      <div class="slide-split">
+        <div class="content-side">
+          <h1 class="slide-title">Cloud-Powered Infrastructure</h1>
+          <p class="slide-text">Hosted at Texas Advanced Computing Center with funding from ACCESS-CI. No installation required - just open your browser and start analyzing.</p>
+          <div class="slide-highlight">Free compute for researchers</div>
+        </div>
+        <div class="image-side">
+          <img src="images/access-map.svg" alt="ACCESS-CI infrastructure">
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 8: Reproducibility Built-In -->
+    <section class="slide slide-stats" data-section="platform">
+      <h1 class="slide-title">Reproducibility Built-In</h1>
+      <p class="slide-subtitle">Galaxy-powered provenance tracking</p>
+      <div class="stats-grid four-col">
+
+        <div class="stat-card orange">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Workflow versioning</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-number">Full</div>
+          <div class="stat-label">Audit trails</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-number">Auto</div>
+          <div class="stat-label">Provenance tracking</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-number">Peer</div>
+          <div class="stat-label">Reviewed validation</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 9: Pathogen Taxonomy Browser -->
+    <section class="slide slide-sunburst" data-section="capabilities">
+      <h1 class="slide-title">Pathogen Taxonomy Browser</h1>
+      <p class="slide-subtitle">1,920 pathogen taxa across bacteria, viruses, and fungi</p>
+      <div class="sunburst-wrapper">
+        <div id="sunburst-container"></div>
+        <div id="sunburst-panel">
+          <div class="sunburst-panel-card">
+            <div class="sunburst-panel-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+              </svg>
+              <a id="sunburst-browse-link" href="https://brc-analytics.org/organisms" target="_blank">Browse All Assemblies</a>
+            </div>
+            <div class="sunburst-panel-title-row">
+              <h4 class="sunburst-panel-title">Subcategories</h4>
+              <div id="sunburst-back-btn" class="sunburst-back-btn" style="display: none;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div id="sunburst-children-list" class="sunburst-children-list"></div>
+          </div>
+          <p id="sunburst-hint" class="sunburst-hint">Click the visualization to explore available assemblies</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 10: Analysis Workflows -->
+    <section class="slide slide-stats" data-section="capabilities">
+      <h1 class="slide-title">Analysis Workflows</h1>
+      <p class="slide-subtitle">Validated pipelines for pathogen genomics</p>
+      <div class="stats-grid four-col">
+
+        <div class="stat-card orange">
+          <div class="stat-number">Variant</div>
+          <div class="stat-label">Calling</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-number">RNA-seq</div>
+          <div class="stat-label">Transcriptomics</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-number">Assembly</div>
+          <div class="stat-label">Genome construction</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-number">Consensus</div>
+          <div class="stat-label">Sequence generation</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 11: Validated Research -->
+    <section class="slide" data-section="capabilities">
+      <div class="slide-split">
+        <div class="content-side">
+          <h1 class="slide-title">Validated Research</h1>
+          <p class="slide-text">Case studies demonstrate reproducibility across real-world outbreaks. Measles analysis of 227 samples from 3 outbreaks. C. auris validation achieved R² = 0.98-0.9998 vs published results.</p>
+          <div class="slide-highlight">Peer-reviewed validation</div>
+        </div>
+        <div class="image-side">
+          <img src="images/phylogenetic-tree.png" alt="Phylogenetic analysis">
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 12: Key Links -->
+    <section class="slide slide-intro" data-section="resources">
+      <h1 class="slide-title">Key Links</h1>
+      <p class="slide-subtitle">Essential resources for BRC Analytics</p>
+      
+    </section>
+
+    <!-- Slide 13: Get Started -->
+    <section class="slide slide-qr" data-section="resources">
+      <h1 class="slide-title">Get Started</h1>
+      <img class="qr-code" src="images/qr-code.png" alt="Scan to visit BRC Analytics">
+    </section>
+
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+
+  <!-- Slide Dots -->
+  <div class="slide-dots"></div>
+
+  <!-- Slide Counter -->
+  <div class="slide-counter">
+    <span class="current">1</span> / <span class="total">9</span>
+  </div>
+
+  <!-- Controls Hint -->
+  <div class="controls-hint">
+    <kbd>Space</kbd> pause &nbsp; <kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate
+  </div>
+
+  <!-- Pause Indicator -->
+  <div class="pause-indicator">Paused</div>
+
+  <!-- D3.js for visualizations -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <script>
+    /* ========================================
+       Word Cloud Data
+       ======================================== */
+
+    const WORDCLOUD_TOPICS = [
+      { text: "Genomics", weight: 100, url: "https://training.galaxyproject.org/training-material/topics/genome-annotation/" },
+      { text: "Transcriptomics", weight: 95, url: "https://training.galaxyproject.org/training-material/topics/transcriptomics/" },
+      { text: "Proteomics", weight: 85, url: "https://training.galaxyproject.org/training-material/topics/proteomics/" },
+      { text: "Metabolomics", weight: 80, url: "https://training.galaxyproject.org/training-material/topics/metabolomics/" },
+      { text: "Single Cell", weight: 90, url: "https://training.galaxyproject.org/training-material/topics/single-cell/" },
+      { text: "Variant Analysis", weight: 88, url: "https://training.galaxyproject.org/training-material/topics/variant-analysis/" },
+      { text: "Sequence Analysis", weight: 92, url: "https://training.galaxyproject.org/training-material/topics/sequence-analysis/" },
+      { text: "Assembly", weight: 85, url: "https://training.galaxyproject.org/training-material/topics/assembly/" },
+      { text: "Epigenetics", weight: 75, url: "https://training.galaxyproject.org/training-material/topics/epigenetics/" },
+      { text: "Microbiome", weight: 82, url: "https://training.galaxyproject.org/training-material/topics/microbiome/" },
+      { text: "Machine Learning", weight: 78, url: "https://training.galaxyproject.org/training-material/topics/statistics/" },
+      { text: "Imaging", weight: 70, url: "https://training.galaxyproject.org/training-material/topics/imaging/" },
+      { text: "Climate", weight: 65, url: "https://training.galaxyproject.org/training-material/topics/climate/" },
+      { text: "Ecology", weight: 68, url: "https://training.galaxyproject.org/training-material/topics/ecology/" },
+      { text: "Evolution", weight: 72, url: "https://training.galaxyproject.org/training-material/topics/evolution/" },
+      { text: "SARS-CoV-2", weight: 60, url: "https://training.galaxyproject.org/training-material/topics/variant-analysis/" },
+      { text: "FAIR Data", weight: 55, url: "https://training.galaxyproject.org/training-material/topics/fair/" },
+      { text: "Visualisation", weight: 58, url: "https://training.galaxyproject.org/training-material/topics/visualisation/" },
+      { text: "Computational Chemistry", weight: 50, url: "https://training.galaxyproject.org/training-material/topics/computational-chemistry/" },
+      { text: "Materials Science", weight: 45, url: "https://training.galaxyproject.org/training-material/topics/materials-science/" },
+      { text: "One Health", weight: 52, url: "https://training.galaxyproject.org/training-material/topics/one-health/" },
+      { text: "Plants", weight: 62, url: "https://training.galaxyproject.org/training-material/topics/plants/" },
+      { text: "Synthetic Biology", weight: 48, url: "https://training.galaxyproject.org/training-material/topics/synthetic-biology/" },
+      { text: "Data Science", weight: 75, url: "https://training.galaxyproject.org/training-material/topics/data-science/" },
+      { text: "Annotation", weight: 78, url: "https://training.galaxyproject.org/training-material/topics/genome-annotation/" },
+      { text: "RNA-seq", weight: 88, url: "https://training.galaxyproject.org/training-material/topics/transcriptomics/" },
+      { text: "ChIP-seq", weight: 72, url: "https://training.galaxyproject.org/training-material/topics/epigenetics/" },
+      { text: "ATAC-seq", weight: 68, url: "https://training.galaxyproject.org/training-material/topics/epigenetics/" },
+      { text: "Metagenomics", weight: 80, url: "https://training.galaxyproject.org/training-material/topics/metagenomics/" }
+    ];
+
+    /* ========================================
+       Word Cloud Generator
+       ======================================== */
+
+    function generateWordCloud() {
+      const container = document.getElementById('wordcloud-container');
+      if (!container) return;
+
+      container.innerHTML = '';
+
+      // Galaxy colors for sparkle effect
+      const sparkleColors = [
+        'rgba(254, 127, 2, 0.5)',   // orange
+        'rgba(32, 119, 179, 0.5)',  // blue
+        'rgba(116, 195, 118, 0.5)', // green
+        'rgba(255, 214, 2, 0.5)',   // yellow
+        'rgba(227, 26, 30, 0.5)',   // red
+        'rgba(163, 203, 223, 0.5)', // light blue
+        'rgba(253, 191, 111, 0.5)'  // light orange
+      ];
+
+      // Create grid of words
+      WORDCLOUD_TOPICS.forEach((topic, index) => {
+        const word = document.createElement('a');
+        word.className = 'wordcloud-word';
+        word.textContent = topic.text;
+        word.href = topic.url;
+        word.target = '_blank';
+        word.rel = 'noopener noreferrer';
+
+        container.appendChild(word);
+      });
+
+      // Add sparkle animation to random cells
+      const words = container.querySelectorAll('.wordcloud-word');
+
+      function addSparkle() {
+        // Remove existing sparkles
+        words.forEach(w => w.classList.remove('sparkle'));
+
+        // Pick 4-6 random words to sparkle
+        const numSparkles = 4 + Math.floor(Math.random() * 3);
+        const indices = new Set();
+        while (indices.size < numSparkles) {
+          indices.add(Math.floor(Math.random() * words.length));
+        }
+
+        indices.forEach(i => {
+          const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+          words[i].style.setProperty('--sparkle-color', color);
+          words[i].classList.add('sparkle');
+        });
+      }
+
+      // Initial sparkle
+      addSparkle();
+
+      // Rotate sparkles every 0.5 seconds
+      setInterval(addSparkle, 500);
+    }
+
+    // Add float animation keyframes (kept for compatibility)
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    /* ========================================
+       Sunburst Phylogeny Visualization
+       ======================================== */
+
+    // Roma cyclic color palette from Crameri
+    const ROMA_CYCLIC = [
+      "#733957", "#843d3b", "#97552c", "#b07f33", "#ccb65e", "#d5db9a",
+      "#bae0c3", "#86c8cf", "#599ec5", "#4f73ab", "#604c81", "#723959"
+    ].reverse();
+
+    let sunburstData = null;
+    let sunburstGenerated = false;
+
+    // Load taxonomy data
+    fetch('ncbi-taxa-tree.json')
+      .then(response => response.json())
+      .then(data => {
+        sunburstData = data;
+      })
+      .catch(err => console.log('Sunburst data not available:', err));
+
+    function generateSunburst() {
+      if (sunburstGenerated || !sunburstData) return;
+
+      const container = document.getElementById('sunburst-container');
+      if (!container) return;
+
+      sunburstGenerated = true;
+
+      const width = 700;
+      const height = width;
+      const radius = (width - 10) / 2;
+      const DEPTH = 4;
+
+      // Create tooltip
+      const tooltip = d3.select('body')
+        .append('div')
+        .attr('class', 'sunburst-tooltip')
+        .style('opacity', 0);
+
+      // Create SVG
+      const svg = d3.select(container)
+        .append('svg')
+        .attr('viewBox', [-width / 2, -height / 2, width, width])
+        .style('font', "10px 'Inter Tight', sans-serif");
+
+      // Color scale
+      const baseColor = d3.scaleOrdinal(ROMA_CYCLIC);
+
+      // Create hierarchy
+      const hierarchyData = d3.hierarchy(sunburstData)
+        .sum(d => (d.children.length === 0 ? 1 : 0))
+        .sort((a, b) => (a.data.name < b.data.name ? -1 : 1));
+
+      // Update color scale for root children count
+      const rootChildren = hierarchyData.children || [];
+      const numColors = rootChildren.length;
+      const equidistantColors = getEquidistantColors(ROMA_CYCLIC, numColors);
+      baseColor.range(equidistantColors);
+
+      // Partition layout
+      const root = d3.partition()
+        .size([2 * Math.PI, hierarchyData.height + 1])(hierarchyData);
+
+      root.each(d => {
+        d.current = { x0: d.x0, x1: d.x1, y0: d.y0, y1: d.y1 };
+        d.target = { x0: d.x0, x1: d.x1, y0: d.y0, y1: d.y1 };
+      });
+
+      let currentRoot = root;
+
+      // Arc generator
+      const arc = d3.arc()
+        .startAngle(d => d.x0)
+        .endAngle(d => d.x1)
+        .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
+        .padRadius(radius)
+        .innerRadius(d => (Math.min(d.y0, DEPTH) * radius) / DEPTH)
+        .outerRadius(d => (Math.min(d.y1, DEPTH) * radius) / DEPTH - 0.5);
+
+      function getNodeColor(d, rootNode) {
+        const relativeDepth = d.depth - rootNode.depth;
+        if (relativeDepth === 0) return '#f5f5f7';
+        if (relativeDepth === 1) return baseColor(d.data.name);
+
+        const rootChild = findRootChild(d, rootNode);
+        if (!rootChild) return '#ccc';
+
+        const baseColorHsl = d3.hsl(baseColor(rootChild.data.name));
+        const lightnessFactor = 0.05 * (relativeDepth - 1);
+        const saturationFactor = 0.1 * (relativeDepth - 1);
+
+        return d3.hsl(
+          baseColorHsl.h,
+          Math.max(0, baseColorHsl.s - saturationFactor),
+          Math.min(1, baseColorHsl.l + lightnessFactor)
+        ).toString();
+      }
+
+      function findRootChild(node, rootNode) {
+        if (node === rootNode) return null;
+        const ancestors = node.ancestors();
+        for (let i = 0; i < ancestors.length; i++) {
+          if (ancestors[i].parent === rootNode) return ancestors[i];
+        }
+        return null;
+      }
+
+      function isVisible(d, rootNode, targetDepth) {
+        const isDescendant = d.ancestors().indexOf(rootNode) >= 0;
+        const withinDepth = d.depth - targetDepth <= DEPTH - 1;
+        return isDescendant && withinDepth;
+      }
+
+      function isLargeEnoughForLabel(d) {
+        const arcSizePercentage = ((d.current.x1 - d.current.x0) / (2 * Math.PI)) * 100;
+        return arcSizePercentage >= 1;
+      }
+
+      // Draw segments
+      const path = svg.append('g')
+        .selectAll('path')
+        .data(root.descendants().slice(1))
+        .join('path')
+        .attr('fill', d => getNodeColor(d, root))
+        .attr('fill-opacity', d => isVisible(d, root, 0) ? 1 : 0)
+        .attr('stroke-opacity', d => isVisible(d, root, 0) ? 1 : 0)
+        .attr('d', d => arc(d.current))
+        .style('cursor', 'pointer')
+        .style('stroke', '#333')
+        .style('stroke-width', '1px')
+        .on('mouseover', function(event, d) {
+          d3.select(this).style('stroke-width', '2px');
+          tooltip.transition().duration(200).style('opacity', 0.9);
+          tooltip.html(`<strong>${d.data.name}</strong>`)
+            .style('left', (event.pageX + 10) + 'px')
+            .style('top', (event.pageY - 28) + 'px');
+        })
+        .on('mouseout', function() {
+          d3.select(this).style('stroke-width', '1px');
+          tooltip.transition().duration(500).style('opacity', 0);
+        })
+        .on('click', clicked);
+
+      // Labels
+      function labelTransform(d) {
+        const angle = ((d.current.x0 + d.current.x1) / 2) * (180 / Math.PI);
+        let r = ((Math.min(d.current.y0, DEPTH) + Math.min(d.current.y1, DEPTH)) / 2) * (radius / DEPTH);
+        if (d.parent === currentRoot) r += 10;
+        return `rotate(${angle - 90}) translate(${r},0) rotate(${angle < 180 ? 0 : 180})`;
+      }
+
+      const label = svg.append('g')
+        .attr('pointer-events', 'none')
+        .attr('text-anchor', 'middle')
+        .selectAll('text')
+        .data(root.descendants().slice(1))
+        .join('text')
+        .attr('fill-opacity', d => (d !== root && isVisible(d, root, 0) && isLargeEnoughForLabel(d)) ? 1 : 0)
+        .attr('dy', '0.35em')
+        .attr('transform', labelTransform)
+        .text(d => d.data.name);
+
+      // Center logo
+      const centerGroup = svg.append('g').attr('class', 'center-group');
+
+      const logoImage = centerGroup.append('image')
+        .attr('x', -70)
+        .attr('y', -70)
+        .attr('width', 140)
+        .attr('height', 140)
+        .attr('href', 'images/brc-logo.svg')
+        .attr('preserveAspectRatio', 'xMidYMid meet');
+
+      const centerText = centerGroup.append('text')
+        .attr('class', 'center-label')
+        .attr('text-anchor', 'middle')
+        .attr('dy', '0.35em')
+        .style('font-size', '16px')
+        .style('opacity', 0);
+
+      function updateCenter(p) {
+        const isRoot = p.depth === 0;
+        logoImage.style('opacity', isRoot ? 1 : 0);
+        centerText.style('opacity', isRoot ? 0 : 1).text(isRoot ? '' : p.data.name);
+      }
+
+      // Center click handler
+      svg.append('circle')
+        .attr('r', radius / DEPTH)
+        .attr('fill', 'transparent')
+        .style('cursor', 'pointer')
+        .on('click', function(event) {
+          if (currentRoot && currentRoot.parent) {
+            clicked(event, currentRoot.parent);
+          }
+        });
+
+      // Panel elements
+      const browseLink = document.getElementById('sunburst-browse-link');
+      const backBtn = document.getElementById('sunburst-back-btn');
+      const childrenList = document.getElementById('sunburst-children-list');
+      const hint = document.getElementById('sunburst-hint');
+
+      // Rank to filter key mapping
+      const rankMap = {
+        isolate: 'taxonomicLevelIsolate',
+        serotype: 'taxonomicLevelSerotype',
+        strain: 'taxonomicLevelStrain',
+        species: 'taxonomicLevelSpecies',
+        genus: 'taxonomicLevelGenus',
+        family: 'taxonomicLevelFamily',
+        order: 'taxonomicLevelOrder',
+        class: 'taxonomicLevelClass',
+        phylum: 'taxonomicLevelPhylum',
+        kingdom: 'taxonomicLevelKingdom',
+        domain: 'taxonomicLevelDomain',
+        realm: 'taxonomicLevelRealm'
+      };
+
+      function createFilterUrl(rank, name) {
+        if (!rank || !name) return 'https://brc-analytics.org/organisms';
+        const categoryKey = rankMap[rank.toLowerCase()];
+        if (!categoryKey) return 'https://brc-analytics.org/organisms';
+        // Format: [{"categoryKey":"taxonomicLevelDomain","value":["Eukaryota"]}]
+        const filter = [{ categoryKey, value: [name] }];
+        return `https://brc-analytics.org/data/assemblies?filter=${encodeURIComponent(JSON.stringify(filter))}`;
+      }
+
+      function updatePanel(node) {
+        const isRoot = node.depth === 0;
+
+        // Update browse link
+        if (isRoot) {
+          browseLink.textContent = 'Browse All Assemblies';
+          browseLink.href = 'https://brc-analytics.org/organisms';
+        } else {
+          const count = node.data.assembly_count;
+          const suffix = count > 1 ? 'ies' : 'y';
+          browseLink.textContent = `View ${count} Assembl${suffix} for ${node.data.name}`;
+          browseLink.href = createFilterUrl(node.data.rank, node.data.name);
+        }
+
+        // Update back button
+        backBtn.style.display = isRoot ? 'none' : 'flex';
+
+        // Update hint
+        hint.style.display = isRoot ? 'block' : 'none';
+
+        // Update children list
+        childrenList.innerHTML = '';
+        const children = node.children || [];
+        children.forEach(child => {
+          const item = document.createElement('div');
+          item.className = 'sunburst-child-item';
+          item.innerHTML = `
+            <div>
+              <span class="sunburst-child-name">${child.data.name}</span>
+              <span class="sunburst-child-count">(${child.data.assembly_count})</span>
+            </div>
+            <svg class="sunburst-child-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          `;
+          item.addEventListener('click', () => clicked(null, child));
+          childrenList.appendChild(item);
+        });
+      }
+
+      // Back button handler
+      backBtn.addEventListener('click', () => {
+        if (currentRoot && currentRoot.parent) {
+          clicked(null, currentRoot.parent);
+        }
+      });
+
+      function clicked(event, p) {
+        currentRoot = p;
+        updateCenter(p);
+        updatePanel(p);
+
+        if (p.children && p.children.length > 0) {
+          const newColors = getEquidistantColors(ROMA_CYCLIC, p.children.length);
+          baseColor.range(newColors);
+        }
+
+        root.each(d => {
+          d.target = {
+            x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+            x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+            y0: Math.max(0, d.y0 - p.depth),
+            y1: Math.max(0, d.y1 - p.depth)
+          };
+        });
+
+        path.transition()
+          .duration(750)
+          .tween('data', d => {
+            const i = d3.interpolate(d.current, d.target);
+            return t => { d.current = i(t); };
+          })
+          .attrTween('d', d => () => arc(d.current) || '')
+          .attr('fill', d => getNodeColor(d, p))
+          .attr('fill-opacity', d => isVisible(d, currentRoot, p.depth) ? 1 : 0)
+          .attr('stroke-opacity', d => isVisible(d, currentRoot, p.depth) ? 1 : 0);
+
+        label.transition()
+          .duration(750)
+          .tween('data', d => {
+            const i = d3.interpolate(d.current, d.target);
+            return t => { d.current = i(t); };
+          })
+          .attrTween('transform', d => () => labelTransform(d))
+          .attrTween('fill-opacity', d => () =>
+            (d !== currentRoot && isVisible(d, currentRoot, p.depth) && isLargeEnoughForLabel(d)) ? '1' : '0'
+          );
+      }
+
+      // Initialize panel with root node
+      updatePanel(root);
+    }
+
+    function getEquidistantColors(colorMap, count) {
+      if (count <= 0) return [];
+      if (count === 1) return [colorMap[0]];
+      if (count <= colorMap.length) {
+        const result = [];
+        const step = colorMap.length / count;
+        for (let i = 0; i < count; i++) {
+          result.push(colorMap[Math.floor(i * step)]);
+        }
+        return result;
+      }
+      const result = [];
+      const colorScale = d3.scaleLinear()
+        .domain(d3.range(0, 1, 1 / (colorMap.length - 1)).concat([1]))
+        .range(colorMap)
+        .interpolate(d3.interpolateRgb.gamma(2.2));
+      for (let i = 0; i < count; i++) {
+        result.push(colorScale(i / (count - 1)));
+      }
+      return result;
+    }
+
+    /* ========================================
+       Slideshow Controller
+       ======================================== */
+
+    const CONFIG = {
+      interval: 3000,
+      transitionDuration: 600,
+      loop: true
+    };
+
+    class Slideshow {
+      constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.dotsContainer = document.querySelector('.slide-dots');
+        this.navLinks = document.querySelectorAll('.masthead-link');
+        this.progressBar = document.querySelector('.progress-bar');
+        this.pauseIndicator = document.querySelector('.pause-indicator');
+        this.counterCurrent = document.querySelector('.slide-counter .current');
+        this.counterTotal = document.querySelector('.slide-counter .total');
+
+        this.currentIndex = 0;
+        this.isPlaying = true;
+        this.progressInterval = null;
+        this.progress = 0;
+
+        this.init();
+      }
+
+      init() {
+        // Generate dots
+        this.slides.forEach((_, index) => {
+          const dot = document.createElement('div');
+          dot.className = `slide-dot${index === 0 ? ' active' : ''}`;
+          dot.dataset.slide = index;
+          dot.addEventListener('click', () => this.goToSlide(index));
+          this.dotsContainer.appendChild(dot);
+        });
+        this.dots = document.querySelectorAll('.slide-dot');
+
+        // Update counter
+        this.counterTotal.textContent = this.slides.length;
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => this.handleKeydown(e));
+
+        // Masthead navigation
+        this.navLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            const section = link.dataset.section;
+            const slideIndex = [...this.slides].findIndex(
+              slide => slide.dataset.section === section
+            );
+            if (slideIndex !== -1) this.goToSlide(slideIndex);
+          });
+        });
+
+        // Generate word cloud when that slide becomes active
+        this.generateWordCloudOnce = false;
+
+        // Generate sunburst when that slide becomes active
+        this.generateSunburstOnce = false;
+
+        // Start autoplay
+        this.startAutoplay();
+      }
+
+      handleKeydown(e) {
+        switch (e.code) {
+          case 'Space':
+            e.preventDefault();
+            this.togglePlayPause();
+            break;
+          case 'ArrowRight':
+            this.next();
+            break;
+          case 'ArrowLeft':
+            this.prev();
+            break;
+          case 'Escape':
+            if (!this.isPlaying) this.play();
+            break;
+        }
+      }
+
+      goToSlide(index) {
+        if (index < 0 || index >= this.slides.length) return;
+
+        // Update slides
+        this.slides[this.currentIndex].classList.remove('active');
+        this.slides[index].classList.add('active');
+
+        // Update body background for wordcloud slide
+        if (this.slides[index].classList.contains('slide-wordcloud')) {
+          document.body.classList.add('wordcloud-active');
+        } else {
+          document.body.classList.remove('wordcloud-active');
+        }
+
+        // Update dots
+        this.dots[this.currentIndex].classList.remove('active');
+        this.dots[index].classList.add('active');
+
+        // Update masthead
+        const section = this.slides[index].dataset.section;
+        this.navLinks.forEach(link => {
+          link.classList.toggle('active', link.dataset.section === section);
+        });
+
+        // Update counter
+        this.counterCurrent.textContent = index + 1;
+
+        this.currentIndex = index;
+
+        // Generate word cloud if on that slide
+        if (this.slides[index].classList.contains('slide-wordcloud') && !this.generateWordCloudOnce) {
+          setTimeout(generateWordCloud, 100);
+          this.generateWordCloudOnce = true;
+        }
+
+        // Generate sunburst if on that slide
+        if (this.slides[index].classList.contains('slide-sunburst') && !this.generateSunburstOnce) {
+          setTimeout(generateSunburst, 100);
+          this.generateSunburstOnce = true;
+        }
+
+        // Reset progress
+        this.resetProgress();
+      }
+
+      next() {
+        let nextIndex = this.currentIndex + 1;
+        if (nextIndex >= this.slides.length) {
+          nextIndex = CONFIG.loop ? 0 : this.slides.length - 1;
+        }
+        this.goToSlide(nextIndex);
+      }
+
+      prev() {
+        let prevIndex = this.currentIndex - 1;
+        if (prevIndex < 0) {
+          prevIndex = CONFIG.loop ? this.slides.length - 1 : 0;
+        }
+        this.goToSlide(prevIndex);
+      }
+
+      getCurrentDuration() {
+        const slide = this.slides[this.currentIndex];
+        return parseInt(slide.dataset.duration) || CONFIG.interval;
+      }
+
+      togglePlayPause() {
+        if (this.isPlaying) {
+          this.pause();
+        } else {
+          this.play();
+        }
+      }
+
+      play() {
+        this.isPlaying = true;
+        this.pauseIndicator.classList.remove('visible');
+        this.startAutoplay();
+      }
+
+      pause() {
+        this.isPlaying = false;
+        this.pauseIndicator.classList.add('visible');
+        this.stopAutoplay();
+
+        setTimeout(() => {
+          if (!this.isPlaying) {
+            this.pauseIndicator.classList.remove('visible');
+          }
+        }, 1000);
+      }
+
+      startAutoplay() {
+        this.stopAutoplay();
+
+        this.progress = 0;
+        this.progressBar.style.width = '0%';
+
+        const duration = this.getCurrentDuration();
+        this.progressInterval = setInterval(() => {
+          this.progress += 100 / (duration / 100);
+          this.progressBar.style.width = `${this.progress}%`;
+
+          if (this.progress >= 100) {
+            this.next();
+          }
+        }, 100);
+      }
+
+      stopAutoplay() {
+        clearInterval(this.progressInterval);
+      }
+
+      resetProgress() {
+        this.progress = 0;
+        this.progressBar.style.width = '0%';
+
+        if (this.isPlaying) {
+          this.startAutoplay();
+        }
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      new Slideshow();
+    });
+  </script>
+</body>
+</html>
