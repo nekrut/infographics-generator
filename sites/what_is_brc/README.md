@@ -11,22 +11,22 @@ An interactive slideshow introducing BRC Analytics - a free, browser-based platf
 13 slides covering:
 
 1. **BRC Analytics** - Key metrics (5,060 assemblies, 1,920 taxa, FREE compute)
-2. **Find Your Pathogen Data** - Browse NCBI, ENA, or upload your own
-3. **Select a Workflow** - Curated IWC pipelines
-4. **Run Your Analysis** - Cloud compute via ACCESS-CI/TACC
-5. **Interpret & Publish** - Jupyter notebooks, visualizations
-6. **Integrated Data Sources** - NCBI, UCSC, ENA integration
-7. **Cloud-Powered Infrastructure** - ACCESS-CI map
-8. **Reproducibility Built-In** - Workflow versioning, audit trails
-9. **Pathogen Taxonomy Browser** - Interactive sunburst with 1,920 taxa
-10. **Analysis Workflows** - Variant calling, RNA-seq, assembly
-11. **Validated Research** - Measles & C. auris case studies
+2. **Find organism** - Select from 1,920 taxa
+3. **Select genome** - Select from 5,060 genome assemblies
+4. **Select workflow** - Best-practice workflows
+5. **Select data** - From SRA or upload your own
+6. **Run workflow** - One or 1,000,000 samples
+7. **Interpret!** - Analyze and publish
+8. **Best data source in one package** - Battle tested resources (whatIsBrc.svg)
+9. **Cloud-Powered Infrastructure** - ACCESS-CI map
+10. **Pathogen Taxonomy Browser** - Interactive sunburst with 1,920 taxa
+11. **Analysis Workflows** - Variant calling, RNA-seq, assembly
 12. **Key Links** - Quick access to BRC resources
 13. **QR Code** - Scan to visit brc-analytics.org
 
 ## Features
 
-### Interactive Sunburst (Slide 9)
+### Interactive Sunburst (Slide 10)
 - Circular phylogeny browser showing all pathogen taxa
 - Click to drill down into taxonomy levels
 - Side panel with subcategories and assembly counts
@@ -67,22 +67,22 @@ python3 -m http.server 8080
 
 Note: Must use HTTP server (not file://) for the sunburst visualization to load taxonomy data.
 
-## Images Needed
+## Images
 
-Place in `images/` directory:
+All images in `images/` directory:
 
 | File | Description |
 |------|-------------|
-| `data-browser.png` | Screenshot of BRC data browser |
-| `workflow-selection.png` | Workflow selection interface |
-| `analysis-running.png` | Analysis in progress view |
-| `results-viz.png` | Results/Jupyter visualization |
-| `phylogenetic-tree.png` | From measles case study |
+| `select-species.png` | Find organism interface |
+| `select-assembly.png` | Select genome interface |
+| `select-workflow.png` | Workflow selection interface |
+| `find-data.png` | Data selection interface |
+| `run-wf.png` | Run workflow interface |
+| `interpret.png` | Results/interpretation interface |
+| `whatIsBrc.svg` | BRC data sources infographic |
+| `access-map.svg` | ACCESS-CI infrastructure map |
+| `brc-logo.svg` | BRC Analytics logo |
 | `qr-code.png` | QR code for brc-analytics.org |
-
-### Already Included
-- `access-map.svg` - ACCESS-CI infrastructure map
-- `brc-logo.svg` - BRC Analytics logo
 
 ## Data Files
 
