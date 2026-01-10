@@ -68,10 +68,10 @@ Workflows 1-9 cover the main assembly pipeline, with Workflow 0 dedicated to mit
 
 ---
 
-# [pipeline] Decontamination
-> type: workflow
+# [pipeline] VGP Workflow Modules
+> type: image-click
 
-- VGP9 Decontamination | Assembly, NCBI taxon ID | Clean assembly, Contaminants
+![VGP Workflow Modules](images/VGP_workflow_modules.svg)
 
 ---
 

@@ -1200,6 +1200,82 @@
         font-size: 11px;
       }
     }
+
+    /* Fullscreen Image Modal */
+    .fullscreen-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      cursor: zoom-out;
+    }
+
+    .fullscreen-modal.active {
+      display: flex;
+    }
+
+    .fullscreen-modal img {
+      max-width: 95%;
+      max-height: 95%;
+      object-fit: contain;
+    }
+
+    .fullscreen-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .fullscreen-close:hover {
+      opacity: 1;
+    }
+
+    /* Clickable Image Slide */
+    .slide-image-click {
+      background: var(--color-bg-light);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide-image-click .slide-title {
+      font-size: 38px;
+      font-weight: 600;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+      color: var(--color-text-dark);
+    }
+
+    .slide-image-click .clickable-image {
+      max-width: 90%;
+      max-height: 70vh;
+      cursor: zoom-in;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .slide-image-click .clickable-image:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .slide-image-click .click-hint {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #86868b;
+    }
   </style>
 
   <!-- Vega-Lite for interactive visualizations -->
@@ -1245,6 +1321,12 @@
 
   <!-- Pause Indicator -->
   <div class="pause-indicator">Paused</div>
+
+  <!-- Fullscreen Image Modal -->
+  <div class="fullscreen-modal" id="fullscreen-modal">
+    <span class="fullscreen-close">&times;</span>
+    <img id="fullscreen-image" src="" alt="Fullscreen view">
+  </div>
 
   <script>
     /* ========================================
@@ -1650,6 +1732,37 @@
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       new Slideshow();
+
+      // Fullscreen image modal
+      const modal = document.getElementById('fullscreen-modal');
+      const modalImg = document.getElementById('fullscreen-image');
+      const closeBtn = modal.querySelector('.fullscreen-close');
+
+      // Click on clickable images to open fullscreen
+      document.querySelectorAll('.clickable-image').forEach(img => {
+        img.addEventListener('click', () => {
+          modalImg.src = img.src;
+          modal.classList.add('active');
+        });
+      });
+
+      // Close modal
+      closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+      });
+
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+        }
+      });
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+          modal.classList.remove('active');
+        }
+      });
     });
   </script>
 </body>

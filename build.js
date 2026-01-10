@@ -24,6 +24,7 @@ const SLIDE_TYPES = {
   wordcloud: /^>\s*type:\s*wordcloud/m,
   scatter: /^>\s*type:\s*scatter/m,
   workflow: /^>\s*type:\s*workflow/m,
+  imageclick: /^>\s*type:\s*image-click/m,
   sunburst: /^>\s*type:\s*sunburst/m,
   ecosystem: /^>\s*type:\s*ecosystem/m,
   galaxies: /^>\s*type:\s*galaxies/m,
@@ -122,6 +123,13 @@ function parseSlide(content, index) {
         outputs: match[4].split(',').map(s => s.trim())
       });
     }
+  } else if (SLIDE_TYPES.imageclick.test(content)) {
+    slide.type = 'imageclick';
+    // Parse image
+    const imgMatch = content.match(/!\[([^\]]*)\]\(([^)]+)\)/);
+    if (imgMatch) {
+      slide.image = { alt: imgMatch[1], src: imgMatch[2] };
+    }
   } else if (SLIDE_TYPES.sunburst.test(content)) {
     slide.type = 'sunburst';
   } else if (SLIDE_TYPES.ecosystem.test(content)) {
@@ -189,6 +197,8 @@ function generateSlideHTML(slide) {
       return generateScatterSlide(slide, activeClass);
     case 'workflow':
       return generateWorkflowSlide(slide, activeClass);
+    case 'imageclick':
+      return generateImageClickSlide(slide, activeClass);
     case 'sunburst':
       return generateSunburstSlide(slide, activeClass);
     case 'ecosystem':
@@ -311,6 +321,19 @@ function generateWorkflowSlide(slide, activeClass) {
       <div class="workflow-container">
 ${workflowsHTML}
       </div>
+    </section>`;
+}
+
+function generateImageClickSlide(slide, activeClass) {
+  const imgHTML = slide.image ?
+    `<img class="clickable-image" src="${slide.image.src}" alt="${slide.image.alt}">` : '';
+
+  return `
+    <!-- Slide ${slide.index + 1}: ${slide.title} -->
+    <section class="slide slide-image-click${activeClass}" data-section="${slide.section}">
+      <h1 class="slide-title">${slide.title}</h1>
+      ${imgHTML}
+      <p class="click-hint">Click image to view fullscreen</p>
     </section>`;
 }
 
