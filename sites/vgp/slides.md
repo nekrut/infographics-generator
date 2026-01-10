@@ -23,15 +23,18 @@ masthead:
 
 ---
 
-# [overview] Genome Assemblies Completed
-> Reference-quality genomes across the vertebrate tree of life
+# [overview] Genome Assemblies: Size vs Quality
+> split
 
-| Stat | Label |
-|------|-------|
-| 521 | genome assemblies |
-| 274 | unique species |
-| 89 | chromosome-level |
-| 179 | with mitogenome |
+257 reference-quality genome assemblies spanning genome sizes from 0.4 to 8.5 Gb.
+
+Scaffold N50 values range from 17 to 793 Mb, demonstrating chromosome-level assembly quality across diverse vertebrate lineages.
+
+::: highlight
+Assemblies span mammals, birds, fish, reptiles, amphibians, and sharks.
+:::
+
+![Genome Size vs N50](images/genome-scatter.svg)
 
 ---
 
