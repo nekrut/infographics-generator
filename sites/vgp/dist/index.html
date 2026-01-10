@@ -1005,7 +1005,51 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* Scatter Plot Slide */
+    .slide-scatter {
+      background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 30px 30px;
+    }
+
+    .slide-scatter .slide-title {
+      font-size: 38px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: 16px;
+      color: var(--color-text-light);
+    }
+
+    #scatter-container {
+      width: 100%;
+      max-width: 900px;
+      height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #scatter-container .vega-embed {
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .slide-scatter .slide-title {
+        font-size: 24px;
+      }
+      #scatter-container {
+        height: 60vh;
+      }
+    }
   </style>
+
+  <!-- Vega-Lite for interactive visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 </head>
 <body>
   <!-- Masthead -->
@@ -1051,18 +1095,10 @@
     </section>
 
     <!-- Slide 2: Genome Assemblies: Size vs Quality -->
-    <section class="slide" data-section="overview">
-      <div class="slide-split">
-        <div class="content-side">
-          <h1 class="slide-title">Genome Assemblies: Size vs Quality</h1>
-          <p class="slide-text">257 reference-quality genome assemblies spanning genome sizes from 0.4 to 8.5 Gb.</p>
-          <p class="slide-text">Scaffold N50 values range from 17 to 793 Mb, demonstrating chromosome-level assembly quality across diverse vertebrate lineages.</p>
-          <div class="slide-highlight">Assemblies span mammals, birds, fish, reptiles, amphibians, and sharks.</div>
-        </div>
-        <div class="image-side">
-          <img src="images/genome-scatter.svg" alt="Genome Size vs N50">
-        </div>
-      </div>
+    <section class="slide slide-intro" data-section="overview">
+      <h1 class="slide-title">Genome Assemblies: Size vs Quality</h1>
+      <p class="slide-subtitle"></p>
+      
     </section>
 
     <!-- Slide 3: Building the Tree of Life -->
@@ -1256,6 +1292,2085 @@
     ];
 
     /* ========================================
+       Scatter Plot Data and Generator
+       ======================================== */
+
+    const SCATTER_DATA = [
+  {
+    "species": "Gastrophryne carolinensis",
+    "common_name": "Eastern narrowmouth toad",
+    "genome_size_gb": 4.1,
+    "n50_mb": 513.4,
+    "heterozygosity": 1.45,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Gastrophryne carolinensis",
+    "common_name": "Eastern narrowmouth toad",
+    "genome_size_gb": 4.1,
+    "n50_mb": 517.5,
+    "heterozygosity": 1.45,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Hyla sarda",
+    "common_name": "Sardinian tree frog",
+    "genome_size_gb": 3.75,
+    "n50_mb": 417.7,
+    "heterozygosity": 1.08,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Hyla sarda",
+    "common_name": "Sardinian tree frog",
+    "genome_size_gb": 3.75,
+    "n50_mb": 380.6,
+    "heterozygosity": 1.08,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Pseudophryne corroboree",
+    "common_name": "Corroboree frog",
+    "genome_size_gb": 8.46,
+    "n50_mb": 792.6,
+    "heterozygosity": 0.47,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Spea bombifrons",
+    "common_name": "Plain's spadefoot toad",
+    "genome_size_gb": 0.96,
+    "n50_mb": 109.4,
+    "heterozygosity": 1.73,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Acridotheres tristis",
+    "common_name": "Common myna",
+    "genome_size_gb": 1.35,
+    "n50_mb": 71.9,
+    "heterozygosity": 0.56,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Ammodramus caudacutus",
+    "common_name": "Salt marsh sparrow",
+    "genome_size_gb": 1.23,
+    "n50_mb": 34.3,
+    "heterozygosity": 0.24,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Ammospiza nelsoni",
+    "common_name": "Nelson's sparrow",
+    "genome_size_gb": 1.19,
+    "n50_mb": 40.2,
+    "heterozygosity": 0.57,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Ara ararauna",
+    "common_name": "Blue-and-gold macaw",
+    "genome_size_gb": 1.22,
+    "n50_mb": 109.5,
+    "heterozygosity": 0.32,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Ara ararauna",
+    "common_name": "Blue-and-gold macaw",
+    "genome_size_gb": 1.22,
+    "n50_mb": 103.6,
+    "heterozygosity": 0.32,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Colius striatus",
+    "common_name": "Speckled mousebird",
+    "genome_size_gb": 1.13,
+    "n50_mb": 58.8,
+    "heterozygosity": 0.65,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Colius striatus",
+    "common_name": "Speckled mousebird",
+    "genome_size_gb": 1.13,
+    "n50_mb": 59.2,
+    "heterozygosity": 0.65,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Corvus hawaiiensis",
+    "common_name": "Hawaiian crow",
+    "genome_size_gb": 1.08,
+    "n50_mb": 65.8,
+    "heterozygosity": 0.34,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Dixiphia pipra",
+    "common_name": "White-crowned manakin",
+    "genome_size_gb": 0.99,
+    "n50_mb": 75.0,
+    "heterozygosity": 1.16,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Dixiphia pipra",
+    "common_name": "White-crowned manakin",
+    "genome_size_gb": 0.99,
+    "n50_mb": 75.6,
+    "heterozygosity": 1.16,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Melospiza georgiana",
+    "common_name": "Swamp sparrow",
+    "genome_size_gb": 1.33,
+    "n50_mb": 55.4,
+    "heterozygosity": 1.17,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Opisthocomus hoazin",
+    "common_name": "Hoatzin",
+    "genome_size_gb": 1.32,
+    "n50_mb": 78.1,
+    "heterozygosity": 0.58,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Opisthocomus hoazin",
+    "common_name": "Hoatzin",
+    "genome_size_gb": 1.32,
+    "n50_mb": 81.1,
+    "heterozygosity": 0.58,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Podargus strigoides",
+    "common_name": "Tawny frogmouth",
+    "genome_size_gb": 1.09,
+    "n50_mb": 46.4,
+    "heterozygosity": 1.33,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Poecile atricapillus",
+    "common_name": "Black-capped chickadee",
+    "genome_size_gb": 1.05,
+    "n50_mb": 66.6,
+    "heterozygosity": 0.89,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Poecile atricapillus",
+    "common_name": "Black-capped chickadee",
+    "genome_size_gb": 1.05,
+    "n50_mb": 116.8,
+    "heterozygosity": 0.89,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Rhea pennata",
+    "common_name": "Darwin's southern rhea",
+    "genome_size_gb": 1.26,
+    "n50_mb": 79.5,
+    "heterozygosity": 0.45,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Rhynochetos jubatus",
+    "common_name": "Kagu",
+    "genome_size_gb": 1.31,
+    "n50_mb": 34.9,
+    "heterozygosity": 0.6,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Spheniscus humboldti",
+    "common_name": "Humboldt penguin",
+    "genome_size_gb": 1.25,
+    "n50_mb": 83.4,
+    "heterozygosity": 0.43,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Taeniopygia guttata",
+    "common_name": "Zebra finch",
+    "genome_size_gb": 1.01,
+    "n50_mb": 69.0,
+    "heterozygosity": 1.47,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Hoplias malabaricus",
+    "common_name": "Trahira",
+    "genome_size_gb": 1.01,
+    "n50_mb": 47.6,
+    "heterozygosity": 0.67,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Hoplias malabaricus",
+    "common_name": "Trahira",
+    "genome_size_gb": 1.01,
+    "n50_mb": 49.4,
+    "heterozygosity": 0.67,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Lampris incognitus",
+    "common_name": "Smalleye opah",
+    "genome_size_gb": 1.33,
+    "n50_mb": 62.0,
+    "heterozygosity": 1.06,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Lampris incognitus",
+    "common_name": "Smalleye opah",
+    "genome_size_gb": 1.33,
+    "n50_mb": 61.4,
+    "heterozygosity": 1.06,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Lycodopsis pacificus",
+    "common_name": "Blackbelly eelpout",
+    "genome_size_gb": 0.59,
+    "n50_mb": 27.5,
+    "heterozygosity": 0.86,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Neoarius graeffei",
+    "common_name": "Blue salmon catfish",
+    "genome_size_gb": 2.42,
+    "n50_mb": 81.1,
+    "heterozygosity": 0.49,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Odontesthes bonariensis",
+    "common_name": "Pejerrey",
+    "genome_size_gb": 0.92,
+    "n50_mb": 30.6,
+    "heterozygosity": 0.43,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Salminus brasiliensis",
+    "common_name": "Golden dorado",
+    "genome_size_gb": 1.07,
+    "n50_mb": 38.9,
+    "heterozygosity": 0.8,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Salminus brasiliensis",
+    "common_name": "Golden dorado",
+    "genome_size_gb": 1.07,
+    "n50_mb": 39.8,
+    "heterozygosity": 0.8,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Scomber japonicus",
+    "common_name": "chub mackerel",
+    "genome_size_gb": 0.69,
+    "n50_mb": 22.2,
+    "heterozygosity": 1.22,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Trichomycterus rosablanca",
+    "common_name": "Rosablanca cavefish",
+    "genome_size_gb": 1.0,
+    "n50_mb": 40.2,
+    "heterozygosity": 0.13,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Trichomycterus rosablanca",
+    "common_name": "Rosablanca cavefish",
+    "genome_size_gb": 1.0,
+    "n50_mb": 38.1,
+    "heterozygosity": 0.13,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Balaenoptera ricei",
+    "common_name": "Rice's whale",
+    "genome_size_gb": 2.7,
+    "n50_mb": 108.2,
+    "heterozygosity": 0.06,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Cynocephalus volans",
+    "common_name": "Philippine flying lemur",
+    "genome_size_gb": 2.72,
+    "n50_mb": 124.9,
+    "heterozygosity": 0.61,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Dasypus novemcinctus",
+    "common_name": "Nine-banded armadillo",
+    "genome_size_gb": 3.24,
+    "n50_mb": 78.9,
+    "heterozygosity": 0.6,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Dasypus novemcinctus",
+    "common_name": "Nine-banded armadillo",
+    "genome_size_gb": 3.24,
+    "n50_mb": 101.4,
+    "heterozygosity": 0.6,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Dugong dugon",
+    "common_name": "Dugong",
+    "genome_size_gb": 3.16,
+    "n50_mb": 177.4,
+    "heterozygosity": 0.17,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Dugong dugon",
+    "common_name": "Dugong",
+    "genome_size_gb": 3.16,
+    "n50_mb": 138.0,
+    "heterozygosity": 0.17,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Eschrichtius robustus",
+    "common_name": "Gray whale",
+    "genome_size_gb": 2.73,
+    "n50_mb": 107.0,
+    "heterozygosity": 0.3,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Eubalaena glacialis",
+    "common_name": "North Atlantic right whale",
+    "genome_size_gb": 2.66,
+    "n50_mb": 84.4,
+    "heterozygosity": 0.22,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Eubalaena glacialis",
+    "common_name": "North Atlantic right whale",
+    "genome_size_gb": 2.66,
+    "n50_mb": 84.4,
+    "heterozygosity": 0.22,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Hippopotamus amphibius",
+    "common_name": "East African river hippopotamus",
+    "genome_size_gb": 2.55,
+    "n50_mb": 129.8,
+    "heterozygosity": 0.0,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Hippopotamus amphibius",
+    "common_name": "East African river hippopotamus",
+    "genome_size_gb": 2.55,
+    "n50_mb": 136.5,
+    "heterozygosity": 0.0,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Loxodonta africana",
+    "common_name": "African elephant",
+    "genome_size_gb": 3.4,
+    "n50_mb": 116.1,
+    "heterozygosity": 0.32,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Loxodonta africana",
+    "common_name": "African elephant",
+    "genome_size_gb": 3.4,
+    "n50_mb": 109.3,
+    "heterozygosity": 0.32,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Macropus eugenii",
+    "common_name": "Tammar wallaby",
+    "genome_size_gb": 3.31,
+    "n50_mb": 488.0,
+    "heterozygosity": 0.33,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Manis pentadactyla",
+    "common_name": "Chinese pangolin",
+    "genome_size_gb": 2.73,
+    "n50_mb": 132.3,
+    "heterozygosity": 0.21,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Manis pentadactyla",
+    "common_name": "Chinese pangolin",
+    "genome_size_gb": 2.73,
+    "n50_mb": 139.4,
+    "heterozygosity": 0.21,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Mesoplodon densirostris",
+    "common_name": "Blainville's beak whale",
+    "genome_size_gb": 3.13,
+    "n50_mb": 88.7,
+    "heterozygosity": 0.29,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Monodelphis domestica",
+    "common_name": "Gray short-tailed opossum",
+    "genome_size_gb": 3.22,
+    "n50_mb": 518.6,
+    "heterozygosity": 0.81,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Neofelis nebulosa",
+    "common_name": "Clouded leopard",
+    "genome_size_gb": 2.4,
+    "n50_mb": 135.0,
+    "heterozygosity": 0.36,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Sorex araneus",
+    "common_name": "Common shrew",
+    "genome_size_gb": 2.23,
+    "n50_mb": 231.2,
+    "heterozygosity": 1.14,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Candoia aspera",
+    "common_name": "Viper boa",
+    "genome_size_gb": 1.47,
+    "n50_mb": 209.8,
+    "heterozygosity": 0.49,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Candoia aspera",
+    "common_name": "Viper boa",
+    "genome_size_gb": 1.47,
+    "n50_mb": 209.3,
+    "heterozygosity": 0.49,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Emys orbicularis",
+    "common_name": "European pond turtle",
+    "genome_size_gb": 2.27,
+    "n50_mb": 137.7,
+    "heterozygosity": 0.28,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Euleptes europaea",
+    "common_name": "European leaf-tailed gecko",
+    "genome_size_gb": 1.59,
+    "n50_mb": 101.9,
+    "heterozygosity": 0.92,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Gavialis gangeticus",
+    "common_name": "Gharial",
+    "genome_size_gb": 2.3,
+    "n50_mb": 255.8,
+    "heterozygosity": 0.12,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Gavialis gangeticus",
+    "common_name": "Gharial",
+    "genome_size_gb": 2.3,
+    "n50_mb": 298.3,
+    "heterozygosity": 0.12,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Liasis olivaceus",
+    "common_name": "Olive python",
+    "genome_size_gb": 1.45,
+    "n50_mb": 203.5,
+    "heterozygosity": 0.19,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Alligator mississippiensis",
+    "common_name": "American alligator",
+    "genome_size_gb": 2.29,
+    "n50_mb": 256.3,
+    "heterozygosity": 0.21,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Alligator mississippiensis",
+    "common_name": "American alligator",
+    "genome_size_gb": 2.29,
+    "n50_mb": 292.7,
+    "heterozygosity": 0.21,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Vipera latastei",
+    "common_name": "Snub-nosed viper",
+    "genome_size_gb": 1.44,
+    "n50_mb": 175.7,
+    "heterozygosity": 0.52,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Hypanus sabinus",
+    "common_name": "Atlantic stingray",
+    "genome_size_gb": 3.47,
+    "n50_mb": 109.8,
+    "heterozygosity": 0.44,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Hypanus sabinus",
+    "common_name": "Atlantic stingray",
+    "genome_size_gb": 3.47,
+    "n50_mb": 158.6,
+    "heterozygosity": 0.44,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Mobula giorna",
+    "common_name": "Atlantic manta ray",
+    "genome_size_gb": 3.42,
+    "n50_mb": 63.9,
+    "heterozygosity": 0.36,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Mobula giorna",
+    "common_name": "Atlantic manta ray",
+    "genome_size_gb": 3.42,
+    "n50_mb": 65.9,
+    "heterozygosity": 0.36,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Anomaloglossus baeobatrachus",
+    "common_name": "Edward's rocket frog",
+    "genome_size_gb": 5.95,
+    "n50_mb": 545.8,
+    "heterozygosity": 1.18,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Anomaloglossus baeobatrachus",
+    "common_name": "Edward's rocket frog",
+    "genome_size_gb": 5.95,
+    "n50_mb": 714.8,
+    "heterozygosity": 1.18,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Ascaphus truei",
+    "common_name": "tailed frog",
+    "genome_size_gb": 3.15,
+    "n50_mb": 437.1,
+    "heterozygosity": 1.14,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Ascaphus truei",
+    "common_name": "tailed frog",
+    "genome_size_gb": 3.15,
+    "n50_mb": 330.9,
+    "heterozygosity": 1.14,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Leptodactylus fuscus",
+    "common_name": "rufous frog",
+    "genome_size_gb": 1.88,
+    "n50_mb": 232.4,
+    "heterozygosity": 0.5,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Leptodactylus fuscus",
+    "common_name": "rufous frog",
+    "genome_size_gb": 1.88,
+    "n50_mb": 282.6,
+    "heterozygosity": 0.5,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Mixophyes fleayi",
+    "common_name": "Fleay's barred frog",
+    "genome_size_gb": 2.76,
+    "n50_mb": 346.5,
+    "heterozygosity": 0.95,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Mixophyes fleayi",
+    "common_name": "Fleay's barred frog",
+    "genome_size_gb": 2.76,
+    "n50_mb": 332.1,
+    "heterozygosity": 0.95,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Rhinophrynus dorsalis",
+    "common_name": "Mexican burrowing toad",
+    "genome_size_gb": 4.23,
+    "n50_mb": 692.5,
+    "heterozygosity": 0.79,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Rhinophrynus dorsalis",
+    "common_name": "Mexican burrowing toad",
+    "genome_size_gb": 4.23,
+    "n50_mb": 594.3,
+    "heterozygosity": 0.79,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Amazona ochrocephala",
+    "common_name": "yellow-crowned amazon",
+    "genome_size_gb": 1.23,
+    "n50_mb": 86.2,
+    "heterozygosity": 0.7,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Amazona ochrocephala",
+    "common_name": "yellow-crowned amazon",
+    "genome_size_gb": 1.23,
+    "n50_mb": 71.3,
+    "heterozygosity": 0.7,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Caloenas nicobarica",
+    "common_name": "Nicobar pigeon",
+    "genome_size_gb": 1.14,
+    "n50_mb": 79.7,
+    "heterozygosity": 0.48,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Caloenas nicobarica",
+    "common_name": "Nicobar pigeon",
+    "genome_size_gb": 1.14,
+    "n50_mb": 103.8,
+    "heterozygosity": 0.48,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Coturnix chinensis",
+    "common_name": "king/button quail",
+    "genome_size_gb": 0.88,
+    "n50_mb": 85.7,
+    "heterozygosity": 1.12,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Coturnix chinensis",
+    "common_name": "king/button quail",
+    "genome_size_gb": 0.88,
+    "n50_mb": 86.4,
+    "heterozygosity": 1.12,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Dromaius novaehollandiae",
+    "common_name": "emu",
+    "genome_size_gb": 1.35,
+    "n50_mb": 86.0,
+    "heterozygosity": 0.32,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Dromaius novaehollandiae",
+    "common_name": "emu",
+    "genome_size_gb": 1.35,
+    "n50_mb": 71.8,
+    "heterozygosity": 0.32,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Gavia stellata",
+    "common_name": "red-throated loon",
+    "genome_size_gb": 1.26,
+    "n50_mb": 44.5,
+    "heterozygosity": 0.4,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Gavia stellata",
+    "common_name": "red-throated loon",
+    "genome_size_gb": 1.26,
+    "n50_mb": 50.6,
+    "heterozygosity": 0.4,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Heliangelus exortis",
+    "common_name": "tourmaline sunangel",
+    "genome_size_gb": 0.95,
+    "n50_mb": 73.8,
+    "heterozygosity": 1.04,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Heliangelus exortis",
+    "common_name": "tourmaline sunangel",
+    "genome_size_gb": 0.95,
+    "n50_mb": 44.5,
+    "heterozygosity": 1.04,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Lathamus discolor",
+    "common_name": "swift parrot",
+    "genome_size_gb": 1.1,
+    "n50_mb": 127.4,
+    "heterozygosity": 0.79,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Lathamus discolor",
+    "common_name": "swift parrot",
+    "genome_size_gb": 1.1,
+    "n50_mb": 127.2,
+    "heterozygosity": 0.79,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Leptosomus discolor",
+    "common_name": "cuckoo-roller",
+    "genome_size_gb": 1.23,
+    "n50_mb": 74.8,
+    "heterozygosity": 0.45,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Leptosomus discolor",
+    "common_name": "cuckoo-roller",
+    "genome_size_gb": 1.23,
+    "n50_mb": 82.1,
+    "heterozygosity": 0.45,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Mergus octosetaceus",
+    "common_name": "Brazilian merganser",
+    "genome_size_gb": 1.11,
+    "n50_mb": 78.0,
+    "heterozygosity": 0.46,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Mergus octosetaceus",
+    "common_name": "Brazilian merganser",
+    "genome_size_gb": 1.11,
+    "n50_mb": 77.7,
+    "heterozygosity": 0.46,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Molothrus ater",
+    "common_name": "brown-headed cowbird",
+    "genome_size_gb": 1.1,
+    "n50_mb": 63.0,
+    "heterozygosity": 1.02,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Molothrus ater",
+    "common_name": "brown-headed cowbird",
+    "genome_size_gb": 1.1,
+    "n50_mb": 63.2,
+    "heterozygosity": 1.02,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Morus bassanus",
+    "common_name": "Northern gannet",
+    "genome_size_gb": 1.3,
+    "n50_mb": 67.0,
+    "heterozygosity": 0.1,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Morus bassanus",
+    "common_name": "Northern gannet",
+    "genome_size_gb": 1.3,
+    "n50_mb": 85.6,
+    "heterozygosity": 0.1,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Strix aluco",
+    "common_name": "tawny owl",
+    "genome_size_gb": 1.25,
+    "n50_mb": 49.7,
+    "heterozygosity": 0.52,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Strix aluco",
+    "common_name": "tawny owl",
+    "genome_size_gb": 1.25,
+    "n50_mb": 89.7,
+    "heterozygosity": 0.52,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "",
+    "common_name": "",
+    "genome_size_gb": 0.63,
+    "n50_mb": 28.2,
+    "heterozygosity": 0.41,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Cyprinella venusta",
+    "common_name": "blacktail shiner",
+    "genome_size_gb": 0.86,
+    "n50_mb": 36.0,
+    "heterozygosity": 1.4,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Cyprinella venusta",
+    "common_name": "blacktail shiner",
+    "genome_size_gb": 0.86,
+    "n50_mb": 34.3,
+    "heterozygosity": 1.4,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Fundulus diaphanus",
+    "common_name": "banded killifish",
+    "genome_size_gb": 1.26,
+    "n50_mb": 64.0,
+    "heterozygosity": 0.32,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Fundulus diaphanus",
+    "common_name": "banded killifish",
+    "genome_size_gb": 1.26,
+    "n50_mb": 56.5,
+    "heterozygosity": 0.32,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Astatotilapia burtoni",
+    "common_name": "Burton's mouthbrooder",
+    "genome_size_gb": 0.83,
+    "n50_mb": 40.6,
+    "heterozygosity": 0.48,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Astatotilapia burtoni",
+    "common_name": "Burton's mouthbrooder",
+    "genome_size_gb": 0.83,
+    "n50_mb": 46.6,
+    "heterozygosity": 0.48,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Astatotilapia burtoni",
+    "common_name": "Burton's mouthbrooder",
+    "genome_size_gb": 0.85,
+    "n50_mb": 40.6,
+    "heterozygosity": 0.54,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Astatotilapia burtoni",
+    "common_name": "Burton's mouthbrooder",
+    "genome_size_gb": 0.85,
+    "n50_mb": 46.3,
+    "heterozygosity": 0.54,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Myoxocephalus scorpius",
+    "common_name": "shorthorn sculpin",
+    "genome_size_gb": 0.62,
+    "n50_mb": 36.4,
+    "heterozygosity": 1.12,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Myoxocephalus scorpius",
+    "common_name": "shorthorn sculpin",
+    "genome_size_gb": 0.62,
+    "n50_mb": 36.6,
+    "heterozygosity": 1.12,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Pseudopleuronectes americanus",
+    "common_name": "winter flounder",
+    "genome_size_gb": 0.47,
+    "n50_mb": 23.5,
+    "heterozygosity": 1.16,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Pseudopleuronectes americanus",
+    "common_name": "winter flounder",
+    "genome_size_gb": 0.47,
+    "n50_mb": 25.9,
+    "heterozygosity": 1.16,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Salvelinus alpinus",
+    "common_name": "Arctic char",
+    "genome_size_gb": 1.91,
+    "n50_mb": 57.6,
+    "heterozygosity": 0.93,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Salvelinus alpinus",
+    "common_name": "Arctic char",
+    "genome_size_gb": 1.91,
+    "n50_mb": 41.5,
+    "heterozygosity": 0.93,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Branchiostoma lanceolatum",
+    "common_name": "European lancelet",
+    "genome_size_gb": 0.42,
+    "n50_mb": 23.1,
+    "heterozygosity": 4.12,
+    "tax_class": "Other"
+  },
+  {
+    "species": "Branchiostoma lanceolatum",
+    "common_name": "European lancelet",
+    "genome_size_gb": 0.42,
+    "n50_mb": 23.1,
+    "heterozygosity": 4.12,
+    "tax_class": "Other"
+  },
+  {
+    "species": "Artibeus intermedius",
+    "common_name": "intermediate fruit-eating bat",
+    "genome_size_gb": 2.11,
+    "n50_mb": 149.6,
+    "heterozygosity": 1.29,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Artibeus intermedius",
+    "common_name": "intermediate fruit-eating bat",
+    "genome_size_gb": 2.11,
+    "n50_mb": 163.8,
+    "heterozygosity": 1.29,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Artibeus lituratus",
+    "common_name": "great fruit-eating bat",
+    "genome_size_gb": 2.15,
+    "n50_mb": 160.3,
+    "heterozygosity": 1.19,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Artibeus lituratus",
+    "common_name": "great fruit-eating bat",
+    "genome_size_gb": 2.15,
+    "n50_mb": 164.1,
+    "heterozygosity": 1.19,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Canis lupus baileyi",
+    "common_name": "Mexican wolf",
+    "genome_size_gb": 2.39,
+    "n50_mb": 65.2,
+    "heterozygosity": 0.34,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Canis lupus baileyi",
+    "common_name": "Mexican wolf",
+    "genome_size_gb": 2.39,
+    "n50_mb": 65.8,
+    "heterozygosity": 0.34,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Eptesicus furinalis",
+    "common_name": "Argentine brown bat",
+    "genome_size_gb": 2.07,
+    "n50_mb": 101.0,
+    "heterozygosity": 0.38,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Eptesicus furinalis",
+    "common_name": "Argentine brown bat",
+    "genome_size_gb": 2.07,
+    "n50_mb": 107.7,
+    "heterozygosity": 0.38,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Glossophaga mutica",
+    "common_name": "Merriam's long-tongued bat",
+    "genome_size_gb": 2.13,
+    "n50_mb": 169.7,
+    "heterozygosity": 0.65,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Glossophaga mutica",
+    "common_name": "Merriam's long-tongued bat",
+    "genome_size_gb": 2.13,
+    "n50_mb": 169.6,
+    "heterozygosity": 0.65,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Lophostoma evotis",
+    "common_name": "Davis' round-eared bat",
+    "genome_size_gb": 2.12,
+    "n50_mb": 172.9,
+    "heterozygosity": 0.51,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Lophostoma evotis",
+    "common_name": "Davis' round-eared bat",
+    "genome_size_gb": 2.12,
+    "n50_mb": 170.6,
+    "heterozygosity": 0.51,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Macaca nemestrina",
+    "common_name": "pig-tailed macaque",
+    "genome_size_gb": 2.82,
+    "n50_mb": 143.9,
+    "heterozygosity": 0.96,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Macaca nemestrina",
+    "common_name": "pig-tailed macaque",
+    "genome_size_gb": 2.82,
+    "n50_mb": 142.3,
+    "heterozygosity": 0.96,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Micronycteris microtis",
+    "common_name": "common big-eared bat",
+    "genome_size_gb": 2.06,
+    "n50_mb": 134.0,
+    "heterozygosity": 0.31,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Micronycteris microtis",
+    "common_name": "common big-eared bat",
+    "genome_size_gb": 2.06,
+    "n50_mb": 146.0,
+    "heterozygosity": 0.31,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Microtus pennsylvanicus",
+    "common_name": "meadow vole",
+    "genome_size_gb": 2.19,
+    "n50_mb": 113.6,
+    "heterozygosity": 1.23,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Microtus pennsylvanicus",
+    "common_name": "meadow vole",
+    "genome_size_gb": 2.19,
+    "n50_mb": 125.7,
+    "heterozygosity": 1.23,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Molossus alvarezi",
+    "common_name": "Alvarez's mastiff bat",
+    "genome_size_gb": 2.46,
+    "n50_mb": 112.7,
+    "heterozygosity": 0.26,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Molossus alvarezi",
+    "common_name": "Alvarez's mastiff bat",
+    "genome_size_gb": 2.46,
+    "n50_mb": 113.3,
+    "heterozygosity": 0.26,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Molossus nigricans",
+    "common_name": "northern black mastiff bat",
+    "genome_size_gb": 2.44,
+    "n50_mb": 114.2,
+    "heterozygosity": 0.73,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Molossus nigricans",
+    "common_name": "northern black mastiff bat",
+    "genome_size_gb": 2.44,
+    "n50_mb": 112.6,
+    "heterozygosity": 0.73,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Ochotona princeps",
+    "common_name": "southern American pika",
+    "genome_size_gb": 2.65,
+    "n50_mb": 69.3,
+    "heterozygosity": 0.36,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Ochotona princeps",
+    "common_name": "southern American pika",
+    "genome_size_gb": 2.65,
+    "n50_mb": 64.4,
+    "heterozygosity": 0.36,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Rhynchonycteris naso",
+    "common_name": "proboscis bat",
+    "genome_size_gb": 2.31,
+    "n50_mb": 284.6,
+    "heterozygosity": 0.51,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Rhynchonycteris naso",
+    "common_name": "proboscis bat",
+    "genome_size_gb": 2.31,
+    "n50_mb": 288.0,
+    "heterozygosity": 0.51,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Tapirus indicus",
+    "common_name": "Malayan tapir",
+    "genome_size_gb": 2.45,
+    "n50_mb": 127.3,
+    "heterozygosity": 0.2,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Tapirus indicus",
+    "common_name": "Malayan tapir",
+    "genome_size_gb": 2.45,
+    "n50_mb": 129.8,
+    "heterozygosity": 0.2,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Thomomys bottae",
+    "common_name": "Botta's pocket gopher",
+    "genome_size_gb": 2.96,
+    "n50_mb": 60.5,
+    "heterozygosity": 0.97,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Thomomys bottae",
+    "common_name": "Botta's pocket gopher",
+    "genome_size_gb": 2.96,
+    "n50_mb": 64.6,
+    "heterozygosity": 0.97,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Rhineura floridana",
+    "common_name": "Florida worm lizard",
+    "genome_size_gb": 2.3,
+    "n50_mb": 194.5,
+    "heterozygosity": 0.0,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Rhineura floridana",
+    "common_name": "Florida worm lizard",
+    "genome_size_gb": 2.3,
+    "n50_mb": 188.7,
+    "heterozygosity": 0.0,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Tiliqua scincoides",
+    "common_name": "blue-tongued skink",
+    "genome_size_gb": 1.54,
+    "n50_mb": 241.6,
+    "heterozygosity": 0.89,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Tiliqua scincoides",
+    "common_name": "blue-tongued skink",
+    "genome_size_gb": 1.54,
+    "n50_mb": 282.5,
+    "heterozygosity": 0.89,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Heptranchias perlo",
+    "common_name": "sharpnose sevengill shark",
+    "genome_size_gb": 2.78,
+    "n50_mb": 66.5,
+    "heterozygosity": 0.6,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Heptranchias perlo",
+    "common_name": "sharpnose sevengill shark",
+    "genome_size_gb": 2.78,
+    "n50_mb": 66.2,
+    "heterozygosity": 0.6,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Heterodontus francisci",
+    "common_name": "horn shark",
+    "genome_size_gb": 5.26,
+    "n50_mb": 75.3,
+    "heterozygosity": 0.56,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Heterodontus francisci",
+    "common_name": "horn shark",
+    "genome_size_gb": 5.26,
+    "n50_mb": 92.5,
+    "heterozygosity": 0.56,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Hydrolagus colliei",
+    "common_name": "spotted ratfish",
+    "genome_size_gb": 0.79,
+    "n50_mb": 30.9,
+    "heterozygosity": 1.06,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Hydrolagus colliei",
+    "common_name": "spotted ratfish",
+    "genome_size_gb": 0.79,
+    "n50_mb": 42.6,
+    "heterozygosity": 1.06,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Narcine bancroftii",
+    "common_name": "Brazilian electric ray",
+    "genome_size_gb": 3.08,
+    "n50_mb": 310.9,
+    "heterozygosity": 0.6,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Narcine bancroftii",
+    "common_name": "Brazilian electric ray",
+    "genome_size_gb": 3.08,
+    "n50_mb": 249.6,
+    "heterozygosity": 0.6,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Stegostoma tigrinum",
+    "common_name": "zebra shark",
+    "genome_size_gb": 3.16,
+    "n50_mb": 78.4,
+    "heterozygosity": 0.29,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Stegostoma tigrinum",
+    "common_name": "zebra shark",
+    "genome_size_gb": 3.16,
+    "n50_mb": 68.0,
+    "heterozygosity": 0.29,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Anadara tuberculosa",
+    "common_name": "piangua",
+    "genome_size_gb": 0.8,
+    "n50_mb": 47.7,
+    "heterozygosity": 2.4,
+    "tax_class": "Other"
+  },
+  {
+    "species": "Anadara tuberculosa",
+    "common_name": "piangua",
+    "genome_size_gb": 0.8,
+    "n50_mb": 44.8,
+    "heterozygosity": 2.4,
+    "tax_class": "Other"
+  },
+  {
+    "species": "Scaphiopus couchii",
+    "common_name": "Couch's spadefoot toad",
+    "genome_size_gb": 0.88,
+    "n50_mb": 110.4,
+    "heterozygosity": 1.01,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Scaphiopus couchii",
+    "common_name": "Couch's spadefoot toad",
+    "genome_size_gb": 0.88,
+    "n50_mb": 97.3,
+    "heterozygosity": 1.01,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Spea multiplicata",
+    "common_name": "Mexican spadefoot toad",
+    "genome_size_gb": 0.8,
+    "n50_mb": 107.9,
+    "heterozygosity": 1.08,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Spea multiplicata",
+    "common_name": "Mexican spadefoot toad",
+    "genome_size_gb": 0.8,
+    "n50_mb": 103.6,
+    "heterozygosity": 1.08,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Xenopus petersii",
+    "common_name": "Peter's clawed frog",
+    "genome_size_gb": 2.54,
+    "n50_mb": 172.9,
+    "heterozygosity": 1.99,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Xenopus petersii",
+    "common_name": "Peter's clawed frog",
+    "genome_size_gb": 2.54,
+    "n50_mb": 145.7,
+    "heterozygosity": 1.99,
+    "tax_class": "Amphibians"
+  },
+  {
+    "species": "Aegotheles albertisi",
+    "common_name": "mountain owlet-nightjar",
+    "genome_size_gb": 1.04,
+    "n50_mb": 103.6,
+    "heterozygosity": 1.17,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Aegotheles albertisi",
+    "common_name": "mountain owlet-nightjar",
+    "genome_size_gb": 1.04,
+    "n50_mb": 46.6,
+    "heterozygosity": 1.17,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Anodorhynchus hyacinthinus",
+    "common_name": "hyacinth macaw",
+    "genome_size_gb": 1.14,
+    "n50_mb": 124.2,
+    "heterozygosity": 0.52,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Anodorhynchus hyacinthinus",
+    "common_name": "hyacinth macaw",
+    "genome_size_gb": 1.14,
+    "n50_mb": 106.3,
+    "heterozygosity": 0.52,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Baeolophus bicolor",
+    "common_name": "tufted titmouse",
+    "genome_size_gb": 1.05,
+    "n50_mb": 64.4,
+    "heterozygosity": 1.08,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Baeolophus bicolor",
+    "common_name": "tufted titmouse",
+    "genome_size_gb": 1.05,
+    "n50_mb": 64.5,
+    "heterozygosity": 1.08,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Columba livia",
+    "common_name": "rock dove",
+    "genome_size_gb": 1.11,
+    "n50_mb": 77.5,
+    "heterozygosity": 0.8,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Columba livia",
+    "common_name": "rock dove",
+    "genome_size_gb": 1.11,
+    "n50_mb": 68.7,
+    "heterozygosity": 0.8,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Cyanocitta cristata",
+    "common_name": "blue jay",
+    "genome_size_gb": 1.12,
+    "n50_mb": 70.8,
+    "heterozygosity": 1.05,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Cyanocitta cristata",
+    "common_name": "blue jay",
+    "genome_size_gb": 1.12,
+    "n50_mb": 42.0,
+    "heterozygosity": 1.05,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Melospiza melodia",
+    "common_name": "song sparrow",
+    "genome_size_gb": 1.28,
+    "n50_mb": 37.3,
+    "heterozygosity": 0.98,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Morphnus guianensis",
+    "common_name": "crested eagle",
+    "genome_size_gb": 1.28,
+    "n50_mb": 49.2,
+    "heterozygosity": 0.51,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Morphnus guianensis",
+    "common_name": "crested eagle",
+    "genome_size_gb": 1.28,
+    "n50_mb": 49.4,
+    "heterozygosity": 0.51,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Passerculus sandwichensis",
+    "common_name": "Savannah sparrow",
+    "genome_size_gb": 1.09,
+    "n50_mb": 64.4,
+    "heterozygosity": 1.3,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Pulsatrix perspicillata",
+    "common_name": "spectacled owl",
+    "genome_size_gb": 1.57,
+    "n50_mb": 17.5,
+    "heterozygosity": 0.61,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Pulsatrix perspicillata",
+    "common_name": "spectacled owl",
+    "genome_size_gb": 1.57,
+    "n50_mb": 62.0,
+    "heterozygosity": 0.61,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Sarcoramphus papa",
+    "common_name": "king vulture",
+    "genome_size_gb": 1.39,
+    "n50_mb": 77.5,
+    "heterozygosity": 0.44,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Sarcoramphus papa",
+    "common_name": "king vulture",
+    "genome_size_gb": 1.39,
+    "n50_mb": 77.6,
+    "heterozygosity": 0.44,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Struthio camelus",
+    "common_name": "ostrich",
+    "genome_size_gb": 1.29,
+    "n50_mb": 77.1,
+    "heterozygosity": 0.46,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Struthio camelus",
+    "common_name": "ostrich",
+    "genome_size_gb": 1.29,
+    "n50_mb": 75.5,
+    "heterozygosity": 0.46,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Sturnus vulgaris",
+    "common_name": "European starling",
+    "genome_size_gb": 1.08,
+    "n50_mb": 41.2,
+    "heterozygosity": 0.9,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Sturnus vulgaris",
+    "common_name": "European starling",
+    "genome_size_gb": 1.08,
+    "n50_mb": 48.1,
+    "heterozygosity": 0.9,
+    "tax_class": "Birds"
+  },
+  {
+    "species": "Amia calva",
+    "common_name": "bowfin",
+    "genome_size_gb": 0.95,
+    "n50_mb": 44.2,
+    "heterozygosity": 0.15,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Amia calva",
+    "common_name": "bowfin",
+    "genome_size_gb": 0.95,
+    "n50_mb": 41.8,
+    "heterozygosity": 0.15,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Atractosteus spatula",
+    "common_name": "alligator gar",
+    "genome_size_gb": 1.07,
+    "n50_mb": 55.3,
+    "heterozygosity": 0.21,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Atractosteus spatula",
+    "common_name": "alligator gar",
+    "genome_size_gb": 1.07,
+    "n50_mb": 54.7,
+    "heterozygosity": 0.21,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Cyprinella lutrensis",
+    "common_name": "red shiner",
+    "genome_size_gb": 0.81,
+    "n50_mb": 36.5,
+    "heterozygosity": 1.71,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Cyprinella lutrensis",
+    "common_name": "red shiner",
+    "genome_size_gb": 0.81,
+    "n50_mb": 36.2,
+    "heterozygosity": 1.71,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Latimeria chalumnae",
+    "common_name": "African coealacanth",
+    "genome_size_gb": 2.78,
+    "n50_mb": 194.9,
+    "heterozygosity": 0.41,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Lepisosteus oculatus",
+    "common_name": "spotted gar",
+    "genome_size_gb": 1.05,
+    "n50_mb": 43.8,
+    "heterozygosity": 0.48,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Lepisosteus oculatus",
+    "common_name": "spotted gar",
+    "genome_size_gb": 1.05,
+    "n50_mb": 44.0,
+    "heterozygosity": 0.48,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Carollia sowelli",
+    "common_name": "Sowell's Short-tailed Bat",
+    "genome_size_gb": 2.26,
+    "n50_mb": 164.0,
+    "heterozygosity": 0.83,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Carollia sowelli",
+    "common_name": "Sowell's Short-tailed Bat",
+    "genome_size_gb": 2.26,
+    "n50_mb": 241.2,
+    "heterozygosity": 0.83,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Dermanura phaeotis",
+    "common_name": "Pygmy Fruit-eating Bat",
+    "genome_size_gb": 2.03,
+    "n50_mb": 149.2,
+    "heterozygosity": 1.25,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Dermanura phaeotis",
+    "common_name": "Pygmy Fruit-eating Bat",
+    "genome_size_gb": 2.03,
+    "n50_mb": 156.9,
+    "heterozygosity": 1.25,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Eptesicus chiriquinus",
+    "common_name": "Chiriquinan Serotine",
+    "genome_size_gb": 2.01,
+    "n50_mb": 98.5,
+    "heterozygosity": 0.77,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Eptesicus chiriquinus",
+    "common_name": "Chiriquinan Serotine",
+    "genome_size_gb": 2.01,
+    "n50_mb": 102.9,
+    "heterozygosity": 0.77,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Gardnerycteris keenani",
+    "common_name": "Keenan's Hairy-nosed Bat",
+    "genome_size_gb": 2.12,
+    "n50_mb": 171.2,
+    "heterozygosity": 0.44,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Gardnerycteris keenani",
+    "common_name": "Keenan's Hairy-nosed Bat",
+    "genome_size_gb": 2.12,
+    "n50_mb": 179.1,
+    "heterozygosity": 0.44,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Mustela lutreola",
+    "common_name": "European mink",
+    "genome_size_gb": 2.57,
+    "n50_mb": 154.1,
+    "heterozygosity": 0.17,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Mustela nivalis",
+    "common_name": "least weasel",
+    "genome_size_gb": 2.72,
+    "n50_mb": 114.9,
+    "heterozygosity": 0.7,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Mustela nivalis",
+    "common_name": "least weasel",
+    "genome_size_gb": 2.72,
+    "n50_mb": 114.5,
+    "heterozygosity": 0.7,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Myotis nesopolus",
+    "common_name": "Cura\u00e7ao Myotis",
+    "genome_size_gb": 2.03,
+    "n50_mb": 96.7,
+    "heterozygosity": 0.68,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Myotis nesopolus",
+    "common_name": "Cura\u00e7ao Myotis",
+    "genome_size_gb": 2.03,
+    "n50_mb": 100.4,
+    "heterozygosity": 0.68,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Myotis pilosatibialis",
+    "common_name": "Hairy-legged Myotis",
+    "genome_size_gb": 1.92,
+    "n50_mb": 130.4,
+    "heterozygosity": 0.58,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Myotis pilosatibialis",
+    "common_name": "Hairy-legged Myotis",
+    "genome_size_gb": 1.92,
+    "n50_mb": 115.1,
+    "heterozygosity": 0.58,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Myotis tricolor",
+    "common_name": "Temminck's Myotis",
+    "genome_size_gb": 1.95,
+    "n50_mb": 177.1,
+    "heterozygosity": 0.85,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Myotis tricolor",
+    "common_name": "Temminck's Myotis",
+    "genome_size_gb": 1.95,
+    "n50_mb": 110.1,
+    "heterozygosity": 0.85,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Nycteris thebaica",
+    "common_name": "Egyptian Slit-faced Bat",
+    "genome_size_gb": 2.24,
+    "n50_mb": 138.6,
+    "heterozygosity": 0.72,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Nycteris thebaica",
+    "common_name": "Egyptian Slit-faced Bat",
+    "genome_size_gb": 2.24,
+    "n50_mb": 115.7,
+    "heterozygosity": 0.72,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Platyrrhinus helleri",
+    "common_name": "Heller's Broad-nosed Bat",
+    "genome_size_gb": 2.14,
+    "n50_mb": 151.7,
+    "heterozygosity": 0.81,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Platyrrhinus helleri",
+    "common_name": "Heller's Broad-nosed Bat",
+    "genome_size_gb": 2.14,
+    "n50_mb": 157.6,
+    "heterozygosity": 0.81,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Rhinolophus blasii",
+    "common_name": "Blasius' Horseshoe Bat",
+    "genome_size_gb": 2.02,
+    "n50_mb": 100.8,
+    "heterozygosity": 0.36,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Rhinolophus blasii",
+    "common_name": "Blasius' Horseshoe Bat",
+    "genome_size_gb": 2.02,
+    "n50_mb": 94.7,
+    "heterozygosity": 0.36,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Rhinolophus clivosus",
+    "common_name": "Geoffroy's Horseshoe Bat",
+    "genome_size_gb": 2.15,
+    "n50_mb": 100.9,
+    "heterozygosity": 0.55,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Rhinolophus clivosus",
+    "common_name": "Geoffroy's Horseshoe Bat",
+    "genome_size_gb": 2.15,
+    "n50_mb": 111.8,
+    "heterozygosity": 0.55,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Rhinopoma cystops",
+    "common_name": "Big-eyed (Egyptian) Mouse-tailed Bat",
+    "genome_size_gb": 2.92,
+    "n50_mb": 125.8,
+    "heterozygosity": 0.74,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Rhinopoma cystops",
+    "common_name": "Big-eyed (Egyptian) Mouse-tailed Bat",
+    "genome_size_gb": 2.92,
+    "n50_mb": 145.4,
+    "heterozygosity": 0.74,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Sturnira parvidens",
+    "common_name": "Northern Yellow-shouldered Bat",
+    "genome_size_gb": 2.18,
+    "n50_mb": 156.6,
+    "heterozygosity": 1.02,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Sturnira parvidens",
+    "common_name": "Northern Yellow-shouldered Bat",
+    "genome_size_gb": 2.18,
+    "n50_mb": 154.5,
+    "heterozygosity": 1.02,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Anolis sagrei",
+    "common_name": "brown anole",
+    "genome_size_gb": 1.68,
+    "n50_mb": 274.8,
+    "heterozygosity": 1.92,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Anolis sagrei",
+    "common_name": "brown anole",
+    "genome_size_gb": 1.68,
+    "n50_mb": 248.8,
+    "heterozygosity": 1.92,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Liasis olivaceus",
+    "common_name": "olive python",
+    "genome_size_gb": 1.43,
+    "n50_mb": 203.8,
+    "heterozygosity": 0.27,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Liasis olivaceus",
+    "common_name": "olive python",
+    "genome_size_gb": 1.43,
+    "n50_mb": 203.1,
+    "heterozygosity": 0.27,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Malaclemys terrapin",
+    "common_name": "diamondback terrapin",
+    "genome_size_gb": 2.17,
+    "n50_mb": 134.4,
+    "heterozygosity": 0.23,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Carcharias taurus",
+    "common_name": "sand tiger shark",
+    "genome_size_gb": 4.31,
+    "n50_mb": 149.2,
+    "heterozygosity": 0.42,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Carcharias taurus",
+    "common_name": "sand tiger shark",
+    "genome_size_gb": 4.31,
+    "n50_mb": 147.3,
+    "heterozygosity": 0.42,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Potamotrygon marinae",
+    "common_name": "golden dust stingray",
+    "genome_size_gb": 4.7,
+    "n50_mb": 139.9,
+    "heterozygosity": 0.3,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Potamotrygon marinae",
+    "common_name": "golden dust stingray",
+    "genome_size_gb": 4.7,
+    "n50_mb": 137.1,
+    "heterozygosity": 0.3,
+    "tax_class": "Sharks"
+  },
+  {
+    "species": "Notoma floridana",
+    "common_name": "Eastern woodrat",
+    "genome_size_gb": 3.01,
+    "n50_mb": 95.0,
+    "heterozygosity": 0.26,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Notoma floridana",
+    "common_name": "Eastern woodrat",
+    "genome_size_gb": 3.01,
+    "n50_mb": 91.4,
+    "heterozygosity": 0.26,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Dibamus smithi",
+    "common_name": "Smith's blind skink",
+    "genome_size_gb": 1.93,
+    "n50_mb": 134.1,
+    "heterozygosity": 0.65,
+    "tax_class": "Reptiles"
+  },
+  {
+    "species": "Pempheris schomburgkii",
+    "common_name": "Copper sweeper",
+    "genome_size_gb": 0.59,
+    "n50_mb": 25.6,
+    "heterozygosity": 0.73,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Pempheris schomburgkii",
+    "common_name": "Copper sweeper",
+    "genome_size_gb": 0.59,
+    "n50_mb": 26.0,
+    "heterozygosity": 0.73,
+    "tax_class": "Fish"
+  },
+  {
+    "species": "Castor canadensis",
+    "common_name": "North American beaver",
+    "genome_size_gb": 2.76,
+    "n50_mb": 150.0,
+    "heterozygosity": 0.41,
+    "tax_class": "Mammals"
+  },
+  {
+    "species": "Castor canadensis",
+    "common_name": "North American beaver",
+    "genome_size_gb": 2.76,
+    "n50_mb": 141.0,
+    "heterozygosity": 0.41,
+    "tax_class": "Mammals"
+  }
+];
+
+    function generateScatterPlot() {
+      const container = document.getElementById('scatter-container');
+      if (!container || !SCATTER_DATA || SCATTER_DATA.length === 0) return;
+
+      const spec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "width": "container",
+        "height": 450,
+        "background": "transparent",
+        "data": { "values": SCATTER_DATA },
+        "mark": {
+          "type": "circle",
+          "opacity": 0.8,
+          "stroke": "white",
+          "strokeWidth": 0.5
+        },
+        "encoding": {
+          "x": {
+            "field": "genome_size_gb",
+            "type": "quantitative",
+            "title": "Genome Size (Gb)",
+            "scale": {"zero": false},
+            "axis": {"labelColor": "white", "titleColor": "white", "gridColor": "rgba(255,255,255,0.1)"}
+          },
+          "y": {
+            "field": "n50_mb",
+            "type": "quantitative",
+            "title": "Scaffold N50 (Mb)",
+            "scale": {"zero": false},
+            "axis": {"labelColor": "white", "titleColor": "white", "gridColor": "rgba(255,255,255,0.1)"}
+          },
+          "size": {
+            "field": "heterozygosity",
+            "type": "quantitative",
+            "title": "Heterozygosity (%)",
+            "scale": {"range": [50, 800]}
+          },
+          "color": {
+            "field": "tax_class",
+            "type": "nominal",
+            "title": "Class",
+            "scale": {
+              "domain": ["Mammals", "Birds", "Fish", "Reptiles", "Amphibians", "Sharks"],
+              "range": ["#E74C3C", "#3498DB", "#2ECC71", "#9B59B6", "#F39C12", "#1ABC9C"]
+            },
+            "legend": {"labelColor": "white", "titleColor": "white"}
+          },
+          "tooltip": [
+            {"field": "common_name", "type": "nominal", "title": "Species"},
+            {"field": "genome_size_gb", "type": "quantitative", "title": "Genome Size (Gb)", "format": ".2f"},
+            {"field": "n50_mb", "type": "quantitative", "title": "N50 (Mb)", "format": ".1f"},
+            {"field": "heterozygosity", "type": "quantitative", "title": "Heterozygosity (%)", "format": ".2f"},
+            {"field": "tax_class", "type": "nominal", "title": "Class"}
+          ]
+        },
+        "config": {
+          "view": {"stroke": "transparent"},
+          "axis": {"domainColor": "white", "tickColor": "white"}
+        }
+      };
+
+      vegaEmbed('#scatter-container', spec, {actions: false}).catch(console.error);
+    }
+
+    /* ========================================
        Word Cloud Generator
        ======================================== */
 
@@ -1382,8 +3497,9 @@
           });
         });
 
-        // Generate word cloud when that slide becomes active
+        // Generate visualizations when their slides become active
         this.generateWordCloudOnce = false;
+        this.generateScatterOnce = false;
 
         // Start autoplay
         this.startAutoplay();
@@ -1440,6 +3556,12 @@
         if (this.slides[index].classList.contains('slide-wordcloud') && !this.generateWordCloudOnce) {
           setTimeout(generateWordCloud, 100);
           this.generateWordCloudOnce = true;
+        }
+
+        // Generate scatter plot if on that slide
+        if (this.slides[index].classList.contains('slide-scatter') && !this.generateScatterOnce) {
+          setTimeout(generateScatterPlot, 100);
+          this.generateScatterOnce = true;
         }
 
         // Reset progress

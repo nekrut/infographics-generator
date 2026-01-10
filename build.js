@@ -169,6 +169,8 @@ function generateSlideHTML(slide) {
       return generateSplitSlide(slide, activeClass);
     case 'wordcloud':
       return generateWordcloudSlide(slide, activeClass);
+    case 'scatter':
+      return generateScatterSlide(slide, activeClass);
     case 'sunburst':
       return generateSunburstSlide(slide, activeClass);
     case 'ecosystem':
@@ -250,6 +252,15 @@ function generateWordcloudSlide(slide, activeClass) {
     <section class="slide slide-wordcloud${activeClass}" data-section="${slide.section}">
       <h1 class="slide-title">${slide.title}</h1>
       <div id="wordcloud-container"></div>
+    </section>`;
+}
+
+function generateScatterSlide(slide, activeClass) {
+  return `
+    <!-- Slide ${slide.index + 1}: ${slide.title} -->
+    <section class="slide slide-scatter${activeClass}" data-section="${slide.section}">
+      <h1 class="slide-title">${slide.title}</h1>
+      <div id="scatter-container"></div>
     </section>`;
 }
 
@@ -427,10 +438,18 @@ function build() {
   const slidesHTML = slides.map(generateSlideHTML).join('\n');
   const wordcloudTopics = generateWordcloudTopics(slides);
 
+  // Load scatter data if exists
+  const scatterDataPath = path.join(siteDir, 'scatter-data.json');
+  let scatterData = '[]';
+  if (fs.existsSync(scatterDataPath)) {
+    scatterData = fs.readFileSync(scatterDataPath, 'utf8');
+  }
+
   // Replace placeholders
   template = template.replace('{{MASTHEAD_LINKS}}', mastheadHTML);
   template = template.replace('{{SLIDES}}', slidesHTML);
   template = template.replace('{{WORDCLOUD_TOPICS}}', wordcloudTopics);
+  template = template.replace('{{SCATTER_DATA}}', scatterData);
 
   // Create output directory
   if (!fs.existsSync(OUTPUT_DIR)) {
