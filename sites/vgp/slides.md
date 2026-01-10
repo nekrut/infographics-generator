@@ -23,7 +23,7 @@ masthead:
 
 ---
 
-# [overview] Genome Assemblies: Size vs Quality
+# [overview] 274 genomes and counting
 > type: scatter
 
 ---
