@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galaxy Project</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    /* ========================================
+       Apple-Style Design System
+       ======================================== */
+
+    :root {
+      /* Colors from usegalaxy.org */
+      --color-primary: #2c3143;
+      --color-accent: #FFD700;
+      --color-text-light: #f8f9fa;
+      --color-text-dark: #1d1d1f;
+      --color-bg-light: #ffffff;
+      --color-bg-subtle: #f5f5f7;
+      --color-border: rgba(0, 0, 0, 0.1);
+
+      /* Galaxy Paired colormap */
+      --color-orange: #fe7f02;
+      --color-orange-light: #fdbf6f;
+      --color-blue: #2077b3;
+      --color-blue-light: #a3cbdf;
+      --color-green: #74c376;
+      --color-green-light: #9fd99a;
+      --color-red: #e31a1e;
+      --color-red-light: #fb9998;
+      --color-yellow: #ffd602;
+
+      /* Typography */
+      --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+      /* Transitions */
+      --transition-slide: 0.6s ease-out;
+      --transition-fast: 0.2s ease;
+
+      /* Spacing */
+      --spacing-xl: 80px;
+      --spacing-lg: 48px;
+      --spacing-md: 24px;
+      --spacing-sm: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--color-bg-light);
+      color: var(--color-text-dark);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background 0.6s ease;
+    }
+
+    body.wordcloud-active {
+      background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
+    }
+
+    /* ========================================
+       Masthead Navigation
+       ======================================== */
+
+    .masthead {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      background: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-lg);
+      z-index: 1000;
+    }
+
+    .masthead-logo {
+      position: absolute;
+      left: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-light);
+      letter-spacing: -0.5px;
+    }
+
+    .masthead-logo img {
+      height: 32px;
+      width: auto;
+    }
+
+    .masthead-nav {
+      display: flex;
+      gap: var(--spacing-lg);
+    }
+
+    .masthead-link {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .masthead-link:hover {
+      color: var(--color-accent);
+    }
+
+    .masthead-link.active {
+      color: var(--color-text-light);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* ========================================
+       Slide Container
+       ======================================== */
+
+    .slides-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding-top: 52px;
+    }
+
+    .slide {
+      position: absolute;
+      top: 52px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-slide), visibility var(--transition-slide);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-xl);
+      overflow: hidden;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ========================================
+       Slide Layouts
+       ======================================== */
+
+    /* Intro Slides Layout */
+    .slide-intro {
+      flex-direction: column;
+      text-align: center;
+      background: var(--color-bg-subtle);
+    }
+
+    .slide-intro .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text-dark);
+    }
+
+    .slide-intro .slide-subtitle {
+      font-size: 24px;
+      font-weight: 400;
+      color: #86868b;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .slide-intro .slide-image {
+      max-width: 90%;
+      max-height: 65vh;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    /* Stats Layout */
+    .slide-stats {
+      flex-direction: column;
+      text-align: center;
+      background: var(--color-bg-subtle);
+    }
+
+    .slide-stats .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-dark);
+    }
+
+    .slide-stats .slide-subtitle {
+      font-size: 21px;
+      font-weight: 400;
+      color: #86868b;
+      margin-bottom: var(--spacing-lg);
+      max-width: 700px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
+      max-width: 900px;
+    }
+
+    .stats-grid.two-col {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 600px;
+    }
+
+    .stats-grid.four-col {
+      grid-template-columns: repeat(4, 1fr);
+      max-width: 1000px;
+    }
+
+    .stat-card {
+      background: var(--color-bg-light);
+      border-radius: 18px;
+      padding: var(--spacing-lg) var(--spacing-md);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+      border-top: 5px solid var(--card-color, var(--color-primary));
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card:nth-child(1) { --card-color: #fe7f02; }
+    .stat-card:nth-child(2) { --card-color: #2077b3; }
+    .stat-card:nth-child(3) { --card-color: #74c376; }
+    .stat-card:nth-child(4) { --card-color: #ffd602; }
+    .stat-card:nth-child(5) { --card-color: #e31a1e; }
+    .stat-card:nth-child(6) { --card-color: #2c3143; }
+
+    .stat-number {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      color: var(--card-color, var(--color-primary));
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #86868b;
+      font-weight: 500;
+    }
+
+    /* Split Layout */
+    .slide-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-xl);
+      max-width: 1400px;
+      width: 100%;
+    }
+
+    .slide-split.reverse {
+      direction: rtl;
+    }
+
+    .slide-split.reverse > * {
+      direction: ltr;
+    }
+
+    .slide-split .content-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 var(--spacing-md);
+    }
+
+    .slide-split .slide-title {
+      font-size: 44px;
+      font-weight: 600;
+      letter-spacing: -1.5px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-dark);
+    }
+
+    .slide-split .slide-text {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #1d1d1f;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .slide-split .slide-highlight {
+      font-size: 16px;
+      color: var(--color-primary);
+      font-weight: 500;
+      padding: var(--spacing-md);
+      background: var(--color-bg-subtle);
+      border-radius: 12px;
+      border-left: 4px solid var(--color-accent);
+    }
+
+    .slide-split .image-side {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide-split .image-side img {
+      max-width: 100%;
+      max-height: 65vh;
+      border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Center Layout */
+    .slide-center {
+      flex-direction: column;
+      text-align: center;
+      background: var(--color-bg-subtle);
+    }
+
+    .slide-center .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-dark);
+    }
+
+    .slide-center .slide-subtitle {
+      font-size: 21px;
+      font-weight: 400;
+      color: #86868b;
+      margin-bottom: var(--spacing-lg);
+      max-width: 700px;
+    }
+
+    .slide-center .center-image {
+      max-width: 90%;
+      max-height: 55vh;
+      border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Ecosystem Card Layout */
+    .slide-ecosystem {
+      flex-direction: column;
+      text-align: center;
+      background: linear-gradient(135deg, var(--color-primary) 0%, #1a1f2e 100%);
+    }
+
+    .slide-ecosystem .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text-light);
+    }
+
+    .slide-ecosystem .slide-subtitle {
+      font-size: 21px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: var(--spacing-lg);
+      max-width: 700px;
+    }
+
+    .ecosystem-stats {
+      display: flex;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .ecosystem-stat {
+      text-align: center;
+    }
+
+    .ecosystem-stat-number {
+      font-size: 48px;
+      font-weight: 600;
+      color: var(--color-accent);
+      letter-spacing: -2px;
+    }
+
+    .ecosystem-stat-label {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .ecosystem-description {
+      font-size: 18px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 800px;
+      text-align: center;
+    }
+
+    .ecosystem-logo {
+      width: auto;
+      height: 100px;
+      max-width: 300px;
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ecosystem-logo img {
+      max-height: 100px;
+      max-width: 300px;
+      object-fit: contain;
+    }
+
+    /* Ecosystem Grid Layout */
+    .ecosystem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
+      max-width: 1100px;
+    }
+
+    .ecosystem-panel {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: var(--spacing-md);
+      text-align: center;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .ecosystem-panel:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .ecosystem-panel .panel-logo {
+      height: 60px;
+      margin-bottom: var(--spacing-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ecosystem-panel .panel-logo img {
+      max-height: 60px;
+      max-width: 150px;
+      object-fit: contain;
+    }
+
+    .ecosystem-panel .panel-logo img[alt="TPV"] {
+      max-height: 80px;
+      max-width: 200px;
+    }
+
+    .ecosystem-panel .panel-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--color-text-light);
+      margin-bottom: 8px;
+    }
+
+    .ecosystem-panel .panel-description {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.4;
+    }
+
+    /* Word Cloud Layout */
+    .slide-wordcloud {
+      background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
+      flex-direction: column;
+      padding: 30px 50px;
+    }
+
+    .slide-wordcloud .slide-title {
+      font-size: 38px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: 16px;
+      color: var(--color-text-light);
+      z-index: 10;
+      position: relative;
+    }
+
+    #wordcloud-container {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 18px;
+      max-width: 1400px;
+      width: 95%;
+    }
+
+    .wordcloud-word {
+      padding: 18px 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.3s ease;
+      font-weight: 500;
+      font-family: var(--font-family);
+      text-decoration: none;
+      text-align: center;
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .wordcloud-word:hover {
+      transform: scale(1.08);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .wordcloud-word.sparkle {
+      animation: sparkle 0.5s ease-in-out;
+    }
+
+    @keyframes sparkle {
+      0%, 100% {
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: none;
+      }
+      50% {
+        background: var(--sparkle-color, rgba(255, 215, 0, 0.4));
+        box-shadow: 0 0 20px var(--sparkle-color, rgba(255, 215, 0, 0.5));
+      }
+    }
+
+    /* Global Instances - Background Image Layout */
+    .slide-galaxies {
+      background-color: var(--color-primary);
+      background-image: url('images/galaxies.svg');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .slide-galaxies .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-light);
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+    }
+
+    .slide-galaxies .slide-subtitle {
+      font-size: 21px;
+      font-weight: 400;
+      color: var(--color-text-light);
+      margin-bottom: var(--spacing-lg);
+      max-width: 800px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    }
+
+    .slide-galaxies .galaxies-description {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--color-text-light);
+      max-width: 700px;
+      text-align: center;
+      background: rgba(44, 49, 67, 0.5);
+      padding: var(--spacing-lg);
+      border-radius: 16px;
+    }
+
+    /* ========================================
+       Links Slide
+       ======================================== */
+
+    .slide-links {
+      background: var(--color-bg-light);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide-links .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-primary);
+    }
+
+    .slide-links .slide-subtitle {
+      font-size: 24px;
+      color: #666;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-md);
+      max-width: 1200px;
+      width: 90%;
+    }
+
+    .link-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-lg) var(--spacing-md);
+      background: var(--color-bg-subtle);
+      border-radius: 16px;
+      text-decoration: none;
+      transition: var(--transition-fast);
+      border: 2px solid transparent;
+    }
+
+    .link-card:hover {
+      background: var(--color-primary);
+      border-color: var(--color-accent);
+    }
+
+    .link-card:hover .link-label,
+    .link-card:hover .link-url {
+      color: var(--color-text-light);
+    }
+
+    .link-label {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 8px;
+    }
+
+    .link-url {
+      font-size: 18px;
+      color: var(--color-blue);
+      word-break: break-all;
+      text-align: center;
+    }
+
+    /* ========================================
+       QR Code Slide
+       ======================================== */
+
+    .slide-qr {
+      background: var(--color-bg-light);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .slide-qr .slide-title {
+      font-size: 64px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-lg);
+      color: var(--color-primary);
+    }
+
+    .slide-qr .qr-code {
+      width: 400px;
+      height: 400px;
+      max-width: 50vh;
+      max-height: 50vh;
+    }
+
+    /* ========================================
+       Progress Bar
+       ======================================== */
+
+    .progress-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(0, 0, 0, 0.1);
+      z-index: 1001;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--color-accent);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ========================================
+       Controls
+       ======================================== */
+
+    .controls-hint {
+      position: fixed;
+      bottom: var(--spacing-md);
+      right: var(--spacing-md);
+      font-size: 12px;
+      color: #86868b;
+      background: var(--color-bg-light);
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      opacity: 0.8;
+      transition: opacity var(--transition-fast);
+      z-index: 1001;
+    }
+
+    .controls-hint:hover {
+      opacity: 1;
+    }
+
+    .controls-hint kbd {
+      display: inline-block;
+      background: var(--color-bg-subtle);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: var(--font-family);
+      font-size: 11px;
+      margin: 0 2px;
+    }
+
+    .slide-dots {
+      position: fixed;
+      bottom: var(--spacing-md);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 1001;
+    }
+
+    .slide-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .slide-dot.active {
+      background: var(--color-primary);
+      transform: scale(1.25);
+    }
+
+    .slide-dot:hover {
+      background: var(--color-accent);
+    }
+
+    .pause-indicator {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 20px 40px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 500;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+      pointer-events: none;
+      z-index: 1002;
+    }
+
+    .pause-indicator.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* ========================================
+       Slide Counter
+       ======================================== */
+
+    .slide-counter {
+      position: fixed;
+      bottom: var(--spacing-md);
+      left: var(--spacing-md);
+      font-size: 12px;
+      color: #86868b;
+      background: var(--color-bg-light);
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      z-index: 1001;
+    }
+
+    /* ========================================
+       Responsive Design
+       ======================================== */
+
+    @media (max-width: 768px) {
+      :root {
+        --spacing-xl: 40px;
+        --spacing-lg: 24px;
+        --spacing-md: 16px;
+      }
+
+      .masthead {
+        height: 44px;
+        gap: var(--spacing-md);
+      }
+
+      .masthead-logo img {
+        height: 24px;
+      }
+
+      .masthead-nav {
+        gap: 8px;
+      }
+
+      .masthead-link {
+        font-size: 11px;
+        padding: 6px 10px;
+      }
+
+      .slide {
+        padding: var(--spacing-lg);
+        padding-top: 60px;
+      }
+
+      .slide-intro .slide-title {
+        font-size: 28px;
+      }
+
+      .slide-intro .slide-subtitle {
+        font-size: 16px;
+      }
+
+      .slide-intro .slide-image img {
+        max-height: 40vh;
+      }
+
+      .slide-stats .slide-title {
+        font-size: 32px;
+      }
+
+      .slide-stats .slide-subtitle {
+        font-size: 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+      }
+
+      .stats-grid.four-col {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat-card {
+        padding: var(--spacing-md) var(--spacing-sm);
+      }
+
+      .stat-number {
+        font-size: 32px;
+      }
+
+      .stat-label {
+        font-size: 12px;
+      }
+
+      .slide-split {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+      }
+
+      .slide-split .slide-title {
+        font-size: 28px;
+      }
+
+      .slide-split .slide-text {
+        font-size: 15px;
+      }
+
+      .slide-split .image-side img {
+        max-height: 35vh;
+      }
+
+      .slide-wordcloud .slide-title {
+        font-size: 28px;
+      }
+
+      #wordcloud-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .wordcloud-word {
+        font-size: 13px;
+        padding: 10px 8px;
+      }
+
+      .slide-dots {
+        gap: 4px;
+      }
+
+      .slide-dot {
+        width: 6px;
+        height: 6px;
+      }
+
+      .controls-hint {
+        display: none;
+      }
+
+      .slide-links .slide-title {
+        font-size: 28px;
+      }
+
+      .links-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+      }
+
+      .link-card {
+        padding: var(--spacing-md);
+      }
+
+      .link-name {
+        font-size: 14px;
+      }
+
+      .link-url {
+        font-size: 11px;
+      }
+
+      .slide-qr .slide-title {
+        font-size: 28px;
+      }
+
+      .slide-qr .qr-image img {
+        max-width: 200px;
+      }
+
+      .slide-counter {
+        font-size: 10px;
+        padding: 6px 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .masthead-nav {
+        display: none;
+      }
+
+      .slide-intro .slide-title {
+        font-size: 22px;
+      }
+
+      .slide-stats .slide-title {
+        font-size: 24px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stat-number {
+        font-size: 28px;
+      }
+
+      .slide-split .slide-title {
+        font-size: 22px;
+      }
+
+      #wordcloud-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+
+      .wordcloud-word {
+        font-size: 11px;
+        padding: 8px 6px;
+      }
+
+      .links-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Masthead -->
+  <nav class="masthead">
+    <div class="masthead-logo">
+      <img src="favicon.svg" alt="Galaxy">
+    </div>
+    <div class="masthead-nav">
+      <a class="masthead-link active" data-section="overview">Overview</a>
+      <a class="masthead-link" data-section="pipeline">Pipeline</a>
+      <a class="masthead-link" data-section="scale">Scale</a>
+      <a class="masthead-link" data-section="resources">Resources</a>
+    </div>
+  </nav>
+
+  <!-- Slides -->
+  <div class="slides-container">
+
+
+    <!-- Slide 1: Vertebrate Genomes Project on Galaxy -->
+    <section class="slide slide-stats active" data-section="overview">
+      <h1 class="slide-title">Vertebrate Genomes Project on Galaxy</h1>
+      <p class="slide-subtitle">Building reference-quality genomes for all 70,000 vertebrate species</p>
+      <div class="stats-grid four-col">
+
+        <div class="stat-card orange">
+          <div class="stat-number">2,330</div>
+          <div class="stat-label">workflow runs</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-number">461,000+</div>
+          <div class="stat-label">core-hours</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-number">113</div>
+          <div class="stat-label">unique pipelines</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-number">3+</div>
+          <div class="stat-label">years of operation</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Building the Tree of Life -->
+    <section class="slide" data-section="overview">
+      <div class="slide-split">
+        <div class="content-side">
+          <h1 class="slide-title">Building the Tree of Life</h1>
+          <p class="slide-text">The Vertebrate Genomes Project (VGP) aims to generate near error-free, chromosome-level reference genome assemblies for all ~70,000 extant vertebrate species.</p>
+          <p class="slide-text">Galaxy provides the computational infrastructure to achieve this at scale, with standardized, reproducible workflows accessible to researchers worldwide.</p>
+          <div class="slide-highlight">"95% of the main discoveries that have driven biotechnology came from studying things that were not model organisms at the time." - Giulio Formenti</div>
+        </div>
+        <div class="image-side">
+          <img src="images/tree.png" alt="VGP Phylogenetic Tree">
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: End-to-End Assembly Pipeline -->
+    <section class="slide" data-section="pipeline">
+      <div class="slide-split reverse">
+        <div class="content-side">
+          <h1 class="slide-title">End-to-End Assembly Pipeline</h1>
+          <p class="slide-text">The VGP pipeline consists of 10 modular workflows organized into 5 stages, from raw data to chromosome-level assembly.</p>
+          <p class="slide-text">Each stage is designed to work with different data types: HiFi, Hi-C, Bionano, and parental Illumina for trio assemblies.</p>
+          <div class="slide-highlight">Workflows 1-9 cover the main assembly pipeline, with Workflow 0 dedicated to mitochondrial genome assembly.</div>
+        </div>
+        <div class="image-side">
+          <img src="images/pipeline.png" alt="VGP Assembly Pipeline">
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: VGP Assembly Workflows -->
+    <section class="slide slide-wordcloud" data-section="pipeline">
+      <h1 class="slide-title">VGP Assembly Workflows</h1>
+      <div id="wordcloud-container"></div>
+    </section>
+
+    <!-- Slide 5: Massive Computational Scale -->
+    <section class="slide slide-stats" data-section="scale">
+      <h1 class="slide-title">Massive Computational Scale</h1>
+      <p class="slide-subtitle">Compute resources used by VGP on Galaxy</p>
+      <div class="stats-grid four-col">
+
+        <div class="stat-card orange">
+          <div class="stat-number">24,500+</div>
+          <div class="stat-label">hours of runtime</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-number">40,600+</div>
+          <div class="stat-label">jobs executed</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-number">4 TB</div>
+          <div class="stat-label">peak memory per job</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-number">128</div>
+          <div class="stat-label">max cores per job</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: 3 Years of Genome Assembly -->
+    <section class="slide" data-section="scale">
+      <div class="slide-split">
+        <div class="content-side">
+          <h1 class="slide-title">3 Years of Genome Assembly</h1>
+          <p class="slide-text">From July 2022 to October 2025, the VGP has continuously used Galaxy to assemble vertebrate genomes.</p>
+          <p class="slide-text">The top workflows by execution count include Hi-C scaffolding (244 runs), PretextMap generation (210 runs), and decontamination (131 runs).</p>
+          <div class="slide-highlight">77.9% of all workflow runs completed successfully, with the remainder either cancelled or requiring troubleshooting.</div>
+        </div>
+        <div class="image-side">
+          <img src="images/access-map.svg" alt="ACCESS-CI Infrastructure">
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Powered by Galaxy + ACCESS-CI -->
+    <section class="slide" data-section="scale">
+      <div class="slide-split reverse">
+        <div class="content-side">
+          <h1 class="slide-title">Powered by Galaxy + ACCESS-CI</h1>
+          <p class="slide-text">VGP leverages the US national cyberinfrastructure through ACCESS-CI, running on resources at TACC (Jetstream2), PSC, NCSA, and SDSC.</p>
+          <p class="slide-text">This provides the massive memory (up to 4TB) and CPU resources (up to 128 cores) needed for large vertebrate genome assemblies.</p>
+          <div class="slide-highlight">Galaxy provides an equivalent of >$2,000,000/year of free computational infrastructure to genomics researchers.</div>
+        </div>
+        <div class="image-side">
+          <img src="images/workflows.svg" alt="VGP Workflows">
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 8: Key VGP Resources -->
+    <section class="slide slide-links" data-section="resources">
+      <h1 class="slide-title">Key VGP Resources</h1>
+      
+      <div class="links-grid">
+
+        <a class="link-card" href="https://vgp.usegalaxy.org" target="_blank">
+          <span class="link-label">VGP Galaxy</span>
+          <span class="link-url">vgp.usegalaxy.org</span>
+        </a>
+        <a class="link-card" href="https://genomeark.org" target="_blank">
+          <span class="link-label">GenomeArk</span>
+          <span class="link-url">genomeark.org</span>
+        </a>
+        <a class="link-card" href="https://vertebrategenomesproject.org" target="_blank">
+          <span class="link-label">VGP Website</span>
+          <span class="link-url">vertebrategenomesproject.org</span>
+        </a>
+        <a class="link-card" href="https://usegalaxy.org" target="_blank">
+          <span class="link-label">Galaxy US</span>
+          <span class="link-url">usegalaxy.org</span>
+        </a>
+        <a class="link-card" href="https://iwc.galaxyproject.org" target="_blank">
+          <span class="link-label">IWC Workflows</span>
+          <span class="link-url">iwc.galaxyproject.org</span>
+        </a>
+        <a class="link-card" href="https://training.galaxyproject.org/training-material/topics/assembly/" target="_blank">
+          <span class="link-label">GTN Assembly Training</span>
+          <span class="link-url">training.galaxyproject.org/training-material/topics/assembly/</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Slide 9: vgp.usegalaxy.org -->
+    <section class="slide slide-qr" data-section="resources">
+      <h1 class="slide-title">vgp.usegalaxy.org</h1>
+      <img class="qr-code" src="images/qr-code.svg" alt="QR Code">
+    </section>
+
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+
+  <!-- Slide Dots -->
+  <div class="slide-dots"></div>
+
+  <!-- Slide Counter -->
+  <div class="slide-counter">
+    <span class="current">1</span> / <span class="total">9</span>
+  </div>
+
+  <!-- Controls Hint -->
+  <div class="controls-hint">
+    <kbd>Space</kbd> pause &nbsp; <kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate
+  </div>
+
+  <!-- Pause Indicator -->
+  <div class="pause-indicator">Paused</div>
+
+  <script>
+    /* ========================================
+       Word Cloud Data
+       ======================================== */
+
+    const WORDCLOUD_TOPICS = [
+      { text: "Genomics", weight: 100, url: "https://training.galaxyproject.org/training-material/topics/genome-annotation/" },
+      { text: "Transcriptomics", weight: 95, url: "https://training.galaxyproject.org/training-material/topics/transcriptomics/" },
+      { text: "Proteomics", weight: 85, url: "https://training.galaxyproject.org/training-material/topics/proteomics/" },
+      { text: "Metabolomics", weight: 80, url: "https://training.galaxyproject.org/training-material/topics/metabolomics/" },
+      { text: "Single Cell", weight: 90, url: "https://training.galaxyproject.org/training-material/topics/single-cell/" },
+      { text: "Variant Analysis", weight: 88, url: "https://training.galaxyproject.org/training-material/topics/variant-analysis/" },
+      { text: "Sequence Analysis", weight: 92, url: "https://training.galaxyproject.org/training-material/topics/sequence-analysis/" },
+      { text: "Assembly", weight: 85, url: "https://training.galaxyproject.org/training-material/topics/assembly/" },
+      { text: "Epigenetics", weight: 75, url: "https://training.galaxyproject.org/training-material/topics/epigenetics/" },
+      { text: "Microbiome", weight: 82, url: "https://training.galaxyproject.org/training-material/topics/microbiome/" },
+      { text: "Machine Learning", weight: 78, url: "https://training.galaxyproject.org/training-material/topics/statistics/" },
+      { text: "Imaging", weight: 70, url: "https://training.galaxyproject.org/training-material/topics/imaging/" },
+      { text: "Climate", weight: 65, url: "https://training.galaxyproject.org/training-material/topics/climate/" },
+      { text: "Ecology", weight: 68, url: "https://training.galaxyproject.org/training-material/topics/ecology/" },
+      { text: "Evolution", weight: 72, url: "https://training.galaxyproject.org/training-material/topics/evolution/" },
+      { text: "SARS-CoV-2", weight: 60, url: "https://training.galaxyproject.org/training-material/topics/variant-analysis/" },
+      { text: "FAIR Data", weight: 55, url: "https://training.galaxyproject.org/training-material/topics/fair/" },
+      { text: "Visualisation", weight: 58, url: "https://training.galaxyproject.org/training-material/topics/visualisation/" },
+      { text: "Computational Chemistry", weight: 50, url: "https://training.galaxyproject.org/training-material/topics/computational-chemistry/" },
+      { text: "Materials Science", weight: 45, url: "https://training.galaxyproject.org/training-material/topics/materials-science/" },
+      { text: "One Health", weight: 52, url: "https://training.galaxyproject.org/training-material/topics/one-health/" },
+      { text: "Plants", weight: 62, url: "https://training.galaxyproject.org/training-material/topics/plants/" },
+      { text: "Synthetic Biology", weight: 48, url: "https://training.galaxyproject.org/training-material/topics/synthetic-biology/" },
+      { text: "Data Science", weight: 75, url: "https://training.galaxyproject.org/training-material/topics/data-science/" },
+      { text: "Annotation", weight: 78, url: "https://training.galaxyproject.org/training-material/topics/genome-annotation/" },
+      { text: "RNA-seq", weight: 88, url: "https://training.galaxyproject.org/training-material/topics/transcriptomics/" },
+      { text: "ChIP-seq", weight: 72, url: "https://training.galaxyproject.org/training-material/topics/epigenetics/" },
+      { text: "ATAC-seq", weight: 68, url: "https://training.galaxyproject.org/training-material/topics/epigenetics/" },
+      { text: "Metagenomics", weight: 80, url: "https://training.galaxyproject.org/training-material/topics/metagenomics/" }
+    ];
+
+    /* ========================================
+       Word Cloud Generator
+       ======================================== */
+
+    function generateWordCloud() {
+      const container = document.getElementById('wordcloud-container');
+      if (!container) return;
+
+      container.innerHTML = '';
+
+      // Galaxy colors for sparkle effect
+      const sparkleColors = [
+        'rgba(254, 127, 2, 0.5)',   // orange
+        'rgba(32, 119, 179, 0.5)',  // blue
+        'rgba(116, 195, 118, 0.5)', // green
+        'rgba(255, 214, 2, 0.5)',   // yellow
+        'rgba(227, 26, 30, 0.5)',   // red
+        'rgba(163, 203, 223, 0.5)', // light blue
+        'rgba(253, 191, 111, 0.5)'  // light orange
+      ];
+
+      // Create grid of words
+      WORDCLOUD_TOPICS.forEach((topic, index) => {
+        const word = document.createElement('a');
+        word.className = 'wordcloud-word';
+        word.textContent = topic.text;
+        word.href = topic.url;
+        word.target = '_blank';
+        word.rel = 'noopener noreferrer';
+
+        container.appendChild(word);
+      });
+
+      // Add sparkle animation to random cells
+      const words = container.querySelectorAll('.wordcloud-word');
+
+      function addSparkle() {
+        // Remove existing sparkles
+        words.forEach(w => w.classList.remove('sparkle'));
+
+        // Pick 4-6 random words to sparkle
+        const numSparkles = 4 + Math.floor(Math.random() * 3);
+        const indices = new Set();
+        while (indices.size < numSparkles) {
+          indices.add(Math.floor(Math.random() * words.length));
+        }
+
+        indices.forEach(i => {
+          const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+          words[i].style.setProperty('--sparkle-color', color);
+          words[i].classList.add('sparkle');
+        });
+      }
+
+      // Initial sparkle
+      addSparkle();
+
+      // Rotate sparkles every 0.5 seconds
+      setInterval(addSparkle, 500);
+    }
+
+    // Add float animation keyframes (kept for compatibility)
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    /* ========================================
+       Slideshow Controller
+       ======================================== */
+
+    const CONFIG = {
+      interval: 3000,
+      transitionDuration: 600,
+      loop: true
+    };
+
+    class Slideshow {
+      constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.dotsContainer = document.querySelector('.slide-dots');
+        this.navLinks = document.querySelectorAll('.masthead-link');
+        this.progressBar = document.querySelector('.progress-bar');
+        this.pauseIndicator = document.querySelector('.pause-indicator');
+        this.counterCurrent = document.querySelector('.slide-counter .current');
+        this.counterTotal = document.querySelector('.slide-counter .total');
+
+        this.currentIndex = 0;
+        this.isPlaying = true;
+        this.progressInterval = null;
+        this.progress = 0;
+
+        this.init();
+      }
+
+      init() {
+        // Generate dots
+        this.slides.forEach((_, index) => {
+          const dot = document.createElement('div');
+          dot.className = `slide-dot${index === 0 ? ' active' : ''}`;
+          dot.dataset.slide = index;
+          dot.addEventListener('click', () => this.goToSlide(index));
+          this.dotsContainer.appendChild(dot);
+        });
+        this.dots = document.querySelectorAll('.slide-dot');
+
+        // Update counter
+        this.counterTotal.textContent = this.slides.length;
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => this.handleKeydown(e));
+
+        // Masthead navigation
+        this.navLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            const section = link.dataset.section;
+            const slideIndex = [...this.slides].findIndex(
+              slide => slide.dataset.section === section
+            );
+            if (slideIndex !== -1) this.goToSlide(slideIndex);
+          });
+        });
+
+        // Generate word cloud when that slide becomes active
+        this.generateWordCloudOnce = false;
+
+        // Start autoplay
+        this.startAutoplay();
+      }
+
+      handleKeydown(e) {
+        switch (e.code) {
+          case 'Space':
+            e.preventDefault();
+            this.togglePlayPause();
+            break;
+          case 'ArrowRight':
+            this.next();
+            break;
+          case 'ArrowLeft':
+            this.prev();
+            break;
+          case 'Escape':
+            if (!this.isPlaying) this.play();
+            break;
+        }
+      }
+
+      goToSlide(index) {
+        if (index < 0 || index >= this.slides.length) return;
+
+        // Update slides
+        this.slides[this.currentIndex].classList.remove('active');
+        this.slides[index].classList.add('active');
+
+        // Update body background for wordcloud slide
+        if (this.slides[index].classList.contains('slide-wordcloud')) {
+          document.body.classList.add('wordcloud-active');
+        } else {
+          document.body.classList.remove('wordcloud-active');
+        }
+
+        // Update dots
+        this.dots[this.currentIndex].classList.remove('active');
+        this.dots[index].classList.add('active');
+
+        // Update masthead
+        const section = this.slides[index].dataset.section;
+        this.navLinks.forEach(link => {
+          link.classList.toggle('active', link.dataset.section === section);
+        });
+
+        // Update counter
+        this.counterCurrent.textContent = index + 1;
+
+        this.currentIndex = index;
+
+        // Generate word cloud if on that slide
+        if (this.slides[index].classList.contains('slide-wordcloud') && !this.generateWordCloudOnce) {
+          setTimeout(generateWordCloud, 100);
+          this.generateWordCloudOnce = true;
+        }
+
+        // Reset progress
+        this.resetProgress();
+      }
+
+      next() {
+        let nextIndex = this.currentIndex + 1;
+        if (nextIndex >= this.slides.length) {
+          nextIndex = CONFIG.loop ? 0 : this.slides.length - 1;
+        }
+        this.goToSlide(nextIndex);
+      }
+
+      prev() {
+        let prevIndex = this.currentIndex - 1;
+        if (prevIndex < 0) {
+          prevIndex = CONFIG.loop ? this.slides.length - 1 : 0;
+        }
+        this.goToSlide(prevIndex);
+      }
+
+      getCurrentDuration() {
+        const slide = this.slides[this.currentIndex];
+        return parseInt(slide.dataset.duration) || CONFIG.interval;
+      }
+
+      togglePlayPause() {
+        if (this.isPlaying) {
+          this.pause();
+        } else {
+          this.play();
+        }
+      }
+
+      play() {
+        this.isPlaying = true;
+        this.pauseIndicator.classList.remove('visible');
+        this.startAutoplay();
+      }
+
+      pause() {
+        this.isPlaying = false;
+        this.pauseIndicator.classList.add('visible');
+        this.stopAutoplay();
+
+        setTimeout(() => {
+          if (!this.isPlaying) {
+            this.pauseIndicator.classList.remove('visible');
+          }
+        }, 1000);
+      }
+
+      startAutoplay() {
+        this.stopAutoplay();
+
+        this.progress = 0;
+        this.progressBar.style.width = '0%';
+
+        const duration = this.getCurrentDuration();
+        this.progressInterval = setInterval(() => {
+          this.progress += 100 / (duration / 100);
+          this.progressBar.style.width = `${this.progress}%`;
+
+          if (this.progress >= 100) {
+            this.next();
+          }
+        }, 100);
+      }
+
+      stopAutoplay() {
+        clearInterval(this.progressInterval);
+      }
+
+      resetProgress() {
+        this.progress = 0;
+        this.progressBar.style.width = '0%';
+
+        if (this.isPlaying) {
+          this.startAutoplay();
+        }
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      new Slideshow();
+    });
+  </script>
+</body>
+</html>
