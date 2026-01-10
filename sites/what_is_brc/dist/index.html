@@ -977,6 +977,217 @@
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
       z-index: 1001;
     }
+
+    /* ========================================
+       Responsive Design
+       ======================================== */
+
+    @media (max-width: 768px) {
+      :root {
+        --spacing-xl: 40px;
+        --spacing-lg: 24px;
+        --spacing-md: 16px;
+      }
+
+      .masthead {
+        height: 44px;
+        gap: var(--spacing-md);
+      }
+
+      .masthead-logo img {
+        height: 24px;
+      }
+
+      .masthead-nav {
+        gap: 8px;
+      }
+
+      .masthead-link {
+        font-size: 11px;
+        padding: 6px 10px;
+      }
+
+      .slide {
+        padding: var(--spacing-lg);
+        padding-top: 60px;
+      }
+
+      .slide-intro .slide-title {
+        font-size: 24px;
+      }
+
+      .slide-intro .slide-subtitle {
+        font-size: 16px;
+      }
+
+      .slide-intro .slide-image img {
+        max-height: 40vh;
+      }
+
+      .slide-stats .slide-title {
+        font-size: 32px;
+      }
+
+      .slide-stats .slide-subtitle {
+        font-size: 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+      }
+
+      .stats-grid.four-col {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat-card {
+        padding: var(--spacing-md) var(--spacing-sm);
+      }
+
+      .stat-number {
+        font-size: 32px;
+      }
+
+      .stat-label {
+        font-size: 12px;
+      }
+
+      .slide-split {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+      }
+
+      .slide-split .slide-title {
+        font-size: 28px;
+      }
+
+      .slide-split .slide-text {
+        font-size: 15px;
+      }
+
+      .slide-split .image-side img {
+        max-height: 35vh;
+      }
+
+      /* Sunburst responsive */
+      .slide-sunburst .slide-title {
+        font-size: 24px;
+      }
+
+      .sunburst-wrapper {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+
+      #sunburst-container {
+        flex: none;
+        width: 100%;
+        max-width: 300px;
+      }
+
+      #sunburst-panel {
+        flex: none;
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .sunburst-panel-header a {
+        font-size: 12px;
+      }
+
+      .sunburst-child-item {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+
+      .slide-wordcloud .slide-title {
+        font-size: 28px;
+      }
+
+      #wordcloud-container {
+        gap: 8px;
+      }
+
+      .wordcloud-word {
+        font-size: 14px;
+        padding: 8px 12px;
+      }
+
+      .slide-links .slide-title {
+        font-size: 28px;
+      }
+
+      .links-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+      }
+
+      .link-card {
+        padding: var(--spacing-md);
+      }
+
+      .link-name {
+        font-size: 14px;
+      }
+
+      .link-url {
+        font-size: 11px;
+      }
+
+      .slide-qr .slide-title {
+        font-size: 28px;
+      }
+
+      .slide-qr .qr-image img {
+        max-width: 200px;
+      }
+
+      .slide-counter {
+        font-size: 10px;
+        padding: 6px 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .masthead-nav {
+        display: none;
+      }
+
+      .slide-intro .slide-title {
+        font-size: 18px;
+      }
+
+      .slide-stats .slide-title {
+        font-size: 24px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stat-number {
+        font-size: 28px;
+      }
+
+      .slide-split .slide-title {
+        font-size: 22px;
+      }
+
+      #sunburst-container {
+        max-width: 250px;
+      }
+
+      .wordcloud-word {
+        font-size: 12px;
+        padding: 6px 10px;
+      }
+
+      .links-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
