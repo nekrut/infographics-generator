@@ -23,6 +23,18 @@ masthead:
 
 ---
 
+# [overview] Genome Assemblies Completed
+> Reference-quality genomes across the vertebrate tree of life
+
+| Stat | Label |
+|------|-------|
+| 521 | genome assemblies |
+| 274 | unique species |
+| 89 | chromosome-level |
+| 179 | with mitogenome |
+
+---
+
 # [overview] Building the Tree of Life
 > split
 
