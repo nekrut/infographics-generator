@@ -46,31 +46,31 @@ Workflows 1-9 cover the main assembly pipeline, with Workflow 0 dedicated to mit
 
 ---
 
-# [pipeline] K-mer Profiling Workflows
+# [pipeline] Pre-Assembly & Assembly
 > type: workflow
 
 - VGP0 Mitogenome Assembly | HiFi reads, Species name, Genetic code | GenBank file, Annotation images
 - VGP1 K-mer Profiling | HiFi reads, K-mer length, Ploidy | Meryl database, GenomeScope plots
 - VGP2 K-mer Profiling Trio | HiFi reads, Parental Illumina | Meryl DBs, GenomeScope profiles
-
----
-
-# [pipeline] Assembly Workflows
-> type: workflow
-
 - VGP3 HiFi Assembly | HiFi reads, Meryl DB, GenomeScope | Primary assembly, Alternate assembly
 - VGP4 HiFi+HiC Assembly | HiFi reads, HiC reads, Meryl DB | Haplotype 1, Haplotype 2
 - VGP5 Trio Assembly | HiFi reads, Parental reads, Meryl DBs | Paternal haplotype, Maternal haplotype
 
 ---
 
-# [pipeline] Post-Assembly Workflows
+# [pipeline] Post-Assembly Processing
 > type: workflow
 
 - VGP6 Purge Duplicates | Assemblies, Trimmed HiFi, Meryl DB | Purged primary, Purged alternate
 - VGP6b Purge Single | Assembly, Trimmed HiFi, Meryl DB | Purged assembly
 - VGP7 Bionano Scaffolding | Assembly (GFA), Bionano cmap | Scaffolds, QC plots
 - VGP8 HiC Scaffolding | Assembly (GFA), HiC reads | Scaffolded assembly, Contact map
+
+---
+
+# [pipeline] Decontamination
+> type: workflow
+
 - VGP9 Decontamination | Assembly, NCBI taxon ID | Clean assembly, Contaminants
 
 ---
