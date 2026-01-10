@@ -1107,12 +1107,26 @@
       }
 
       #wordcloud-container {
+        grid-template-columns: repeat(3, 1fr);
         gap: 8px;
       }
 
       .wordcloud-word {
-        font-size: 14px;
-        padding: 8px 12px;
+        font-size: 13px;
+        padding: 10px 8px;
+      }
+
+      .slide-dots {
+        gap: 4px;
+      }
+
+      .slide-dot {
+        width: 6px;
+        height: 6px;
+      }
+
+      .controls-hint {
+        display: none;
       }
 
       .slide-links .slide-title {
@@ -1179,9 +1193,14 @@
         max-width: 250px;
       }
 
+      #wordcloud-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+
       .wordcloud-word {
-        font-size: 12px;
-        padding: 6px 10px;
+        font-size: 11px;
+        padding: 8px 6px;
       }
 
       .links-grid {
