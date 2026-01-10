@@ -23,6 +23,7 @@ const SLIDE_TYPES = {
   split: /^>\s*split/m,
   wordcloud: /^>\s*type:\s*wordcloud/m,
   scatter: /^>\s*type:\s*scatter/m,
+  workflow: /^>\s*type:\s*workflow/m,
   sunburst: /^>\s*type:\s*sunburst/m,
   ecosystem: /^>\s*type:\s*ecosystem/m,
   galaxies: /^>\s*type:\s*galaxies/m,
@@ -109,6 +110,18 @@ function parseSlide(content, index) {
     }
   } else if (SLIDE_TYPES.scatter.test(content)) {
     slide.type = 'scatter';
+  } else if (SLIDE_TYPES.workflow.test(content)) {
+    slide.type = 'workflow';
+    // Parse workflow items: - ID Name | input1, input2 | output1, output2
+    const workflowMatches = content.matchAll(/^-\s*(\S+)\s+([^|]+)\s*\|\s*([^|]+)\s*\|\s*(.+)$/gm);
+    for (const match of workflowMatches) {
+      slide.items.push({
+        id: match[1].trim(),
+        name: match[2].trim(),
+        inputs: match[3].split(',').map(s => s.trim()),
+        outputs: match[4].split(',').map(s => s.trim())
+      });
+    }
   } else if (SLIDE_TYPES.sunburst.test(content)) {
     slide.type = 'sunburst';
   } else if (SLIDE_TYPES.ecosystem.test(content)) {
@@ -174,6 +187,8 @@ function generateSlideHTML(slide) {
       return generateWordcloudSlide(slide, activeClass);
     case 'scatter':
       return generateScatterSlide(slide, activeClass);
+    case 'workflow':
+      return generateWorkflowSlide(slide, activeClass);
     case 'sunburst':
       return generateSunburstSlide(slide, activeClass);
     case 'ecosystem':
@@ -264,6 +279,38 @@ function generateScatterSlide(slide, activeClass) {
     <section class="slide slide-scatter${activeClass}" data-section="${slide.section}">
       <h1 class="slide-title">${slide.title}</h1>
       <div id="scatter-container"></div>
+    </section>`;
+}
+
+function generateWorkflowSlide(slide, activeClass) {
+  const workflowsHTML = slide.items.map(wf => {
+    const inputsHTML = wf.inputs.map(input =>
+      `<span class="workflow-input">${input}</span>`).join('\n            ');
+    const outputsHTML = wf.outputs.map(output =>
+      `<span class="workflow-output">${output}</span>`).join('\n            ');
+
+    return `
+          <div class="workflow-row">
+            <div class="workflow-inputs">
+              ${inputsHTML}
+            </div>
+            <div class="workflow-box">
+              <div class="workflow-id">${wf.id}</div>
+              <div class="workflow-name">${wf.name}</div>
+            </div>
+            <div class="workflow-outputs">
+              ${outputsHTML}
+            </div>
+          </div>`;
+  }).join('\n');
+
+  return `
+    <!-- Slide ${slide.index + 1}: ${slide.title} -->
+    <section class="slide slide-workflow${activeClass}" data-section="${slide.section}">
+      <h1 class="slide-title">${slide.title}</h1>
+      <div class="workflow-container">
+${workflowsHTML}
+      </div>
     </section>`;
 }
 

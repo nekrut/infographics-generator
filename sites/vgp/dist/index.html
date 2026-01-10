@@ -1044,6 +1044,162 @@
         height: 60vh;
       }
     }
+
+    /* Workflow Diagram Slide */
+    .slide-workflow {
+      background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 70px 40px 40px;
+      overflow-y: auto;
+    }
+
+    .slide-workflow .slide-title {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+      color: var(--color-text-light);
+      text-align: center;
+    }
+
+    .workflow-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .workflow-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .workflow-inputs,
+    .workflow-outputs {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 180px;
+      max-width: 220px;
+    }
+
+    .workflow-inputs {
+      align-items: flex-end;
+      text-align: right;
+    }
+
+    .workflow-outputs {
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .workflow-input,
+    .workflow-output {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.85);
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .workflow-input {
+      border-left: 3px solid var(--color-orange);
+    }
+
+    .workflow-output {
+      border-left: 3px solid var(--color-green);
+    }
+
+    .workflow-box {
+      background: #000;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      padding: 16px 24px;
+      min-width: 200px;
+      text-align: center;
+      position: relative;
+    }
+
+    .workflow-box::before,
+    .workflow-box::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 20px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .workflow-box::before {
+      left: -20px;
+    }
+
+    .workflow-box::after {
+      right: -20px;
+    }
+
+    .workflow-id {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-accent);
+      margin-bottom: 4px;
+    }
+
+    .workflow-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-light);
+      line-height: 1.3;
+    }
+
+    @media (max-width: 900px) {
+      .slide-workflow {
+        padding: 60px 20px 30px;
+      }
+
+      .workflow-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .workflow-inputs,
+      .workflow-outputs {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: none;
+        align-items: center;
+        text-align: center;
+      }
+
+      .workflow-inputs {
+        order: 1;
+      }
+
+      .workflow-box {
+        order: 2;
+      }
+
+      .workflow-box::before,
+      .workflow-box::after {
+        display: none;
+      }
+
+      .workflow-outputs {
+        order: 3;
+      }
+
+      .workflow-input,
+      .workflow-output {
+        font-size: 11px;
+      }
+    }
   </style>
 
   <!-- Vega-Lite for interactive visualizations -->
@@ -1105,13 +1261,199 @@
       </div>
     </section>
 
-    <!-- Slide 4: VGP Assembly Workflows -->
-    <section class="slide slide-wordcloud" data-section="pipeline">
-      <h1 class="slide-title">VGP Assembly Workflows</h1>
-      <div id="wordcloud-container"></div>
+    <!-- Slide 4: K-mer Profiling Workflows -->
+    <section class="slide slide-workflow" data-section="pipeline">
+      <h1 class="slide-title">K-mer Profiling Workflows</h1>
+      <div class="workflow-container">
+
+          <div class="workflow-row">
+            <div class="workflow-inputs">
+              <span class="workflow-input">HiFi reads</span>
+            <span class="workflow-input">Species name</span>
+            <span class="workflow-input">Genetic code</span>
+            </div>
+            <div class="workflow-box">
+              <div class="workflow-id">VGP0</div>
+              <div class="workflow-name">Mitogenome Assembly</div>
+            </div>
+            <div class="workflow-outputs">
+              <span class="workflow-output">GenBank file</span>
+            <span class="workflow-output">Annotation images</span>
+            </div>
+          </div>
+
+          <div class="workflow-row">
+            <div class="workflow-inputs">
+              <span class="workflow-input">HiFi reads</span>
+            <span class="workflow-input">K-mer length</span>
+            <span class="workflow-input">Ploidy</span>
+            </div>
+            <div class="workflow-box">
+              <div class="workflow-id">VGP1</div>
+              <div class="workflow-name">K-mer Profiling</div>
+            </div>
+            <div class="workflow-outputs">
+              <span class="workflow-output">Meryl database</span>
+            <span class="workflow-output">GenomeScope plots</span>
+            </div>
+          </div>
+
+          <div class="workflow-row">
+            <div class="workflow-inputs">
+              <span class="workflow-input">HiFi reads</span>
+            <span class="workflow-input">Parental Illumina</span>
+            </div>
+            <div class="workflow-box">
+              <div class="workflow-id">VGP2</div>
+              <div class="workflow-name">K-mer Profiling Trio</div>
+            </div>
+            <div class="workflow-outputs">
+              <span class="workflow-output">Meryl DBs</span>
+            <span class="workflow-output">GenomeScope profiles</span>
+            </div>
+          </div>
+      </div>
     </section>
 
-    <!-- Slide 5: Massive Computational Scale -->
+    <!-- Slide 5: Assembly Workflows -->
+    <section class="slide slide-workflow" data-section="pipeline">
+      <h1 class="slide-title">Assembly Workflows</h1>
+      <div class="workflow-container">
+
+          <div class="workflow-row">
+            <div class="workflow-inputs">
+              <span class="workflow-input">HiFi reads</span>
+            <span class="workflow-input">Meryl DB</span>
+            <span class="workflow-input">GenomeScope</span>
+            </div>
+            <div class="workflow-box">
+              <div class="workflow-id">VGP3</div>
+              <div class="workflow-name">HiFi Assembly</div>
+            </div>
+            <div class="workflow-outputs">
+              <span class="workflow-output">Primary assembly</span>
+            <span class="workflow-output">Alternate assembly</span>
+            </div>
+          </div>
+
+          <div class="workflow-row">
+            <div class="workflow-inputs">
+              <span class="workflow-input">HiFi reads</span>
+            <span class="workflow-input">HiC reads</span>
+            <span class="workflow-input">Meryl DB</span>
+            </div>
+            <div class="workflow-box">
+              <div class="workflow-id">VGP4</div>
+              <div class="workflow-name">HiFi+HiC Assembly</div>
+            </div>
+            <div class="workflow-outputs">
+              <span class="workflow-output">Haplotype 1</span>
+            <span class="workflow-output">Haplotype 2</span>
+            </div>
+          </div>
+
+          <div class="workflow-row">
+            <div class="workflow-inputs">
+              <span class="workflow-input">HiFi reads</span>
+            <span class="workflow-input">Parental reads</span>
+            <span class="workflow-input">Meryl DBs</span>
+            </div>
+            <div class="workflow-box">
+              <div class="workflow-id">VGP5</div>
+              <div class="workflow-name">Trio Assembly</div>
+            </div>
+            <div class="workflow-outputs">
+              <span class="workflow-output">Paternal haplotype</span>
+            <span class="workflow-output">Maternal haplotype</span>
+            </div>
+          </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Post-Assembly Workflows -->
+    <section class="slide slide-workflow" data-section="pipeline">
+      <h1 class="slide-title">Post-Assembly Workflows</h1>
+      <div class="workflow-container">
+
+          <div class="workflow-row">
+            <div class="workflow-inputs">
+              <span class="workflow-input">Assemblies</span>
+            <span class="workflow-input">Trimmed HiFi</span>
+            <span class="workflow-input">Meryl DB</span>
+            </div>
+            <div class="workflow-box">
+              <div class="workflow-id">VGP6</div>
+              <div class="workflow-name">Purge Duplicates</div>
+            </div>
+            <div class="workflow-outputs">
+              <span class="workflow-output">Purged primary</span>
+            <span class="workflow-output">Purged alternate</span>
+            </div>
+          </div>
+
+          <div class="workflow-row">
+            <div class="workflow-inputs">
+              <span class="workflow-input">Assembly</span>
+            <span class="workflow-input">Trimmed HiFi</span>
+            <span class="workflow-input">Meryl DB</span>
+            </div>
+            <div class="workflow-box">
+              <div class="workflow-id">VGP6b</div>
+              <div class="workflow-name">Purge Single</div>
+            </div>
+            <div class="workflow-outputs">
+              <span class="workflow-output">Purged assembly</span>
+            </div>
+          </div>
+
+          <div class="workflow-row">
+            <div class="workflow-inputs">
+              <span class="workflow-input">Assembly (GFA)</span>
+            <span class="workflow-input">Bionano cmap</span>
+            </div>
+            <div class="workflow-box">
+              <div class="workflow-id">VGP7</div>
+              <div class="workflow-name">Bionano Scaffolding</div>
+            </div>
+            <div class="workflow-outputs">
+              <span class="workflow-output">Scaffolds</span>
+            <span class="workflow-output">QC plots</span>
+            </div>
+          </div>
+
+          <div class="workflow-row">
+            <div class="workflow-inputs">
+              <span class="workflow-input">Assembly (GFA)</span>
+            <span class="workflow-input">HiC reads</span>
+            </div>
+            <div class="workflow-box">
+              <div class="workflow-id">VGP8</div>
+              <div class="workflow-name">HiC Scaffolding</div>
+            </div>
+            <div class="workflow-outputs">
+              <span class="workflow-output">Scaffolded assembly</span>
+            <span class="workflow-output">Contact map</span>
+            </div>
+          </div>
+
+          <div class="workflow-row">
+            <div class="workflow-inputs">
+              <span class="workflow-input">Assembly</span>
+            <span class="workflow-input">NCBI taxon ID</span>
+            </div>
+            <div class="workflow-box">
+              <div class="workflow-id">VGP9</div>
+              <div class="workflow-name">Decontamination</div>
+            </div>
+            <div class="workflow-outputs">
+              <span class="workflow-output">Clean assembly</span>
+            <span class="workflow-output">Contaminants</span>
+            </div>
+          </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Massive Computational Scale -->
     <section class="slide slide-stats" data-section="scale">
       <h1 class="slide-title">Massive Computational Scale</h1>
       <p class="slide-subtitle">Compute resources used by VGP on Galaxy</p>
@@ -1136,7 +1478,7 @@
       </div>
     </section>
 
-    <!-- Slide 6: 3 Years of Genome Assembly -->
+    <!-- Slide 8: 3 Years of Genome Assembly -->
     <section class="slide" data-section="scale">
       <div class="slide-split">
         <div class="content-side">
@@ -1151,7 +1493,7 @@
       </div>
     </section>
 
-    <!-- Slide 7: Powered by Galaxy + ACCESS-CI -->
+    <!-- Slide 9: Powered by Galaxy + ACCESS-CI -->
     <section class="slide" data-section="scale">
       <div class="slide-split reverse">
         <div class="content-side">
@@ -1166,7 +1508,7 @@
       </div>
     </section>
 
-    <!-- Slide 8: Key VGP Resources -->
+    <!-- Slide 10: Key VGP Resources -->
     <section class="slide slide-links" data-section="resources">
       <h1 class="slide-title">Key VGP Resources</h1>
       
@@ -1199,7 +1541,7 @@
       </div>
     </section>
 
-    <!-- Slide 9: vgp.usegalaxy.org -->
+    <!-- Slide 11: vgp.usegalaxy.org -->
     <section class="slide slide-qr" data-section="resources">
       <h1 class="slide-title">vgp.usegalaxy.org</h1>
       <img class="qr-code" src="images/qr-code.svg" alt="QR Code">
