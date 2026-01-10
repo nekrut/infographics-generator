@@ -987,7 +987,6 @@
     </div>
     <div class="masthead-nav">
       <a class="masthead-link active" data-section="intro">1-2-3</a>
-      <a class="masthead-link" data-section="platform">Platform</a>
       <a class="masthead-link" data-section="capabilities">Capabilities</a>
       <a class="masthead-link" data-section="resources">Resources</a>
     </div>
@@ -997,29 +996,11 @@
   <div class="slides-container">
 
 
-    <!-- Slide 1: BRC Analytics -->
-    <section class="slide slide-stats active" data-section="platform">
-      <h1 class="slide-title">BRC Analytics</h1>
-      <p class="slide-subtitle">From raw reads to publication-ready results in your browser</p>
-      <div class="stats-grid four-col">
-
-        <div class="stat-card orange">
-          <div class="stat-number">5,060</div>
-          <div class="stat-label">genome assemblies</div>
-        </div>
-        <div class="stat-card blue">
-          <div class="stat-number">1,920</div>
-          <div class="stat-label">pathogen taxa</div>
-        </div>
-        <div class="stat-card green">
-          <div class="stat-number">26+</div>
-          <div class="stat-label">priority pathogens</div>
-        </div>
-        <div class="stat-card yellow">
-          <div class="stat-number">FREE</div>
-          <div class="stat-label">cloud compute</div>
-        </div>
-      </div>
+    <!-- Slide 1: BRC Analytics: Genome data for pathogens, hosts, and vectors + 1,000 of tools and worklows + powerful cloud infrastrcture -->
+    <section class="slide slide-intro active" data-section="intro">
+      <h1 class="slide-title">BRC Analytics: Genome data for pathogens, hosts, and vectors + 1,000 of tools and worklows + powerful cloud infrastrcture</h1>
+      <p class="slide-subtitle">All completely free</p>
+      <img class="slide-image" src="images/whatIsBrc.svg" alt="Data sources">
     </section>
 
     <!-- Slide 2: Find organism -->
@@ -1053,7 +1034,7 @@
     <!-- Slide 6: Run workflow -->
     <section class="slide slide-intro" data-section="intro">
       <h1 class="slide-title">Run workflow</h1>
-      <p class="slide-subtitle">One one sample of 1,000,000 samples</p>
+      <p class="slide-subtitle">On one sample or 1,000,000 samples</p>
       <img class="slide-image" src="images/run-wf.png" alt="Run workflow">
     </section>
 
@@ -1064,22 +1045,8 @@
       <img class="slide-image" src="images/interpret.png" alt="Interpret">
     </section>
 
-    <!-- Slide 8: Best data source in one package -->
-    <section class="slide" data-section="platform">
-      <div class="slide-split">
-        <div class="content-side">
-          <h1 class="slide-title">Best data source in one package</h1>
-          <p class="slide-text">Battle tested resources and infrastructure</p>
-          
-        </div>
-        <div class="image-side">
-          <img src="images/whatIsBrc.svg" alt="Data sources">
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 9: Cloud-Powered Infrastructure -->
-    <section class="slide" data-section="platform">
+    <!-- Slide 8: Cloud-Powered Infrastructure -->
+    <section class="slide" data-section="capabilities">
       <div class="slide-split">
         <div class="content-side">
           <h1 class="slide-title">Cloud-Powered Infrastructure</h1>
@@ -1092,7 +1059,7 @@
       </div>
     </section>
 
-    <!-- Slide 10: Pathogen Taxonomy Browser -->
+    <!-- Slide 9: Pathogen Taxonomy Browser -->
     <section class="slide slide-sunburst" data-section="capabilities">
       <h1 class="slide-title">Pathogen Taxonomy Browser</h1>
       <p class="slide-subtitle">1,920 pathogen taxa across bacteria, viruses, and fungi</p>
@@ -1127,32 +1094,13 @@
       </div>
     </section>
 
-    <!-- Slide 11: Analysis Workflows -->
-    <section class="slide slide-stats" data-section="capabilities">
+    <!-- Slide 10: Analysis Workflows -->
+    <section class="slide slide-wordcloud" data-section="capabilities">
       <h1 class="slide-title">Analysis Workflows</h1>
-      <p class="slide-subtitle">Validated pipelines for pathogen genomics</p>
-      <div class="stats-grid four-col">
-
-        <div class="stat-card orange">
-          <div class="stat-number">Variant</div>
-          <div class="stat-label">Calling</div>
-        </div>
-        <div class="stat-card blue">
-          <div class="stat-number">RNA-seq</div>
-          <div class="stat-label">Transcriptomics</div>
-        </div>
-        <div class="stat-card green">
-          <div class="stat-number">Assembly</div>
-          <div class="stat-label">Genome construction</div>
-        </div>
-        <div class="stat-card yellow">
-          <div class="stat-number">Consensus</div>
-          <div class="stat-label">Sequence generation</div>
-        </div>
-      </div>
+      <div id="wordcloud-container"></div>
     </section>
 
-    <!-- Slide 12: Key Links -->
+    <!-- Slide 11: Key Links -->
     <section class="slide slide-links" data-section="resources">
       <h1 class="slide-title">Key Links</h1>
       <p class="slide-subtitle">Essential resources for BRC Analytics</p>
@@ -1161,10 +1109,6 @@
         <a class="link-card" href="https://brc-analytics.org" target="_blank">
           <span class="link-label">BRC Analytics</span>
           <span class="link-url">brc-analytics.org</span>
-        </a>
-        <a class="link-card" href="https://www.bv-brc.org" target="_blank">
-          <span class="link-label">BV-BRC</span>
-          <span class="link-url">www.bv-brc.org</span>
         </a>
         <a class="link-card" href="https://usegalaxy.org" target="_blank">
           <span class="link-label">Galaxy</span>
@@ -1181,10 +1125,10 @@
       </div>
     </section>
 
-    <!-- Slide 13: Get Started -->
+    <!-- Slide 12: gxy.io/what-is-brc -->
     <section class="slide slide-qr" data-section="resources">
-      <h1 class="slide-title">Get Started</h1>
-      <img class="qr-code" src="images/qr-code.png" alt="Scan to visit BRC Analytics">
+      <h1 class="slide-title">gxy.io/what-is-brc</h1>
+      <img class="qr-code" src="images/qr-code.svg" alt="Scan to visit BRC Analytics">
     </section>
 
   </div>
@@ -1219,35 +1163,20 @@
        ======================================== */
 
     const WORDCLOUD_TOPICS = [
-      { text: "Genomics", weight: 100, url: "https://training.galaxyproject.org/training-material/topics/genome-annotation/" },
-      { text: "Transcriptomics", weight: 95, url: "https://training.galaxyproject.org/training-material/topics/transcriptomics/" },
-      { text: "Proteomics", weight: 85, url: "https://training.galaxyproject.org/training-material/topics/proteomics/" },
-      { text: "Metabolomics", weight: 80, url: "https://training.galaxyproject.org/training-material/topics/metabolomics/" },
-      { text: "Single Cell", weight: 90, url: "https://training.galaxyproject.org/training-material/topics/single-cell/" },
-      { text: "Variant Analysis", weight: 88, url: "https://training.galaxyproject.org/training-material/topics/variant-analysis/" },
-      { text: "Sequence Analysis", weight: 92, url: "https://training.galaxyproject.org/training-material/topics/sequence-analysis/" },
-      { text: "Assembly", weight: 85, url: "https://training.galaxyproject.org/training-material/topics/assembly/" },
-      { text: "Epigenetics", weight: 75, url: "https://training.galaxyproject.org/training-material/topics/epigenetics/" },
-      { text: "Microbiome", weight: 82, url: "https://training.galaxyproject.org/training-material/topics/microbiome/" },
-      { text: "Machine Learning", weight: 78, url: "https://training.galaxyproject.org/training-material/topics/statistics/" },
-      { text: "Imaging", weight: 70, url: "https://training.galaxyproject.org/training-material/topics/imaging/" },
-      { text: "Climate", weight: 65, url: "https://training.galaxyproject.org/training-material/topics/climate/" },
-      { text: "Ecology", weight: 68, url: "https://training.galaxyproject.org/training-material/topics/ecology/" },
-      { text: "Evolution", weight: 72, url: "https://training.galaxyproject.org/training-material/topics/evolution/" },
-      { text: "SARS-CoV-2", weight: 60, url: "https://training.galaxyproject.org/training-material/topics/variant-analysis/" },
-      { text: "FAIR Data", weight: 55, url: "https://training.galaxyproject.org/training-material/topics/fair/" },
-      { text: "Visualisation", weight: 58, url: "https://training.galaxyproject.org/training-material/topics/visualisation/" },
-      { text: "Computational Chemistry", weight: 50, url: "https://training.galaxyproject.org/training-material/topics/computational-chemistry/" },
-      { text: "Materials Science", weight: 45, url: "https://training.galaxyproject.org/training-material/topics/materials-science/" },
-      { text: "One Health", weight: 52, url: "https://training.galaxyproject.org/training-material/topics/one-health/" },
-      { text: "Plants", weight: 62, url: "https://training.galaxyproject.org/training-material/topics/plants/" },
-      { text: "Synthetic Biology", weight: 48, url: "https://training.galaxyproject.org/training-material/topics/synthetic-biology/" },
-      { text: "Data Science", weight: 75, url: "https://training.galaxyproject.org/training-material/topics/data-science/" },
-      { text: "Annotation", weight: 78, url: "https://training.galaxyproject.org/training-material/topics/genome-annotation/" },
-      { text: "RNA-seq", weight: 88, url: "https://training.galaxyproject.org/training-material/topics/transcriptomics/" },
-      { text: "ChIP-seq", weight: 72, url: "https://training.galaxyproject.org/training-material/topics/epigenetics/" },
-      { text: "ATAC-seq", weight: 68, url: "https://training.galaxyproject.org/training-material/topics/epigenetics/" },
-      { text: "Metagenomics", weight: 80, url: "https://training.galaxyproject.org/training-material/topics/metagenomics/" }
+      { text: 'Amplicon', url: 'https://iwc.galaxyproject.org/?filter=Amplicon' },
+      { text: 'Bacterial Genomics', url: 'https://iwc.galaxyproject.org/?filter=Bacterial%20Genomics' },
+      { text: 'Epigenetics', url: 'https://iwc.galaxyproject.org/?filter=Epigenetics' },
+      { text: 'Genome Assembly', url: 'https://iwc.galaxyproject.org/?filter=Genome%20Assembly' },
+      { text: 'Genome Annotation', url: 'https://iwc.galaxyproject.org/?filter=Genome%20Annotation' },
+      { text: 'Imaging', url: 'https://iwc.galaxyproject.org/?filter=Imaging' },
+      { text: 'Metabolomics', url: 'https://iwc.galaxyproject.org/?filter=Metabolomics' },
+      { text: 'Microbiome', url: 'https://iwc.galaxyproject.org/?filter=Microbiome' },
+      { text: 'Proteomics', url: 'https://iwc.galaxyproject.org/?filter=Proteomics' },
+      { text: 'Single Cell', url: 'https://iwc.galaxyproject.org/?filter=Single%20Cell' },
+      { text: 'Transcriptomics', url: 'https://iwc.galaxyproject.org/?filter=Transcriptomics' },
+      { text: 'Variant Calling', url: 'https://iwc.galaxyproject.org/?filter=Variant%20Calling' },
+      { text: 'Virology', url: 'https://iwc.galaxyproject.org/?filter=Virology' },
+      { text: 'VGP', url: 'https://iwc.galaxyproject.org/?filter=VGP' }
     ];
 
     /* ========================================

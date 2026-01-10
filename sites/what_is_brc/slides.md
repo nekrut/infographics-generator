@@ -2,24 +2,17 @@
 masthead:
   - name: "1-2-3"
     section: intro
-  - name: "Platform"
-    section: platform
   - name: "Capabilities"
     section: capabilities
   - name: "Resources"
     section: resources
 ---
 
-# [platform] BRC Analytics
+# [intro] BRC Analytics: Genome data for pathogens, hosts, and vectors + 1,000 of tools and worklows + powerful cloud infrastrcture
 
-> From raw reads to publication-ready results in your browser
+> All completely free
 
-| Stat | Label |
-|------|-------|
-| 5,060 | genome assemblies |
-| 1,920 | pathogen taxa |
-| 26+ | priority pathogens |
-| FREE | cloud compute |
+![Data sources](images/whatIsBrc.svg)
 
 ---
 
@@ -57,7 +50,7 @@ masthead:
 
 # [intro] Run workflow
 
-> One one sample of 1,000,000 samples
+> On one sample or 1,000,000 samples
 
 ![Run workflow](images/run-wf.png)
 
@@ -71,17 +64,7 @@ masthead:
 
 ---
 
-# [platform] Best data source in one package
-
-> split
-
-Battle tested resources and infrastructure
-
-![Data sources](images/whatIsBrc.svg)
-
----
-
-# [platform] Cloud-Powered Infrastructure
+# [capabilities] Cloud-Powered Infrastructure
 
 > split
 
@@ -105,14 +88,22 @@ Free compute for researchers
 
 # [capabilities] Analysis Workflows
 
-> Validated pipelines for pathogen genomics
+> type: wordcloud
 
-| Stat | Label |
-|------|-------|
-| Variant | Calling |
-| RNA-seq | Transcriptomics |
-| Assembly | Genome construction |
-| Consensus | Sequence generation |
+- [Amplicon](https://iwc.galaxyproject.org/?filter=Amplicon)
+- [Bacterial Genomics](https://iwc.galaxyproject.org/?filter=Bacterial%20Genomics)
+- [Epigenetics](https://iwc.galaxyproject.org/?filter=Epigenetics)
+- [Genome Assembly](https://iwc.galaxyproject.org/?filter=Genome%20Assembly)
+- [Genome Annotation](https://iwc.galaxyproject.org/?filter=Genome%20Annotation)
+- [Imaging](https://iwc.galaxyproject.org/?filter=Imaging)
+- [Metabolomics](https://iwc.galaxyproject.org/?filter=Metabolomics)
+- [Microbiome](https://iwc.galaxyproject.org/?filter=Microbiome)
+- [Proteomics](https://iwc.galaxyproject.org/?filter=Proteomics)
+- [Single Cell](https://iwc.galaxyproject.org/?filter=Single%20Cell)
+- [Transcriptomics](https://iwc.galaxyproject.org/?filter=Transcriptomics)
+- [Variant Calling](https://iwc.galaxyproject.org/?filter=Variant%20Calling)
+- [Virology](https://iwc.galaxyproject.org/?filter=Virology)
+- [VGP](https://iwc.galaxyproject.org/?filter=VGP)
 
 ---
 
@@ -122,15 +113,14 @@ Free compute for researchers
 > Essential resources for BRC Analytics
 
 - BRC Analytics: https://brc-analytics.org
-- BV-BRC: https://www.bv-brc.org
 - Galaxy: https://usegalaxy.org
 - IWC Workflows: https://iwc.galaxyproject.org
 - GitHub: https://github.com/galaxyproject/brc-analytics
 
 ---
 
-# [resources] Get Started
+# [resources] gxy.io/what-is-brc
 
 > type: qr
 
-![Scan to visit BRC Analytics](images/qr-code.png)
+![Scan to visit BRC Analytics](images/qr-code.svg)
