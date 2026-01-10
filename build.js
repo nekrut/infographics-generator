@@ -22,6 +22,7 @@ const SLIDE_TYPES = {
   stats: /\|\s*Stat\s*\|\s*Label\s*\|/i,
   split: /^>\s*split/m,
   wordcloud: /^>\s*type:\s*wordcloud/m,
+  scatter: /^>\s*type:\s*scatter/m,
   sunburst: /^>\s*type:\s*sunburst/m,
   ecosystem: /^>\s*type:\s*ecosystem/m,
   galaxies: /^>\s*type:\s*galaxies/m,
@@ -106,6 +107,8 @@ function parseSlide(content, index) {
     for (const match of listMatches) {
       slide.items.push({ text: match[1], url: match[2] });
     }
+  } else if (SLIDE_TYPES.scatter.test(content)) {
+    slide.type = 'scatter';
   } else if (SLIDE_TYPES.sunburst.test(content)) {
     slide.type = 'sunburst';
   } else if (SLIDE_TYPES.ecosystem.test(content)) {
