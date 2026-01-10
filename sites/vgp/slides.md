@@ -11,23 +11,6 @@ masthead:
     section: resources
 ---
 
-# [overview] Vertebrate Genomes Project on Galaxy
-> Building reference-quality genomes for all 70,000 vertebrate species
-
-| Stat | Label |
-|------|-------|
-| 2,330 | workflow runs |
-| 461,000+ | core-hours |
-| 113 | unique pipelines |
-| 3+ | years of operation |
-
----
-
-# [overview] 274 genomes and counting
-> type: scatter
-
----
-
 # [overview] Building the Tree of Life
 > split
 
@@ -40,6 +23,11 @@ Galaxy provides the computational infrastructure to achieve this at scale, with 
 :::
 
 ![VGP Phylogenetic Tree](images/tree.png)
+
+---
+
+# [overview] 274 genomes and counting
+> type: scatter
 
 ---
 
