@@ -133,7 +133,7 @@ Galaxy powers the largest biological data analysis training events in the world,
 # [capabilities] Scalable Genome Assembly
 > split
 
-The Vertebrate Genomes Project has produced near error-free, chromosome-level genomes for **600 species** using Galaxy on Jetstream2.
+The Vertebrate Genomes Project has produced near error-free, chromosome-level genomes for **600 assemblies** using Galaxy on Jetstream2.
 
 VGP's ultimate goal: generating reproducible reference genomes for approximately **70,000** known living vertebrate species.
 
