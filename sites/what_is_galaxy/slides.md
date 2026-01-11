@@ -200,15 +200,15 @@ Dynamic job routing system that knows where each tools needs to be run
 
 ---
 
-# [ecosystem] Galaxy Workshop Today!
+# [ecosystem] Galaxy Workshop Tuesday!
 > split
 
-Come see the **Galaxy Workshop** today at **4pm** in **Town and Country D**.
+Come see the **Galaxy Workshop** on **Tuesday, Jan 13** at **4pm** in **Town and Country D**.
 
 Learn hands-on how to use Galaxy for your research analysis needs.
 
 ::: highlight
-Town and Country D - 4:00 PM
+Tuesday, Jan 13 - Town and Country D - 4:00 PM
 :::
 
 ![Town and Country Conference Map](images/tc-map-annotated.png)
