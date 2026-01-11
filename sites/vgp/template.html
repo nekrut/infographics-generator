@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galaxy Project</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" href="images/vgp.png">
   <style>
     /* ========================================
        Apple-Style Design System
@@ -1095,6 +1095,119 @@
       }
     }
 
+    /* Bar Chart Slide */
+    .slide-barchart {
+      background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 30px 30px;
+    }
+
+    .slide-barchart .slide-title {
+      font-size: 38px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: 8px;
+      color: var(--color-text-light);
+    }
+
+    .slide-barchart .slide-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 20px;
+    }
+
+    .barchart-container {
+      width: 100%;
+      max-width: 900px;
+      height: 65vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .barchart-container .vega-embed {
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .slide-barchart .slide-title {
+        font-size: 24px;
+      }
+      .barchart-container {
+        height: 55vh;
+      }
+    }
+
+    /* Image Grid Slide */
+    .slide-imagegrid {
+      background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 30px 30px;
+    }
+
+    .slide-imagegrid .slide-title {
+      font-size: 38px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: 8px;
+      color: var(--color-text-light);
+    }
+
+    .slide-imagegrid .slide-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 20px;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 6px;
+      max-width: 1200px;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .grid-image-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 6px;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+
+    .grid-image-item:hover {
+      transform: scale(1.1);
+      z-index: 10;
+    }
+
+    .grid-image-item img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    .grid-image-label {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .slide-imagegrid .slide-title {
+        font-size: 24px;
+      }
+      .image-grid {
+        grid-template-columns: repeat(8, 1fr);
+        gap: 4px;
+      }
+    }
+
     /* Workflow Diagram Slide */
     .slide-workflow {
       background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
@@ -1337,7 +1450,7 @@
   <!-- Masthead -->
   <nav class="masthead">
     <div class="masthead-logo">
-      <img src="favicon.svg" alt="Galaxy">
+      <img src="images/vgp.png" alt="VGP">
     </div>
     <div class="masthead-nav">
       {{MASTHEAD_LINKS}}
@@ -1505,6 +1618,126 @@
       };
 
       vegaEmbed('#scatter-container', spec, {actions: false}).catch(console.error);
+    }
+
+    /* ========================================
+       Bar Chart Generator
+       ======================================== */
+
+    // Cache for loaded bar chart data
+    const barchartDataCache = {};
+    const barchartRendered = new Set();
+
+    async function loadBarchartData(filename) {
+      if (barchartDataCache[filename]) {
+        return barchartDataCache[filename];
+      }
+      try {
+        const response = await fetch(filename);
+        const data = await response.json();
+        barchartDataCache[filename] = data;
+        return data;
+      } catch (e) {
+        console.error(`Failed to load ${filename}:`, e);
+        return [];
+      }
+    }
+
+    function generateBarChart(containerId, data, options = {}) {
+      const container = document.getElementById(containerId);
+      if (!container || !data || data.length === 0) return;
+
+      const {
+        xField = 'hours',
+        yField = 'name',
+        xTitle = 'Core-Hours',
+        yTitle = '',
+        color = '#fe7f02',
+        formatX = ',.0f'
+      } = options;
+
+      const spec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "width": "container",
+        "height": 400,
+        "background": "transparent",
+        "data": { "values": data },
+        "mark": {
+          "type": "bar",
+          "cornerRadiusEnd": 4,
+          "color": color
+        },
+        "encoding": {
+          "y": {
+            "field": yField,
+            "type": "nominal",
+            "title": yTitle,
+            "sort": "-x",
+            "axis": {
+              "labelColor": "white",
+              "titleColor": "white",
+              "labelFontSize": 13,
+              "labelLimit": 200
+            }
+          },
+          "x": {
+            "field": xField,
+            "type": "quantitative",
+            "title": xTitle,
+            "axis": {
+              "labelColor": "white",
+              "titleColor": "white",
+              "gridColor": "rgba(255,255,255,0.1)",
+              "format": formatX,
+              "labelFontSize": 18
+            }
+          },
+          "tooltip": [
+            {"field": yField, "type": "nominal", "title": yTitle || "Name"},
+            {"field": xField, "type": "quantitative", "title": xTitle, "format": formatX}
+          ]
+        },
+        "config": {
+          "font": "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+          "view": {"stroke": "transparent"},
+          "axis": {
+            "domainColor": "white",
+            "tickColor": "white",
+            "labelFont": "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+            "titleFont": "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+            "titleFontSize": 14,
+            "titleFontWeight": 500
+          }
+        }
+      };
+
+      vegaEmbed(`#${containerId}`, spec, {actions: false}).catch(console.error);
+    }
+
+    async function renderBarchartSlide(slideElement) {
+      const container = slideElement.querySelector('.barchart-container');
+      if (!container || barchartRendered.has(container.id)) return;
+
+      const dataSource = slideElement.dataset.source;
+      if (!dataSource) return;
+
+      const data = await loadBarchartData(dataSource);
+      if (!data || data.length === 0) return;
+
+      // Determine chart options based on data structure
+      let options = {};
+      if (dataSource.includes('workflow')) {
+        options = { xField: 'hours', yField: 'name', xTitle: 'Core-Hours', color: '#fe7f02' };
+      } else if (dataSource.includes('tool-memory')) {
+        options = { xField: 'memory_gb', yField: 'name', xTitle: 'Peak Memory (GB)', color: '#74c376', formatX: ',.0f' };
+      } else if (dataSource.includes('tool')) {
+        options = { xField: 'hours', yField: 'name', xTitle: 'Core-Hours', color: '#2077b3' };
+      } else if (dataSource.includes('memory')) {
+        options = { xField: 'count', yField: 'bucket', xTitle: 'Number of Jobs', color: '#74c376', formatX: ',.0f' };
+      }
+
+      generateBarChart(container.id, data, options);
+      barchartRendered.add(container.id);
     }
 
     /* ========================================
@@ -1711,6 +1944,11 @@
         if (this.slides[index].classList.contains('slide-scatter') && !this.generateScatterOnce) {
           setTimeout(generateScatterPlot, 100);
           this.generateScatterOnce = true;
+        }
+
+        // Generate bar chart if on that slide
+        if (this.slides[index].classList.contains('slide-barchart')) {
+          setTimeout(() => renderBarchartSlide(this.slides[index]), 100);
         }
 
         // Reset progress

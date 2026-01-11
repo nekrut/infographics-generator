@@ -1,0 +1,12 @@
+[
+  {"name": "hifiasm", "memory_gb": 3990},
+  {"name": "BLAST", "memory_gb": 3990},
+  {"name": "bwa-mem2", "memory_gb": 955},
+  {"name": "MitoHiFi", "memory_gb": 527},
+  {"name": "COMPLEASM", "memory_gb": 517},
+  {"name": "BUSCO", "memory_gb": 480},
+  {"name": "FCS-GX", "memory_gb": 476},
+  {"name": "Kraken2", "memory_gb": 327},
+  {"name": "YAHS", "memory_gb": 198},
+  {"name": "Meryl", "memory_gb": 190}
+]

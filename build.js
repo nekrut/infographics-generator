@@ -23,6 +23,8 @@ const SLIDE_TYPES = {
   split: /^>\s*split/m,
   wordcloud: /^>\s*type:\s*wordcloud/m,
   scatter: /^>\s*type:\s*scatter/m,
+  barchart: /^>\s*type:\s*barchart/m,
+  imagegrid: /^>\s*type:\s*imagegrid/m,
   workflow: /^>\s*type:\s*workflow/m,
   imageclick: /^>\s*type:\s*image-click/m,
   sunburst: /^>\s*type:\s*sunburst/m,
@@ -46,10 +48,12 @@ function parseSlide(content, index) {
     image: null,
     stats: [],
     items: [],
+    images: [],
     paragraphs: [],
     highlight: null,
     reverse: false,
-    background: null
+    background: null,
+    dataSource: null
   };
 
   // Parse title line: # [section] Title
@@ -65,7 +69,7 @@ function parseSlide(content, index) {
   const blockquotes = content.match(/^>\s*(.+)$/gm) || [];
   for (const bq of blockquotes) {
     const text = bq.replace(/^>\s*/, '').trim();
-    if (!text.match(/^(type:|split|background:)/i)) {
+    if (!text.match(/^(type:|split|background:|data:)/i)) {
       slide.subtitle = text;
       break;
     }
@@ -111,6 +115,21 @@ function parseSlide(content, index) {
     }
   } else if (SLIDE_TYPES.scatter.test(content)) {
     slide.type = 'scatter';
+  } else if (SLIDE_TYPES.barchart.test(content)) {
+    slide.type = 'barchart';
+    // Parse data source from > data: filename
+    const dataMatch = content.match(/^>\s*data:\s*(.+)$/m);
+    if (dataMatch) {
+      slide.dataSource = dataMatch[1].trim();
+    }
+  } else if (SLIDE_TYPES.imagegrid.test(content)) {
+    slide.type = 'imagegrid';
+    // Parse image list from markdown image syntax ![alt](src)
+    const imageMatches = content.matchAll(/!\[([^\]]*)\]\(([^)]+)\)/g);
+    slide.images = [];
+    for (const match of imageMatches) {
+      slide.images.push({ alt: match[1], src: match[2] });
+    }
   } else if (SLIDE_TYPES.workflow.test(content)) {
     slide.type = 'workflow';
     // Parse workflow items: - ID Name | input1, input2 | output1, output2
@@ -195,6 +214,10 @@ function generateSlideHTML(slide) {
       return generateWordcloudSlide(slide, activeClass);
     case 'scatter':
       return generateScatterSlide(slide, activeClass);
+    case 'barchart':
+      return generateBarchartSlide(slide, activeClass);
+    case 'imagegrid':
+      return generateImageGridSlide(slide, activeClass);
     case 'workflow':
       return generateWorkflowSlide(slide, activeClass);
     case 'imageclick':
@@ -289,6 +312,37 @@ function generateScatterSlide(slide, activeClass) {
     <section class="slide slide-scatter${activeClass}" data-section="${slide.section}">
       <h1 class="slide-title">${slide.title}</h1>
       <div id="scatter-container"></div>
+    </section>`;
+}
+
+function generateBarchartSlide(slide, activeClass) {
+  const dataAttr = slide.dataSource ? ` data-source="${slide.dataSource}"` : '';
+  const containerId = `barchart-container-${slide.index}`;
+  return `
+    <!-- Slide ${slide.index + 1}: ${slide.title} -->
+    <section class="slide slide-barchart${activeClass}" data-section="${slide.section}"${dataAttr}>
+      <h1 class="slide-title">${slide.title}</h1>
+      <p class="slide-subtitle">${slide.subtitle}</p>
+      <div id="${containerId}" class="barchart-container"></div>
+    </section>`;
+}
+
+function generateImageGridSlide(slide, activeClass) {
+  const imagesHTML = slide.images.map(img =>
+    `<div class="grid-image-item">
+        <img src="${img.src}" alt="${img.alt}" loading="lazy">
+        <span class="grid-image-label">${img.alt}</span>
+      </div>`
+  ).join('\n      ');
+
+  return `
+    <!-- Slide ${slide.index + 1}: ${slide.title} -->
+    <section class="slide slide-imagegrid${activeClass}" data-section="${slide.section}">
+      <h1 class="slide-title">${slide.title}</h1>
+      <p class="slide-subtitle">${slide.subtitle}</p>
+      <div class="image-grid">
+      ${imagesHTML}
+      </div>
     </section>`;
 }
 
@@ -552,6 +606,16 @@ function build() {
   if (fs.existsSync(taxonomyPath)) {
     fs.copyFileSync(taxonomyPath, path.join(OUTPUT_DIR, 'ncbi-taxa-tree.json'));
     console.log('Copied ncbi-taxa-tree.json to dist/');
+  }
+
+  // Copy bar chart data files to dist if they exist
+  const barchartFiles = ['workflow-hours.json', 'tool-hours.json', 'memory-dist.json', 'tool-memory.json'];
+  for (const filename of barchartFiles) {
+    const filepath = path.join(siteDir, filename);
+    if (fs.existsSync(filepath)) {
+      fs.copyFileSync(filepath, path.join(OUTPUT_DIR, filename));
+      console.log(`Copied ${filename} to dist/`);
+    }
   }
 }
 

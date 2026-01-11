@@ -71,6 +71,11 @@ More content...
 | Galaxies | `> type: galaxies` | Background image slide |
 | Links | `> type: links` | Grid of clickable link cards |
 | QR | `> type: qr` | Large centered QR code |
+| Scatter | `> type: scatter` | Vega-Lite scatter plot (requires data file) |
+| Barchart | `> type: barchart` | Vega-Lite horizontal bar chart |
+| Imagegrid | `> type: imagegrid` | Grid of images (mosaic layout) |
+| Workflow | `> type: workflow` | Workflow cards with inputs/outputs |
+| Image-click | `> type: image-click` | Full-screen clickable image |
 
 ## Slide Type Examples
 
@@ -118,6 +123,36 @@ Highlighted callout text.
 ![QR Code](images/qr-code.svg)
 ```
 
+### Barchart Slide
+```markdown
+# [section] Data Visualization
+> type: barchart
+> data: my-data.json
+> Chart subtitle here
+
+# my-data.json should contain: [{"category": "A", "value": 100}, ...]
+```
+
+### Imagegrid Slide
+```markdown
+# [section] Image Gallery
+> type: imagegrid
+> Subtitle here
+
+![Alt 1](images/img1.jpg)
+![Alt 2](images/img2.jpg)
+...
+```
+
+### Workflow Slide
+```markdown
+# [section] Pipeline Steps
+> type: workflow
+
+- Step Name | Input 1, Input 2 | Output 1, Output 2
+- Another Step | Input | Output
+```
+
 ## Special Syntax
 
 - `# [section] Title` - Section tag for masthead navigation
@@ -131,19 +166,19 @@ Highlighted callout text.
 ```
 infographics-generator/
 ├── build.js              # Build script
-├── template.html         # HTML template with CSS/JS
+├── template.html         # Default HTML template
 ├── package.json          # Dependencies and scripts
 ├── README.md             # This file
 │
 └── sites/                # Site content directories
-    └── what_is_galaxy/   # Example site
+    ├── what_is_galaxy/   # Galaxy overview site
+    ├── what_is_brc/      # BRC overview site
+    └── vgp/              # VGP (Vertebrate Genomes Project) site
         ├── slides.md     # Slide content
+        ├── template.html # Custom template (optional)
         ├── images/       # Site images
-        ├── favicon.svg   # Site favicon
+        ├── *.json        # Data files for charts
         └── dist/         # Generated output
-            ├── index.html
-            ├── images/
-            └── favicon.svg
 ```
 
 ## Keyboard Controls (in generated site)

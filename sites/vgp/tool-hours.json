@@ -1,0 +1,12 @@
+[
+  {"name": "hifiasm", "hours": 121121},
+  {"name": "bwa-mem2", "hours": 110328},
+  {"name": "BUSCO", "hours": 98365},
+  {"name": "BLAST", "hours": 31172},
+  {"name": "Meryl", "hours": 29182},
+  {"name": "minimap2", "hours": 19513},
+  {"name": "Bellerophon", "hours": 6375},
+  {"name": "COMPLEASM", "hours": 5591},
+  {"name": "Kraken2", "hours": 4449},
+  {"name": "cutadapt", "hours": 3893}
+]

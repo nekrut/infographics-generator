@@ -1,0 +1,12 @@
+[
+  {"name": "HiC Scaffolding (VGP8)", "hours": 166413},
+  {"name": "HiFi+HiC Assembly (VGP4)", "hours": 158211},
+  {"name": "Decontamination (VGP9)", "hours": 38077},
+  {"name": "PretextMap Generation", "hours": 27660},
+  {"name": "K-mer Profiling (VGP1)", "hours": 18610},
+  {"name": "K-mer Trio (VGP2)", "hours": 13830},
+  {"name": "Purge Duplicates (VGP6)", "hours": 8508},
+  {"name": "HiFi Assembly (VGP3)", "hours": 6179},
+  {"name": "Trio Assembly (VGP5)", "hours": 4432},
+  {"name": "Mitogenome (VGP0)", "hours": 3087}
+]

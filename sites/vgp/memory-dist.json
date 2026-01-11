@@ -1,0 +1,6 @@
+[
+  {"bucket": "< 64 GB", "count": 37992, "order": 0},
+  {"bucket": "64-256 GB", "count": 2114, "order": 1},
+  {"bucket": "256 GB-1 TB", "count": 500, "order": 2},
+  {"bucket": "> 1 TB", "count": 11, "order": 3}
+]

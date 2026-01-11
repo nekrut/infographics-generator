@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galaxy Project</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" href="images/vgp.png">
   <style>
     /* ========================================
        Apple-Style Design System
@@ -1095,6 +1095,119 @@
       }
     }
 
+    /* Bar Chart Slide */
+    .slide-barchart {
+      background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 30px 30px;
+    }
+
+    .slide-barchart .slide-title {
+      font-size: 38px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: 8px;
+      color: var(--color-text-light);
+    }
+
+    .slide-barchart .slide-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 20px;
+    }
+
+    .barchart-container {
+      width: 100%;
+      max-width: 900px;
+      height: 65vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .barchart-container .vega-embed {
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .slide-barchart .slide-title {
+        font-size: 24px;
+      }
+      .barchart-container {
+        height: 55vh;
+      }
+    }
+
+    /* Image Grid Slide */
+    .slide-imagegrid {
+      background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 30px 30px;
+    }
+
+    .slide-imagegrid .slide-title {
+      font-size: 38px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: 8px;
+      color: var(--color-text-light);
+    }
+
+    .slide-imagegrid .slide-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 20px;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 6px;
+      max-width: 1200px;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .grid-image-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 6px;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+
+    .grid-image-item:hover {
+      transform: scale(1.1);
+      z-index: 10;
+    }
+
+    .grid-image-item img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    .grid-image-label {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .slide-imagegrid .slide-title {
+        font-size: 24px;
+      }
+      .image-grid {
+        grid-template-columns: repeat(8, 1fr);
+        gap: 4px;
+      }
+    }
+
     /* Workflow Diagram Slide */
     .slide-workflow {
       background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
@@ -1337,7 +1450,7 @@
   <!-- Masthead -->
   <nav class="masthead">
     <div class="masthead-logo">
-      <img src="favicon.svg" alt="Galaxy">
+      <img src="images/vgp.png" alt="VGP">
     </div>
     <div class="masthead-nav">
       <a class="masthead-link active" data-section="overview">Overview</a>
@@ -1355,8 +1468,216 @@
   <div class="slides-container">
 
 
-    <!-- Slide 1: Building the Tree of Life -->
-    <section class="slide active" data-section="overview">
+    <!-- Slide 1: Sequencing Vertebrate Diversity -->
+    <section class="slide slide-imagegrid active" data-section="overview">
+      <h1 class="slide-title">Sequencing Vertebrate Diversity</h1>
+      <p class="slide-subtitle">50 species from the VGP assembly catalog</p>
+      <div class="image-grid">
+      <div class="grid-image-item">
+        <img src="images/species/Abramis_brama_300x300.jpg" alt="Abramis brama" loading="lazy">
+        <span class="grid-image-label">Abramis brama</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Acanthisitta_chloris_300x300.jpg" alt="Acanthisitta chloris" loading="lazy">
+        <span class="grid-image-label">Acanthisitta chloris</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Acanthopagrus_latus_300x300.jpg" alt="Acanthopagrus latus" loading="lazy">
+        <span class="grid-image-label">Acanthopagrus latus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Acomys_russatus_300x300.jpg" alt="Acomys russatus" loading="lazy">
+        <span class="grid-image-label">Acomys russatus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Alca_torda_300x300.jpg" alt="Alca torda" loading="lazy">
+        <span class="grid-image-label">Alca torda</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Amblyraja_radiata_300x300.jpg" alt="Amblyraja radiata" loading="lazy">
+        <span class="grid-image-label">Amblyraja radiata</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Ammospiza_caudacuta_300x300.jpg" alt="Ammospiza caudacuta" loading="lazy">
+        <span class="grid-image-label">Ammospiza caudacuta</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Anguilla_anguilla_300x300.jpg" alt="Anguilla anguilla" loading="lazy">
+        <span class="grid-image-label">Anguilla anguilla</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Antennarius_maculatus_300x300.jpg" alt="Antennarius maculatus" loading="lazy">
+        <span class="grid-image-label">Antennarius maculatus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Apus_apus_300x300.jpg" alt="Apus apus" loading="lazy">
+        <span class="grid-image-label">Apus apus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Argentina_silus_300x300.jpg" alt="Argentina silus" loading="lazy">
+        <span class="grid-image-label">Argentina silus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Ascidiella_aspersa_300x300.jpg" alt="Ascidiella aspersa" loading="lazy">
+        <span class="grid-image-label">Ascidiella aspersa</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Aythya_ferina_300x300.jpg" alt="Aythya ferina" loading="lazy">
+        <span class="grid-image-label">Aythya ferina</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Barbus_barbus_300x300.jpg" alt="Barbus barbus" loading="lazy">
+        <span class="grid-image-label">Barbus barbus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Borostomias_antarcticus_300x300.jpg" alt="Borostomias antarcticus" loading="lazy">
+        <span class="grid-image-label">Borostomias antarcticus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Bucephala_clangula_300x300.jpg" alt="Bucephala clangula" loading="lazy">
+        <span class="grid-image-label">Bucephala clangula</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Callithrix_jacchus_300x300.jpg" alt="Callithrix jacchus" loading="lazy">
+        <span class="grid-image-label">Callithrix jacchus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Candoia_aspera_300x300.jpg" alt="Candoia aspera" loading="lazy">
+        <span class="grid-image-label">Candoia aspera</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Carcharodon_carcharias_300x300.jpg" alt="Carcharodon carcharias" loading="lazy">
+        <span class="grid-image-label">Carcharodon carcharias</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Cervus_elaphus_300x300.jpg" alt="Cervus elaphus" loading="lazy">
+        <span class="grid-image-label">Cervus elaphus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Chelmon_rostratus_300x300.jpg" alt="Chelmon rostratus" loading="lazy">
+        <span class="grid-image-label">Chelmon rostratus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Chiroxiphia_lanceolata_300x300.jpg" alt="Chiroxiphia lanceolata" loading="lazy">
+        <span class="grid-image-label">Chiroxiphia lanceolata</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Ciconia_maguari_300x300.jpg" alt="Ciconia maguari" loading="lazy">
+        <span class="grid-image-label">Ciconia maguari</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Cnephaeus_nilssonii_300x300.jpg" alt="Cnephaeus nilssonii" loading="lazy">
+        <span class="grid-image-label">Cnephaeus nilssonii</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Coregonus_lavaretus_300x300.jpg" alt="Coregonus lavaretus" loading="lazy">
+        <span class="grid-image-label">Coregonus lavaretus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Cottoperca_gobio_300x300.jpg" alt="Cottoperca gobio" loading="lazy">
+        <span class="grid-image-label">Cottoperca gobio</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Cynocephalus_volans_300x300.jpg" alt="Cynocephalus volans" loading="lazy">
+        <span class="grid-image-label">Cynocephalus volans</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Dendropsophus_ebraccatus_300x300.jpg" alt="Dendropsophus ebraccatus" loading="lazy">
+        <span class="grid-image-label">Dendropsophus ebraccatus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Diceros_bicornis_300x300.jpg" alt="Diceros bicornis" loading="lazy">
+        <span class="grid-image-label">Diceros bicornis</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Dryobates_pubescens_300x300.jpg" alt="Dryobates pubescens" loading="lazy">
+        <span class="grid-image-label">Dryobates pubescens</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Electrona_antarctica_300x300.jpg" alt="Electrona antarctica" loading="lazy">
+        <span class="grid-image-label">Electrona antarctica</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Elgaria_multicarinata_300x300.jpg" alt="Elgaria multicarinata" loading="lazy">
+        <span class="grid-image-label">Elgaria multicarinata</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Equus_caballus_300x300.jpg" alt="Equus caballus" loading="lazy">
+        <span class="grid-image-label">Equus caballus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Erpetoichthys_calabaricus_300x300.jpg" alt="Erpetoichthys calabaricus" loading="lazy">
+        <span class="grid-image-label">Erpetoichthys calabaricus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Eubalaena_glacialis_300x300.jpg" alt="Eubalaena glacialis" loading="lazy">
+        <span class="grid-image-label">Eubalaena glacialis</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Falco_biarmicus_300x300.jpg" alt="Falco biarmicus" loading="lazy">
+        <span class="grid-image-label">Falco biarmicus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Gadus_morhua_300x300.jpg" alt="Gadus morhua" loading="lazy">
+        <span class="grid-image-label">Gadus morhua</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Gastrophryne_carolinensis_300x300.jpg" alt="Gastrophryne carolinensis" loading="lazy">
+        <span class="grid-image-label">Gastrophryne carolinensis</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Geotrypetes_seraphini_300x300.jpg" alt="Geotrypetes seraphini" loading="lazy">
+        <span class="grid-image-label">Geotrypetes seraphini</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Gobius_niger_300x300.jpg" alt="Gobius niger" loading="lazy">
+        <span class="grid-image-label">Gobius niger</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Grus_americana_300x300.jpg" alt="Grus americana" loading="lazy">
+        <span class="grid-image-label">Grus americana</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Harpia_harpyja_300x300.jpg" alt="Harpia harpyja" loading="lazy">
+        <span class="grid-image-label">Harpia harpyja</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Heptranchias_perlo_300x300.jpg" alt="Heptranchias perlo" loading="lazy">
+        <span class="grid-image-label">Heptranchias perlo</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Hippopotamus_amphibius_300x300.jpg" alt="Hippopotamus amphibius" loading="lazy">
+        <span class="grid-image-label">Hippopotamus amphibius</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Hydrolagus_colliei_300x300.jpg" alt="Hydrolagus colliei" loading="lazy">
+        <span class="grid-image-label">Hydrolagus colliei</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Hyperoodon_ampullatus_300x300.jpg" alt="Hyperoodon ampullatus" loading="lazy">
+        <span class="grid-image-label">Hyperoodon ampullatus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Labrus_bergylta_300x300.jpg" alt="Labrus bergylta" loading="lazy">
+        <span class="grid-image-label">Labrus bergylta</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Lampetra_fluviatilis_300x300.jpg" alt="Lampetra fluviatilis" loading="lazy">
+        <span class="grid-image-label">Lampetra fluviatilis</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Lemur_catta_300x300.jpg" alt="Lemur catta" loading="lazy">
+        <span class="grid-image-label">Lemur catta</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Leucopleurus_acutus_300x300.jpg" alt="Leucopleurus acutus" loading="lazy">
+        <span class="grid-image-label">Leucopleurus acutus</span>
+      </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Building the Tree of Life -->
+    <section class="slide" data-section="overview">
       <div class="slide-split">
         <div class="content-side">
           <h1 class="slide-title">Building the Tree of Life</h1>
@@ -1370,28 +1691,20 @@
       </div>
     </section>
 
-    <!-- Slide 2: 274 genomes and counting -->
+    <!-- Slide 3: 274 genomes and counting -->
     <section class="slide slide-scatter" data-section="overview">
       <h1 class="slide-title">274 genomes and counting</h1>
       <div id="scatter-container"></div>
     </section>
 
-    <!-- Slide 3: End-to-End Assembly Pipeline -->
-    <section class="slide" data-section="pipeline">
-      <div class="slide-split reverse">
-        <div class="content-side">
-          <h1 class="slide-title">End-to-End Assembly Pipeline</h1>
-          <p class="slide-text">The VGP pipeline consists of 10 modular workflows organized into 5 stages, from raw data to chromosome-level assembly.</p>
-          <p class="slide-text">Each stage is designed to work with different data types: HiFi, Hi-C, Bionano, and parental Illumina for trio assemblies.</p>
-          <div class="slide-highlight">Workflows 1-9 cover the main assembly pipeline, with Workflow 0 dedicated to mitochondrial genome assembly.</div>
-        </div>
-        <div class="image-side">
-          <img src="images/pipeline.png" alt="VGP Assembly Pipeline">
-        </div>
-      </div>
+    <!-- Slide 4: VGP Workflow Modules -->
+    <section class="slide slide-image-click" data-section="pipeline">
+      <h1 class="slide-title">VGP Workflow Modules</h1>
+      <img class="clickable-image" src="images/VGP_workflow_modules.svg" alt="VGP Workflow Modules">
+      <p class="click-hint">Click image to view fullscreen</p>
     </section>
 
-    <!-- Slide 4: Pre-Assembly & Assembly -->
+    <!-- Slide 5: Pre-Assembly & Assembly -->
     <section class="slide slide-workflow" data-section="pipeline">
       <h1 class="slide-title">Pre-Assembly & Assembly</h1>
       <div class="workflow-container">
@@ -1493,7 +1806,7 @@
       </div>
     </section>
 
-    <!-- Slide 5: Post-Assembly Processing -->
+    <!-- Slide 6: Post-Assembly Processing -->
     <section class="slide slide-workflow" data-section="pipeline">
       <h1 class="slide-title">Post-Assembly Processing</h1>
       <div class="workflow-container">
@@ -1561,54 +1874,28 @@
       </div>
     </section>
 
-    <!-- Slide 6: VGP Workflow Modules -->
-    <section class="slide slide-image-click" data-section="pipeline">
-      <h1 class="slide-title">VGP Workflow Modules</h1>
-      <img class="clickable-image" src="images/VGP_workflow_modules.svg" alt="VGP Workflow Modules">
-      <p class="click-hint">Click image to view fullscreen</p>
+    <!-- Slide 7: VGP Workflows by Compute -->
+    <section class="slide slide-barchart" data-section="scale" data-source="workflow-hours.json">
+      <h1 class="slide-title">VGP Workflows by Compute</h1>
+      <p class="slide-subtitle">Core hours used by workflows</p>
+      <div id="barchart-container-6" class="barchart-container"></div>
     </section>
 
-    <!-- Slide 7: Massive Computational Scale -->
-    <section class="slide slide-stats" data-section="scale">
-      <h1 class="slide-title">Massive Computational Scale</h1>
-      <p class="slide-subtitle">Compute resources used by VGP on Galaxy</p>
-      <div class="stats-grid four-col">
-
-        <div class="stat-card orange">
-          <div class="stat-number">24,500+</div>
-          <div class="stat-label">hours of runtime</div>
-        </div>
-        <div class="stat-card blue">
-          <div class="stat-number">40,600+</div>
-          <div class="stat-label">jobs executed</div>
-        </div>
-        <div class="stat-card green">
-          <div class="stat-number">4 TB</div>
-          <div class="stat-label">peak memory per job</div>
-        </div>
-        <div class="stat-card yellow">
-          <div class="stat-number">128</div>
-          <div class="stat-label">max cores per job</div>
-        </div>
-      </div>
+    <!-- Slide 8: Top Assembly Tools -->
+    <section class="slide slide-barchart" data-section="scale" data-source="tool-hours.json">
+      <h1 class="slide-title">Top Assembly Tools</h1>
+      <p class="slide-subtitle">Core hours used by individual tools</p>
+      <div id="barchart-container-7" class="barchart-container"></div>
     </section>
 
-    <!-- Slide 8: 3 Years of Genome Assembly -->
-    <section class="slide" data-section="scale">
-      <div class="slide-split">
-        <div class="content-side">
-          <h1 class="slide-title">3 Years of Genome Assembly</h1>
-          <p class="slide-text">From July 2022 to October 2025, the VGP has continuously used Galaxy to assemble vertebrate genomes.</p>
-          <p class="slide-text">The top workflows by execution count include Hi-C scaffolding (244 runs), PretextMap generation (210 runs), and decontamination (131 runs).</p>
-          <div class="slide-highlight">77.9% of all workflow runs completed successfully, with the remainder either cancelled or requiring troubleshooting.</div>
-        </div>
-        <div class="image-side">
-          <img src="images/access-map.svg" alt="ACCESS-CI Infrastructure">
-        </div>
-      </div>
+    <!-- Slide 9: Peak Memory by Tool -->
+    <section class="slide slide-barchart" data-section="scale" data-source="tool-memory.json">
+      <h1 class="slide-title">Peak Memory by Tool</h1>
+      <p class="slide-subtitle">Assembly needs memory!</p>
+      <div id="barchart-container-8" class="barchart-container"></div>
     </section>
 
-    <!-- Slide 9: Powered by Galaxy + ACCESS-CI -->
+    <!-- Slide 10: Powered by Galaxy + ACCESS-CI -->
     <section class="slide" data-section="scale">
       <div class="slide-split reverse">
         <div class="content-side">
@@ -1618,12 +1905,12 @@
           <div class="slide-highlight">Galaxy provides an equivalent of >$2,000,000/year of free computational infrastructure to genomics researchers.</div>
         </div>
         <div class="image-side">
-          <img src="images/workflows.svg" alt="VGP Workflows">
+          <img src="images/access-map.svg" alt="ACCESS-CI Infrastructure">
         </div>
       </div>
     </section>
 
-    <!-- Slide 10: Key VGP Resources -->
+    <!-- Slide 11: Key VGP Resources -->
     <section class="slide slide-links" data-section="resources">
       <h1 class="slide-title">Key VGP Resources</h1>
       
@@ -1633,9 +1920,9 @@
           <span class="link-label">VGP Galaxy</span>
           <span class="link-url">vgp.usegalaxy.org</span>
         </a>
-        <a class="link-card" href="https://genomeark.org" target="_blank">
+        <a class="link-card" href="https://genomeark2.org" target="_blank">
           <span class="link-label">GenomeArk</span>
-          <span class="link-url">genomeark.org</span>
+          <span class="link-url">genomeark2.org</span>
         </a>
         <a class="link-card" href="https://vertebrategenomesproject.org" target="_blank">
           <span class="link-label">VGP Website</span>
@@ -1645,21 +1932,13 @@
           <span class="link-label">Galaxy US</span>
           <span class="link-url">usegalaxy.org</span>
         </a>
-        <a class="link-card" href="https://iwc.galaxyproject.org" target="_blank">
-          <span class="link-label">IWC Workflows</span>
-          <span class="link-url">iwc.galaxyproject.org</span>
-        </a>
-        <a class="link-card" href="https://training.galaxyproject.org/training-material/topics/assembly/" target="_blank">
-          <span class="link-label">GTN Assembly Training</span>
-          <span class="link-url">training.galaxyproject.org/training-material/topics/assembly/</span>
-        </a>
       </div>
     </section>
 
-    <!-- Slide 11: vgp.usegalaxy.org -->
+    <!-- Slide 12: gxy.io/what-is-vgp -->
     <section class="slide slide-qr" data-section="resources">
-      <h1 class="slide-title">vgp.usegalaxy.org</h1>
-      <img class="qr-code" src="images/qr-code.svg" alt="QR Code">
+      <h1 class="slide-title">gxy.io/what-is-vgp</h1>
+      <img class="qr-code" src="images/qr-what-is-vgp.svg" alt="QR Code">
     </section>
 
   </div>
@@ -3826,6 +4105,126 @@
     }
 
     /* ========================================
+       Bar Chart Generator
+       ======================================== */
+
+    // Cache for loaded bar chart data
+    const barchartDataCache = {};
+    const barchartRendered = new Set();
+
+    async function loadBarchartData(filename) {
+      if (barchartDataCache[filename]) {
+        return barchartDataCache[filename];
+      }
+      try {
+        const response = await fetch(filename);
+        const data = await response.json();
+        barchartDataCache[filename] = data;
+        return data;
+      } catch (e) {
+        console.error(`Failed to load ${filename}:`, e);
+        return [];
+      }
+    }
+
+    function generateBarChart(containerId, data, options = {}) {
+      const container = document.getElementById(containerId);
+      if (!container || !data || data.length === 0) return;
+
+      const {
+        xField = 'hours',
+        yField = 'name',
+        xTitle = 'Core-Hours',
+        yTitle = '',
+        color = '#fe7f02',
+        formatX = ',.0f'
+      } = options;
+
+      const spec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "width": "container",
+        "height": 400,
+        "background": "transparent",
+        "data": { "values": data },
+        "mark": {
+          "type": "bar",
+          "cornerRadiusEnd": 4,
+          "color": color
+        },
+        "encoding": {
+          "y": {
+            "field": yField,
+            "type": "nominal",
+            "title": yTitle,
+            "sort": "-x",
+            "axis": {
+              "labelColor": "white",
+              "titleColor": "white",
+              "labelFontSize": 13,
+              "labelLimit": 200
+            }
+          },
+          "x": {
+            "field": xField,
+            "type": "quantitative",
+            "title": xTitle,
+            "axis": {
+              "labelColor": "white",
+              "titleColor": "white",
+              "gridColor": "rgba(255,255,255,0.1)",
+              "format": formatX,
+              "labelFontSize": 18
+            }
+          },
+          "tooltip": [
+            {"field": yField, "type": "nominal", "title": yTitle || "Name"},
+            {"field": xField, "type": "quantitative", "title": xTitle, "format": formatX}
+          ]
+        },
+        "config": {
+          "font": "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+          "view": {"stroke": "transparent"},
+          "axis": {
+            "domainColor": "white",
+            "tickColor": "white",
+            "labelFont": "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+            "titleFont": "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+            "titleFontSize": 14,
+            "titleFontWeight": 500
+          }
+        }
+      };
+
+      vegaEmbed(`#${containerId}`, spec, {actions: false}).catch(console.error);
+    }
+
+    async function renderBarchartSlide(slideElement) {
+      const container = slideElement.querySelector('.barchart-container');
+      if (!container || barchartRendered.has(container.id)) return;
+
+      const dataSource = slideElement.dataset.source;
+      if (!dataSource) return;
+
+      const data = await loadBarchartData(dataSource);
+      if (!data || data.length === 0) return;
+
+      // Determine chart options based on data structure
+      let options = {};
+      if (dataSource.includes('workflow')) {
+        options = { xField: 'hours', yField: 'name', xTitle: 'Core-Hours', color: '#fe7f02' };
+      } else if (dataSource.includes('tool-memory')) {
+        options = { xField: 'memory_gb', yField: 'name', xTitle: 'Peak Memory (GB)', color: '#74c376', formatX: ',.0f' };
+      } else if (dataSource.includes('tool')) {
+        options = { xField: 'hours', yField: 'name', xTitle: 'Core-Hours', color: '#2077b3' };
+      } else if (dataSource.includes('memory')) {
+        options = { xField: 'count', yField: 'bucket', xTitle: 'Number of Jobs', color: '#74c376', formatX: ',.0f' };
+      }
+
+      generateBarChart(container.id, data, options);
+      barchartRendered.add(container.id);
+    }
+
+    /* ========================================
        Word Cloud Generator
        ======================================== */
 
@@ -4029,6 +4428,11 @@
         if (this.slides[index].classList.contains('slide-scatter') && !this.generateScatterOnce) {
           setTimeout(generateScatterPlot, 100);
           this.generateScatterOnce = true;
+        }
+
+        // Generate bar chart if on that slide
+        if (this.slides[index].classList.contains('slide-barchart')) {
+          setTimeout(() => renderBarchartSlide(this.slides[index]), 100);
         }
 
         // Reset progress
