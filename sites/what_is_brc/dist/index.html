@@ -136,6 +136,56 @@
       background: rgba(40, 40, 91, 0.12);
     }
 
+    /* Timing Control Slider */
+    .timing-control {
+      position: absolute;
+      right: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .timing-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 80px;
+      height: 4px;
+      background: rgba(40, 40, 91, 0.2);
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .timing-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .timing-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .timing-slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+    }
+
+    .timing-value {
+      color: rgba(40, 40, 91, 0.6);
+      font-size: 12px;
+      min-width: 28px;
+      text-align: right;
+    }
+
     /* ========================================
        Slide Container
        ======================================== */
@@ -1220,6 +1270,10 @@
       <a class="masthead-link" data-section="capabilities">Capabilities</a>
       <a class="masthead-link" data-section="resources">Resources</a>
     </div>
+    <div class="timing-control">
+      <input type="range" class="timing-slider" id="timing-slider" min="3" max="30" value="8" step="1">
+      <span class="timing-value" id="timing-value">8s</span>
+    </div>
   </nav>
 
   <!-- Slides -->
@@ -1829,10 +1883,22 @@
        ======================================== */
 
     const CONFIG = {
-      interval: 3000,
+      interval: 8000,
       transitionDuration: 600,
       loop: true
     };
+
+    // Timing slider control
+    const timingSlider = document.getElementById('timing-slider');
+    const timingValue = document.getElementById('timing-value');
+
+    if (timingSlider && timingValue) {
+      timingSlider.addEventListener('input', (e) => {
+        const seconds = parseInt(e.target.value);
+        CONFIG.interval = seconds * 1000;
+        timingValue.textContent = seconds + 's';
+      });
+    }
 
     class Slideshow {
       constructor() {
