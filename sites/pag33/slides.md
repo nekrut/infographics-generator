@@ -398,6 +398,6 @@ Vertebrate Genomes Project
 
 # [community] PAG33 training link
 > type: qr
-> You need to create an account first
+> https://usegalaxy.org/join-training/pag33/
 
 ![QR Code](images/qr-pag33-training.svg)
