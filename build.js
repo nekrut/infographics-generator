@@ -70,7 +70,7 @@ function parseSlide(content, index) {
   const blockquotes = content.match(/^>\s*(.+)$/gm) || [];
   for (const bq of blockquotes) {
     const text = bq.replace(/^>\s*/, '').trim();
-    if (!text.match(/^(type:|split|stats:|lists:|background:|data:)/i)) {
+    if (!text.match(/^(type:|split|stats:|lists:|background:|data:|grid:)/i)) {
       slide.subtitle = text;
       break;
     }
