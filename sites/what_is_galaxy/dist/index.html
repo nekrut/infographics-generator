@@ -180,6 +180,63 @@
       text-align: right;
     }
 
+    /* Mode Toggle Switch */
+    .mode-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .mode-toggle input {
+      display: none;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 36px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 9px;
+      transition: background 0.2s ease;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 14px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .mode-toggle input:checked + .toggle-switch {
+      background: var(--color-accent);
+    }
+
+    .mode-toggle input:checked + .toggle-switch::after {
+      transform: translateX(18px);
+      background: white;
+    }
+
+    .toggle-label {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      min-width: 32px;
+    }
+
+    .timing-control.manual-mode .timing-slider,
+    .timing-control.manual-mode .timing-value {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
     /* ========================================
        Slide Container
        ======================================== */
@@ -288,6 +345,59 @@
     .stats-grid.four-col {
       grid-template-columns: repeat(4, 1fr);
       max-width: 1000px;
+    }
+
+    .stats-grid.vertical {
+      grid-template-columns: 1fr;
+      max-width: 1000px;
+      gap: var(--spacing-md);
+    }
+
+    .stats-grid.vertical .stat-card {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      align-items: center;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-lg) var(--spacing-xl);
+      text-align: left;
+    }
+
+    .stats-grid.vertical .stat-number {
+      font-size: 28px;
+      margin-bottom: 0;
+      text-align: left;
+    }
+
+    .stats-grid.vertical .stat-label {
+      font-size: 25px;
+      text-align: left;
+    }
+
+    /* Lists style - compact cards with larger text */
+    .stats-grid.lists {
+      grid-template-columns: 1fr;
+      max-width: 1000px;
+      gap: var(--spacing-sm);
+    }
+
+    .stats-grid.lists .stat-card {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-sm) var(--spacing-lg);
+      text-align: left;
+    }
+
+    .stats-grid.lists .stat-number {
+      font-size: 31px;
+      margin-bottom: 0;
+      text-align: left;
+    }
+
+    .stats-grid.lists .stat-label {
+      font-size: 28px;
+      text-align: left;
     }
 
     .stat-card {
@@ -491,9 +601,9 @@
     /* Ecosystem Grid Layout */
     .ecosystem-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: var(--spacing-md);
-      max-width: 1100px;
+      max-width: 1200px;
     }
 
     .ecosystem-panel {
@@ -510,15 +620,18 @@
     }
 
     .ecosystem-panel .panel-logo {
-      height: 60px;
+      height: 70px;
       margin-bottom: var(--spacing-sm);
       display: flex;
       align-items: center;
       justify-content: center;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      padding: 10px;
     }
 
     .ecosystem-panel .panel-logo img {
-      max-height: 60px;
+      max-height: 50px;
       max-width: 150px;
       object-fit: contain;
     }
@@ -549,26 +662,35 @@
     }
 
     .slide-wordcloud .slide-title {
-      font-size: 38px;
+      font-size: 56px;
       font-weight: 600;
       letter-spacing: -2px;
-      margin-bottom: 16px;
+      margin-bottom: var(--spacing-sm);
       color: var(--color-text-light);
       z-index: 10;
       position: relative;
     }
 
-    #wordcloud-container {
+    .slide-wordcloud .slide-subtitle {
+      font-size: 24px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: var(--spacing-lg);
+      z-index: 10;
+      position: relative;
+    }
+
+    .wordcloud-container {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 18px;
+      gap: 24px;
       max-width: 1400px;
       width: 95%;
     }
 
     .wordcloud-word {
-      padding: 18px 16px;
-      border-radius: 10px;
+      padding: 24px 21px;
+      border-radius: 12px;
       background: rgba(255, 255, 255, 0.08);
       cursor: pointer;
       transition: transform 0.2s ease, background 0.3s ease;
@@ -576,7 +698,7 @@
       font-family: var(--font-family);
       text-decoration: none;
       text-align: center;
-      font-size: 18px;
+      font-size: 24px;
       color: rgba(255, 255, 255, 0.9);
     }
 
@@ -737,6 +859,55 @@
       height: 400px;
       max-width: 50vh;
       max-height: 50vh;
+    }
+
+    /* ========================================
+       Text Slide (Large Centered Text)
+       ======================================== */
+
+    .slide-text {
+      background: var(--color-bg-subtle);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .slide-text .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-lg);
+      color: var(--color-text-dark);
+    }
+
+    .slide-text .text-slide-content {
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+
+    .slide-text .text-slide-paragraph {
+      font-size: 32px;
+      line-height: 1.5;
+      color: var(--color-text-dark);
+      font-weight: 500;
+    }
+
+    .slide-text .text-slide-paragraph strong {
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+      .slide-text .slide-title {
+        font-size: 28px;
+      }
+
+      .slide-text .text-slide-paragraph {
+        font-size: 20px;
+      }
     }
 
     /* ========================================
@@ -958,7 +1129,7 @@
         font-size: 28px;
       }
 
-      #wordcloud-container {
+      .wordcloud-container {
         grid-template-columns: repeat(3, 1fr);
         gap: 8px;
       }
@@ -1041,7 +1212,7 @@
         font-size: 22px;
       }
 
-      #wordcloud-container {
+      .wordcloud-container {
         grid-template-columns: repeat(2, 1fr);
         gap: 6px;
       }
@@ -1053,6 +1224,207 @@
 
       .links-grid {
         grid-template-columns: 1fr;
+      }
+    }
+
+    /* ========================================
+       Sunburst Slide
+       ======================================== */
+
+    .slide-sunburst {
+      background: #ffffff;
+      flex-direction: column;
+      padding: 30px 50px;
+    }
+
+    .slide-sunburst .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-primary);
+      color: var(--color-text-light);
+    }
+
+    .slide-sunburst .slide-subtitle {
+      font-size: 24px;
+      color: rgba(0, 0, 0, 0.6);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .sunburst-wrapper {
+      display: flex;
+      gap: var(--spacing-lg);
+      align-items: flex-start;
+      justify-content: center;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    #sunburst-container {
+      flex: 0 0 auto;
+      width: 500px;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #sunburst-panel {
+      flex: 0 0 300px;
+      color: var(--color-primary);
+    }
+
+    .sunburst-panel-card {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+      padding: var(--spacing-md);
+    }
+
+    .sunburst-panel-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: var(--spacing-md);
+      color: rgba(0, 0, 0, 0.6);
+    }
+
+    .sunburst-panel-header a {
+      color: var(--color-accent);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sunburst-panel-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .sunburst-panel-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    .sunburst-back-btn {
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .sunburst-back-btn:hover {
+      opacity: 1;
+    }
+
+    .sunburst-children-list {
+      max-height: 350px;
+      overflow-y: auto;
+    }
+
+    .sunburst-child-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .sunburst-child-item:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .sunburst-child-name {
+      flex: 1;
+      font-size: 14px;
+      color: var(--color-primary);
+    }
+
+    .sunburst-child-count {
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    .sunburst-hint {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.5);
+      text-align: center;
+      margin-top: var(--spacing-md);
+    }
+
+    /* Image Grid Slide */
+    .slide-imagegrid {
+      background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 30px 30px;
+    }
+
+    .slide-imagegrid .slide-title {
+      font-size: 38px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: 8px;
+      color: var(--color-text-light);
+    }
+
+    .slide-imagegrid .slide-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 20px;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 4px;
+      max-width: 1200px;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .image-grid.grid-large {
+      grid-template-columns: repeat(10, 1fr);
+      gap: 8px;
+      max-width: 1100px;
+    }
+
+    .grid-image-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 6px;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+
+    .grid-image-item:hover {
+      transform: scale(1.1);
+      z-index: 10;
+    }
+
+    .grid-image-item img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    .grid-image-label {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .slide-imagegrid .slide-title {
+        font-size: 24px;
+      }
+      .image-grid {
+        grid-template-columns: repeat(8, 1fr);
+        gap: 4px;
       }
     }
   </style>
@@ -1069,7 +1441,12 @@
       <a class="masthead-link" data-section="capabilities">Capabilities</a>
       <a class="masthead-link" data-section="ecosystem">Ecosystem</a>
     </div>
-    <div class="timing-control">
+    <div class="timing-control" id="timing-control">
+      <label class="mode-toggle">
+        <input type="checkbox" id="auto-mode" checked>
+        <span class="toggle-switch"></span>
+        <span class="toggle-label" id="mode-label">Auto</span>
+      </label>
       <input type="range" class="timing-slider" id="timing-slider" min="3" max="30" value="8" step="1">
       <span class="timing-value" id="timing-value">8s</span>
     </div>
@@ -1196,9 +1573,10 @@
     </section>
 
     <!-- Slide 9: A Universe of Applications -->
-    <section class="slide slide-wordcloud" data-section="capabilities">
+    <section class="slide slide-wordcloud" data-section="capabilities" data-topics="[{ text: 'Genomics', url: 'https://training.galaxyproject.org/training-material/topics/genome-annotation/' }, { text: 'Transcriptomics', url: 'https://training.galaxyproject.org/training-material/topics/transcriptomics/' }, { text: 'Proteomics', url: 'https://training.galaxyproject.org/training-material/topics/proteomics/' }, { text: 'Metabolomics', url: 'https://training.galaxyproject.org/training-material/topics/metabolomics/' }, { text: 'Single Cell', url: 'https://training.galaxyproject.org/training-material/topics/single-cell/' }, { text: 'Variant Analysis', url: 'https://training.galaxyproject.org/training-material/topics/variant-analysis/' }, { text: 'Sequence Analysis', url: 'https://training.galaxyproject.org/training-material/topics/sequence-analysis/' }, { text: 'Assembly', url: 'https://training.galaxyproject.org/training-material/topics/assembly/' }, { text: 'Epigenetics', url: 'https://training.galaxyproject.org/training-material/topics/epigenetics/' }, { text: 'Microbiome', url: 'https://training.galaxyproject.org/training-material/topics/microbiome/' }, { text: 'Machine Learning', url: 'https://training.galaxyproject.org/training-material/topics/statistics/' }, { text: 'Imaging', url: 'https://training.galaxyproject.org/training-material/topics/imaging/' }, { text: 'Climate', url: 'https://training.galaxyproject.org/training-material/topics/climate/' }, { text: 'Ecology', url: 'https://training.galaxyproject.org/training-material/topics/ecology/' }, { text: 'Evolution', url: 'https://training.galaxyproject.org/training-material/topics/evolution/' }, { text: 'SARS-CoV-2', url: 'https://training.galaxyproject.org/training-material/topics/variant-analysis/' }, { text: 'FAIR Data', url: 'https://training.galaxyproject.org/training-material/topics/fair/' }, { text: 'Visualisation', url: 'https://training.galaxyproject.org/training-material/topics/visualisation/' }, { text: 'Computational Chemistry', url: 'https://training.galaxyproject.org/training-material/topics/computational-chemistry/' }, { text: 'Materials Science', url: 'https://training.galaxyproject.org/training-material/topics/materials-science/' }, { text: 'One Health', url: 'https://training.galaxyproject.org/training-material/topics/one-health/' }, { text: 'Plants', url: 'https://training.galaxyproject.org/training-material/topics/plants/' }, { text: 'Synthetic Biology', url: 'https://training.galaxyproject.org/training-material/topics/synthetic-biology/' }, { text: 'Data Science', url: 'https://training.galaxyproject.org/training-material/topics/data-science/' }, { text: 'Annotation', url: 'https://training.galaxyproject.org/training-material/topics/genome-annotation/' }, { text: 'RNA-seq', url: 'https://training.galaxyproject.org/training-material/topics/transcriptomics/' }, { text: 'ChIP-seq', url: 'https://training.galaxyproject.org/training-material/topics/epigenetics/' }, { text: 'ATAC-seq', url: 'https://training.galaxyproject.org/training-material/topics/epigenetics/' }, { text: 'Metagenomics', url: 'https://training.galaxyproject.org/training-material/topics/metagenomics/' }]">
       <h1 class="slide-title">A Universe of Applications</h1>
-      <div id="wordcloud-container"></div>
+      
+      <div class="wordcloud-container"></div>
     </section>
 
     <!-- Slide 10: Scalable Genome Assembly -->
@@ -1343,58 +1721,42 @@
   </div>
 
   <!-- Controls Hint -->
-  <div class="controls-hint">
+  <div class="controls-hint" id="controls-hint">
     <kbd>Space</kbd> pause &nbsp; <kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate
   </div>
 
   <!-- Pause Indicator -->
   <div class="pause-indicator">Paused</div>
 
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
   <script>
-    /* ========================================
-       Word Cloud Data
-       ======================================== */
-
-    const WORDCLOUD_TOPICS = [
-      { text: "Genomics", weight: 100, url: "https://training.galaxyproject.org/training-material/topics/genome-annotation/" },
-      { text: "Transcriptomics", weight: 95, url: "https://training.galaxyproject.org/training-material/topics/transcriptomics/" },
-      { text: "Proteomics", weight: 85, url: "https://training.galaxyproject.org/training-material/topics/proteomics/" },
-      { text: "Metabolomics", weight: 80, url: "https://training.galaxyproject.org/training-material/topics/metabolomics/" },
-      { text: "Single Cell", weight: 90, url: "https://training.galaxyproject.org/training-material/topics/single-cell/" },
-      { text: "Variant Analysis", weight: 88, url: "https://training.galaxyproject.org/training-material/topics/variant-analysis/" },
-      { text: "Sequence Analysis", weight: 92, url: "https://training.galaxyproject.org/training-material/topics/sequence-analysis/" },
-      { text: "Assembly", weight: 85, url: "https://training.galaxyproject.org/training-material/topics/assembly/" },
-      { text: "Epigenetics", weight: 75, url: "https://training.galaxyproject.org/training-material/topics/epigenetics/" },
-      { text: "Microbiome", weight: 82, url: "https://training.galaxyproject.org/training-material/topics/microbiome/" },
-      { text: "Machine Learning", weight: 78, url: "https://training.galaxyproject.org/training-material/topics/statistics/" },
-      { text: "Imaging", weight: 70, url: "https://training.galaxyproject.org/training-material/topics/imaging/" },
-      { text: "Climate", weight: 65, url: "https://training.galaxyproject.org/training-material/topics/climate/" },
-      { text: "Ecology", weight: 68, url: "https://training.galaxyproject.org/training-material/topics/ecology/" },
-      { text: "Evolution", weight: 72, url: "https://training.galaxyproject.org/training-material/topics/evolution/" },
-      { text: "SARS-CoV-2", weight: 60, url: "https://training.galaxyproject.org/training-material/topics/variant-analysis/" },
-      { text: "FAIR Data", weight: 55, url: "https://training.galaxyproject.org/training-material/topics/fair/" },
-      { text: "Visualisation", weight: 58, url: "https://training.galaxyproject.org/training-material/topics/visualisation/" },
-      { text: "Computational Chemistry", weight: 50, url: "https://training.galaxyproject.org/training-material/topics/computational-chemistry/" },
-      { text: "Materials Science", weight: 45, url: "https://training.galaxyproject.org/training-material/topics/materials-science/" },
-      { text: "One Health", weight: 52, url: "https://training.galaxyproject.org/training-material/topics/one-health/" },
-      { text: "Plants", weight: 62, url: "https://training.galaxyproject.org/training-material/topics/plants/" },
-      { text: "Synthetic Biology", weight: 48, url: "https://training.galaxyproject.org/training-material/topics/synthetic-biology/" },
-      { text: "Data Science", weight: 75, url: "https://training.galaxyproject.org/training-material/topics/data-science/" },
-      { text: "Annotation", weight: 78, url: "https://training.galaxyproject.org/training-material/topics/genome-annotation/" },
-      { text: "RNA-seq", weight: 88, url: "https://training.galaxyproject.org/training-material/topics/transcriptomics/" },
-      { text: "ChIP-seq", weight: 72, url: "https://training.galaxyproject.org/training-material/topics/epigenetics/" },
-      { text: "ATAC-seq", weight: 68, url: "https://training.galaxyproject.org/training-material/topics/epigenetics/" },
-      { text: "Metagenomics", weight: 80, url: "https://training.galaxyproject.org/training-material/topics/metagenomics/" }
-    ];
-
     /* ========================================
        Word Cloud Generator
        ======================================== */
 
-    function generateWordCloud() {
-      const container = document.getElementById('wordcloud-container');
+    const wordcloudGeneratedSlides = new Set();
+
+    function generateWordCloud(slideElement) {
+      if (!slideElement) return;
+      const slideIndex = slideElement.dataset.section + '-' + Array.from(document.querySelectorAll('.slide')).indexOf(slideElement);
+      if (wordcloudGeneratedSlides.has(slideIndex)) return;
+
+      const container = slideElement.querySelector('.wordcloud-container');
       if (!container) return;
 
+      const topicsAttr = slideElement.dataset.topics;
+      if (!topicsAttr) return;
+
+      let topics;
+      try {
+        topics = eval(topicsAttr);
+      } catch (e) {
+        console.error('Failed to parse wordcloud topics:', e);
+        return;
+      }
+
+      wordcloudGeneratedSlides.add(slideIndex);
       container.innerHTML = '';
 
       // Galaxy colors for sparkle effect
@@ -1409,7 +1771,7 @@
       ];
 
       // Create grid of words
-      WORDCLOUD_TOPICS.forEach((topic, index) => {
+      topics.forEach((topic, index) => {
         const word = document.createElement('a');
         word.className = 'wordcloud-word';
         word.textContent = topic.text;
@@ -1430,7 +1792,7 @@
         // Pick 4-6 random words to sparkle
         const numSparkles = 4 + Math.floor(Math.random() * 3);
         const indices = new Set();
-        while (indices.size < numSparkles) {
+        while (indices.size < numSparkles && words.length > 0) {
           indices.add(Math.floor(Math.random() * words.length));
         }
 
@@ -1457,6 +1819,231 @@
       }
     `;
     document.head.appendChild(style);
+
+    /* ========================================
+       Sunburst Generator
+       ======================================== */
+
+    const ROMA_CYCLIC = [
+      "#733957", "#843d3b", "#97552c", "#b07f33", "#ccb65e", "#d5db9a",
+      "#bae0c3", "#86c8cf", "#599ec5", "#4f73ab", "#604c81", "#723959"
+    ].reverse();
+
+    let sunburstData = null;
+    let sunburstGenerated = false;
+
+    fetch('ncbi-taxa-tree.json')
+      .then(response => response.json())
+      .then(data => { sunburstData = data; })
+      .catch(err => console.log('Sunburst data not available:', err));
+
+    function generateSunburst() {
+      if (sunburstGenerated || !sunburstData) return;
+      const container = document.getElementById('sunburst-container');
+      if (!container) return;
+      sunburstGenerated = true;
+
+      const width = 500;
+      const height = width;
+      const radius = (width - 10) / 2;
+      const DEPTH = 4;
+
+      const svg = d3.select(container)
+        .append('svg')
+        .attr('viewBox', [-width / 2, -height / 2, width, width])
+        .style('font', "10px sans-serif");
+
+      const baseColor = d3.scaleOrdinal(ROMA_CYCLIC);
+
+      const hierarchyData = d3.hierarchy(sunburstData)
+        .sum(d => (d.children.length === 0 ? 1 : 0))
+        .sort((a, b) => (a.data.name < b.data.name ? -1 : 1));
+
+      const rootChildren = hierarchyData.children || [];
+      baseColor.range(getEquidistantColors(ROMA_CYCLIC, rootChildren.length));
+
+      const root = d3.partition()
+        .size([2 * Math.PI, hierarchyData.height + 1])(hierarchyData);
+
+      root.each(d => {
+        d.current = { x0: d.x0, x1: d.x1, y0: d.y0, y1: d.y1 };
+        d.target = { x0: d.x0, x1: d.x1, y0: d.y0, y1: d.y1 };
+      });
+
+      let currentRoot = root;
+
+      const arc = d3.arc()
+        .startAngle(d => d.x0)
+        .endAngle(d => d.x1)
+        .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
+        .padRadius(radius)
+        .innerRadius(d => (Math.min(d.y0, DEPTH) * radius) / DEPTH)
+        .outerRadius(d => (Math.min(d.y1, DEPTH) * radius) / DEPTH - 0.5);
+
+      function getNodeColor(d, rootNode) {
+        const relativeDepth = d.depth - rootNode.depth;
+        if (relativeDepth === 0) return '#f5f5f7';
+        if (relativeDepth === 1) return baseColor(d.data.name);
+        const rootChild = findRootChild(d, rootNode);
+        if (!rootChild) return '#ccc';
+        const baseColorHsl = d3.hsl(baseColor(rootChild.data.name));
+        return d3.hsl(baseColorHsl.h, Math.max(0, baseColorHsl.s - 0.1 * (relativeDepth - 1)), Math.min(1, baseColorHsl.l + 0.05 * (relativeDepth - 1))).toString();
+      }
+
+      function findRootChild(node, rootNode) {
+        if (node === rootNode) return null;
+        const ancestors = node.ancestors();
+        for (let i = 0; i < ancestors.length; i++) {
+          if (ancestors[i].parent === rootNode) return ancestors[i];
+        }
+        return null;
+      }
+
+      function isVisible(d, rootNode, targetDepth) {
+        return d.ancestors().indexOf(rootNode) >= 0 && d.depth - targetDepth <= DEPTH - 1;
+      }
+
+      const path = svg.append('g')
+        .selectAll('path')
+        .data(root.descendants().slice(1))
+        .join('path')
+        .attr('fill', d => getNodeColor(d, root))
+        .attr('fill-opacity', d => isVisible(d, root, 0) ? 1 : 0)
+        .attr('d', d => arc(d.current))
+        .style('cursor', 'pointer')
+        .style('stroke', '#333')
+        .style('stroke-width', '1px')
+        .on('click', clicked);
+
+      const label = svg.append('g')
+        .attr('pointer-events', 'none')
+        .attr('text-anchor', 'middle')
+        .selectAll('text')
+        .data(root.descendants().slice(1))
+        .join('text')
+        .attr('fill-opacity', d => isVisible(d, root, 0) && ((d.current.x1 - d.current.x0) / (2 * Math.PI)) >= 0.01 ? 1 : 0)
+        .attr('dy', '0.35em')
+        .attr('transform', d => labelTransform(d))
+        .text(d => d.data.name);
+
+      function labelTransform(d) {
+        const angle = ((d.current.x0 + d.current.x1) / 2) * (180 / Math.PI);
+        let r = ((Math.min(d.current.y0, DEPTH) + Math.min(d.current.y1, DEPTH)) / 2) * (radius / DEPTH);
+        if (d.parent === currentRoot) r += 10;
+        return `rotate(${angle - 90}) translate(${r},0) rotate(${angle < 180 ? 0 : 180})`;
+      }
+
+      const centerGroup = svg.append('g');
+      centerGroup.append('image')
+        .attr('x', -50).attr('y', -50).attr('width', 100).attr('height', 100)
+        .attr('href', 'images/brc-logo.svg')
+        .attr('id', 'sunburst-center-logo');
+
+      svg.append('circle')
+        .attr('r', radius / DEPTH)
+        .attr('fill', 'transparent')
+        .style('cursor', 'pointer')
+        .on('click', (event) => { if (currentRoot && currentRoot.parent) clicked(event, currentRoot.parent); });
+
+      const browseLink = document.getElementById('sunburst-browse-link');
+      const backBtn = document.getElementById('sunburst-back-btn');
+      const childrenList = document.getElementById('sunburst-children-list');
+      const hint = document.getElementById('sunburst-hint');
+
+      // Rank to filter key mapping
+      const rankMap = {
+        isolate: 'taxonomicLevelIsolate',
+        serotype: 'taxonomicLevelSerotype',
+        strain: 'taxonomicLevelStrain',
+        species: 'taxonomicLevelSpecies',
+        genus: 'taxonomicLevelGenus',
+        family: 'taxonomicLevelFamily',
+        order: 'taxonomicLevelOrder',
+        class: 'taxonomicLevelClass',
+        phylum: 'taxonomicLevelPhylum',
+        kingdom: 'taxonomicLevelKingdom',
+        domain: 'taxonomicLevelDomain',
+        realm: 'taxonomicLevelRealm'
+      };
+
+      function createFilterUrl(rank, name) {
+        if (!rank || !name) return 'https://brc-analytics.org/organisms';
+        const categoryKey = rankMap[rank.toLowerCase()];
+        if (!categoryKey) return 'https://brc-analytics.org/organisms';
+        const filter = [{ categoryKey, value: [name] }];
+        return `https://brc-analytics.org/data/assemblies?filter=${encodeURIComponent(JSON.stringify(filter))}`;
+      }
+
+      function updatePanel(node) {
+        if (!browseLink || !childrenList) return;
+        const isRoot = node.depth === 0;
+        if (isRoot) {
+          browseLink.textContent = 'Browse All Assemblies';
+          browseLink.href = 'https://brc-analytics.org/organisms';
+        } else {
+          const count = node.data.assembly_count;
+          const suffix = count > 1 ? 'ies' : 'y';
+          browseLink.textContent = `View ${count} Assembl${suffix} for ${node.data.name}`;
+          browseLink.href = createFilterUrl(node.data.rank, node.data.name);
+        }
+        if (backBtn) backBtn.style.display = isRoot ? 'none' : 'flex';
+        if (hint) hint.style.display = isRoot ? 'block' : 'none';
+        childrenList.innerHTML = '';
+        (node.children || []).forEach(child => {
+          const item = document.createElement('div');
+          item.className = 'sunburst-child-item';
+          item.innerHTML = `<span class="sunburst-child-name">${child.data.name}</span><span class="sunburst-child-count">(${child.data.assembly_count})</span>`;
+          item.addEventListener('click', () => clicked(null, child));
+          childrenList.appendChild(item);
+        });
+      }
+
+      if (backBtn) backBtn.addEventListener('click', () => { if (currentRoot && currentRoot.parent) clicked(null, currentRoot.parent); });
+
+      function clicked(event, p) {
+        currentRoot = p;
+        document.getElementById('sunburst-center-logo').style.opacity = p.depth === 0 ? 1 : 0;
+        updatePanel(p);
+        if (p.children && p.children.length > 0) baseColor.range(getEquidistantColors(ROMA_CYCLIC, p.children.length));
+        root.each(d => {
+          d.target = {
+            x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+            x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+            y0: Math.max(0, d.y0 - p.depth),
+            y1: Math.max(0, d.y1 - p.depth)
+          };
+        });
+        path.transition().duration(750)
+          .tween('data', d => { const i = d3.interpolate(d.current, d.target); return t => { d.current = i(t); }; })
+          .attrTween('d', d => () => arc(d.current) || '')
+          .attr('fill', d => getNodeColor(d, p))
+          .attr('fill-opacity', d => isVisible(d, currentRoot, p.depth) ? 1 : 0);
+        label.transition().duration(750)
+          .tween('data', d => { const i = d3.interpolate(d.current, d.target); return t => { d.current = i(t); }; })
+          .attrTween('transform', d => () => labelTransform(d))
+          .attrTween('fill-opacity', d => () => isVisible(d, currentRoot, p.depth) && ((d.current.x1 - d.current.x0) / (2 * Math.PI)) >= 0.01 ? '1' : '0');
+      }
+
+      updatePanel(root);
+    }
+
+    function getEquidistantColors(colorMap, count) {
+      if (count <= 0) return [];
+      if (count === 1) return [colorMap[0]];
+      if (count <= colorMap.length) {
+        const result = [];
+        const step = colorMap.length / count;
+        for (let i = 0; i < count; i++) result.push(colorMap[Math.floor(i * step)]);
+        return result;
+      }
+      const result = [];
+      const colorScale = d3.scaleLinear()
+        .domain(d3.range(0, 1, 1 / (colorMap.length - 1)).concat([1]))
+        .range(colorMap)
+        .interpolate(d3.interpolateRgb.gamma(2.2));
+      for (let i = 0; i < count; i++) result.push(colorScale(i / (count - 1)));
+      return result;
+    }
 
     /* ========================================
        Slideshow Controller
@@ -1492,8 +2079,15 @@
 
         this.currentIndex = 0;
         this.isPlaying = true;
+        this.autoMode = true;
         this.progressInterval = null;
         this.progress = 0;
+
+        // Mode toggle elements
+        this.autoModeToggle = document.getElementById('auto-mode');
+        this.modeLabel = document.getElementById('mode-label');
+        this.timingControl = document.getElementById('timing-control');
+        this.controlsHint = document.getElementById('controls-hint');
 
         this.init();
       }
@@ -1515,6 +2109,11 @@
         // Keyboard controls
         document.addEventListener('keydown', (e) => this.handleKeydown(e));
 
+        // Mode toggle
+        if (this.autoModeToggle) {
+          this.autoModeToggle.addEventListener('change', () => this.toggleAutoMode());
+        }
+
         // Masthead navigation
         this.navLinks.forEach(link => {
           link.addEventListener('click', () => {
@@ -1526,8 +2125,8 @@
           });
         });
 
-        // Generate word cloud when that slide becomes active
-        this.generateWordCloudOnce = false;
+        // Generate sunburst when that slide becomes active
+        this.generateSunburstOnce = false;
 
         // Start autoplay
         this.startAutoplay();
@@ -1537,7 +2136,10 @@
         switch (e.code) {
           case 'Space':
             e.preventDefault();
-            this.togglePlayPause();
+            // Only toggle play/pause in auto mode
+            if (this.autoMode) {
+              this.togglePlayPause();
+            }
             break;
           case 'ArrowRight':
             this.next();
@@ -1546,7 +2148,7 @@
             this.prev();
             break;
           case 'Escape':
-            if (!this.isPlaying) this.play();
+            if (this.autoMode && !this.isPlaying) this.play();
             break;
         }
       }
@@ -1581,9 +2183,15 @@
         this.currentIndex = index;
 
         // Generate word cloud if on that slide
-        if (this.slides[index].classList.contains('slide-wordcloud') && !this.generateWordCloudOnce) {
-          setTimeout(generateWordCloud, 100);
-          this.generateWordCloudOnce = true;
+        if (this.slides[index].classList.contains('slide-wordcloud')) {
+          const slideEl = this.slides[index];
+          setTimeout(() => generateWordCloud(slideEl), 100);
+        }
+
+        // Generate sunburst if on that slide
+        if (this.slides[index].classList.contains('slide-sunburst') && !this.generateSunburstOnce) {
+          setTimeout(generateSunburst, 100);
+          this.generateSunburstOnce = true;
         }
 
         // Reset progress
@@ -1640,6 +2248,12 @@
       startAutoplay() {
         this.stopAutoplay();
 
+        // Don't autoplay in manual mode
+        if (!this.autoMode) {
+          this.progressBar.style.width = '0%';
+          return;
+        }
+
         this.progress = 0;
         this.progressBar.style.width = '0%';
 
@@ -1664,6 +2278,29 @@
 
         if (this.isPlaying) {
           this.startAutoplay();
+        }
+      }
+
+      toggleAutoMode() {
+        this.autoMode = this.autoModeToggle.checked;
+        this.modeLabel.textContent = this.autoMode ? 'Auto' : 'Manual';
+        this.timingControl.classList.toggle('manual-mode', !this.autoMode);
+
+        // Update controls hint
+        if (this.controlsHint) {
+          this.controlsHint.innerHTML = this.autoMode
+            ? '<kbd>Space</kbd> pause &nbsp; <kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate'
+            : '<kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate';
+        }
+
+        if (this.autoMode) {
+          // Switching to auto mode - start autoplay
+          this.isPlaying = true;
+          this.startAutoplay();
+        } else {
+          // Switching to manual mode - stop autoplay
+          this.stopAutoplay();
+          this.progressBar.style.width = '0%';
         }
       }
     }

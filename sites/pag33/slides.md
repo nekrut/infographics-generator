@@ -3,10 +3,10 @@ title: Galaxy Workshop @ PAG33
 masthead:
   - name: Intro
     section: intro
-  - name: Platforms
-    section: platforms
-  - name: Impact
-    section: impact
+  - name: Galaxy
+    section: galaxy
+  - name: Projects
+    section: projects
   - name: Community
     section: community
 ---
@@ -30,13 +30,13 @@ masthead:
 
 ---
 
-# [intro] Galaxy is a Universe
+# [galaxy] Galaxy is a Universe
 
 ![Galaxy Architecture](images/slide03.png)
 
 ---
 
-# [intro] Galaxy is free, it is powerful and it scales!
+# [galaxy] Galaxy is free, it is powerful and it scales!
 > Analyze your genomic, metagenomic, proteomic, metabolomic data in one place.
 
 | Stat | Label |
@@ -50,7 +50,7 @@ masthead:
 
 ---
 
-# [intro] Galaxy = 1,000s of tools
+# [galaxy] Galaxy = 1,000s of tools
 > Galaxy serves thousands of open-source analysis tools and is tightly integrated with BioConda and BioContainers communities
 
 | Stat | Label |
@@ -62,21 +62,21 @@ masthead:
 
 ---
 
-# [intro] Galaxy = 1,000s of tools
+# [galaxy] Galaxy = 1,000s of tools
 > All tools have a consistent interface
 
 ![Run a tool in Galaxy](images/run-tool.png)
 
 ---
 
-# [intro] Galaxy = 100s of workflows
+# [galaxy] Galaxy = 100s of workflows
 > Community-curated, production-ready
 
 ![Run a workflow in Galaxy](images/run-wf.png)
 
 ---
 
-# [intro] Galaxy = 100s of workflows
+# [galaxy] Galaxy = 100s of workflows
 > type: wordcloud
 > Community-curated, production-ready
 
@@ -97,28 +97,28 @@ masthead:
 
 ---
 
-# [intro] Ways to use Galaxy
+# [galaxy] Ways to use Galaxy
 > GUI, API, LLMs (soon!)
 
 ![Ways to use Galaxy](images/slide09.png)
 
 ---
 
-# [intro] Run programmatically
+# [galaxy] Run programmatically
 > Against our infrastructure!
 
 ![Run programmatically](images/slide10.png)
 
 ---
 
-# [intro] Globally distributed
+# [galaxy] Globally distributed
 > Use the one closer to you!
 
 ![Globally distributed](images/slide11.png)
 
 ---
 
-# [platforms] Part of large initiatives
+# [projects] Part of large initiatives
 > type: ecosystem
 
 ## AnVIL
@@ -139,27 +139,27 @@ Vertebrate Genomes Project
 
 ---
 
-# [platforms] AnVIL
+# [projects] AnVIL
 > NHGRI's Analysis, Visualization, and Informatics Lab-Space
 
 ![AnVIL](images/slide13.png)
 
 ---
 
-# [platforms] BRC Analytics
+# [projects] BRC Analytics
 > type: sunburst
 > Pathogen bioinformatics powered by Galaxy
 
 ---
 
-# [platforms] CFDE Cloud Workspace
+# [projects] CFDE Cloud Workspace
 > Tools for analyses of protected datasets
 
 ![CFDE Cloud Workspace](images/slide15.png)
 
 ---
 
-# [platforms] VGP: Sequencing Vertebrate Diversity
+# [projects] VGP: Sequencing Vertebrate Diversity
 > type: imagegrid
 > grid: large
 > 600 assemblies and counting

@@ -180,6 +180,63 @@
       text-align: right;
     }
 
+    /* Mode Toggle Switch */
+    .mode-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .mode-toggle input {
+      display: none;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 36px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 9px;
+      transition: background 0.2s ease;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 14px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .mode-toggle input:checked + .toggle-switch {
+      background: var(--color-accent);
+    }
+
+    .mode-toggle input:checked + .toggle-switch::after {
+      transform: translateX(18px);
+      background: white;
+    }
+
+    .toggle-label {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      min-width: 32px;
+    }
+
+    .timing-control.manual-mode .timing-slider,
+    .timing-control.manual-mode .timing-value {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
     /* ========================================
        Slide Container
        ======================================== */
@@ -1380,11 +1437,16 @@
     </div>
     <div class="masthead-nav">
       <a class="masthead-link active" data-section="intro">Intro</a>
-      <a class="masthead-link" data-section="platforms">Platforms</a>
-      <a class="masthead-link" data-section="impact">Impact</a>
+      <a class="masthead-link" data-section="galaxy">Galaxy</a>
+      <a class="masthead-link" data-section="projects">Projects</a>
       <a class="masthead-link" data-section="community">Community</a>
     </div>
-    <div class="timing-control">
+    <div class="timing-control" id="timing-control">
+      <label class="mode-toggle">
+        <input type="checkbox" id="auto-mode" checked>
+        <span class="toggle-switch"></span>
+        <span class="toggle-label" id="mode-label">Auto</span>
+      </label>
       <input type="range" class="timing-slider" id="timing-slider" min="3" max="30" value="8" step="1">
       <span class="timing-value" id="timing-value">8s</span>
     </div>
@@ -1427,14 +1489,14 @@
     </section>
 
     <!-- Slide 3: Galaxy is a Universe -->
-    <section class="slide slide-intro" data-section="intro">
+    <section class="slide slide-intro" data-section="galaxy">
       <h1 class="slide-title">Galaxy is a Universe</h1>
       <p class="slide-subtitle"></p>
       <img class="slide-image" src="images/slide03.png" alt="Galaxy Architecture">
     </section>
 
     <!-- Slide 4: Galaxy is free, it is powerful and it scales! -->
-    <section class="slide slide-stats" data-section="intro">
+    <section class="slide slide-stats" data-section="galaxy">
       <h1 class="slide-title">Galaxy is free, it is powerful and it scales!</h1>
       <p class="slide-subtitle">Analyze your genomic, metagenomic, proteomic, metabolomic data in one place.</p>
       <div class="stats-grid ">
@@ -1467,7 +1529,7 @@
     </section>
 
     <!-- Slide 5: Galaxy = 1,000s of tools -->
-    <section class="slide slide-stats" data-section="intro">
+    <section class="slide slide-stats" data-section="galaxy">
       <h1 class="slide-title">Galaxy = 1,000s of tools</h1>
       <p class="slide-subtitle">Galaxy serves thousands of open-source analysis tools and is tightly integrated with BioConda and BioContainers communities</p>
       <div class="stats-grid four-col">
@@ -1492,49 +1554,49 @@
     </section>
 
     <!-- Slide 6: Galaxy = 1,000s of tools -->
-    <section class="slide slide-intro" data-section="intro">
+    <section class="slide slide-intro" data-section="galaxy">
       <h1 class="slide-title">Galaxy = 1,000s of tools</h1>
       <p class="slide-subtitle">All tools have a consistent interface</p>
       <img class="slide-image" src="images/run-tool.png" alt="Run a tool in Galaxy">
     </section>
 
     <!-- Slide 7: Galaxy = 100s of workflows -->
-    <section class="slide slide-intro" data-section="intro">
+    <section class="slide slide-intro" data-section="galaxy">
       <h1 class="slide-title">Galaxy = 100s of workflows</h1>
       <p class="slide-subtitle">Community-curated, production-ready</p>
       <img class="slide-image" src="images/run-wf.png" alt="Run a workflow in Galaxy">
     </section>
 
     <!-- Slide 8: Galaxy = 100s of workflows -->
-    <section class="slide slide-wordcloud" data-section="intro" data-topics="[{ text: 'Amplicon', url: 'https://iwc.galaxyproject.org/?filter=Amplicon' }, { text: 'Bacterial Genomics', url: 'https://iwc.galaxyproject.org/?filter=Bacterial%20Genomics' }, { text: 'Epigenetics', url: 'https://iwc.galaxyproject.org/?filter=Epigenetics' }, { text: 'Genome Assembly', url: 'https://iwc.galaxyproject.org/?filter=Genome%20Assembly' }, { text: 'Genome Annotation', url: 'https://iwc.galaxyproject.org/?filter=Genome%20Annotation' }, { text: 'Imaging', url: 'https://iwc.galaxyproject.org/?filter=Imaging' }, { text: 'Metabolomics', url: 'https://iwc.galaxyproject.org/?filter=Metabolomics' }, { text: 'Microbiome', url: 'https://iwc.galaxyproject.org/?filter=Microbiome' }, { text: 'Proteomics', url: 'https://iwc.galaxyproject.org/?filter=Proteomics' }, { text: 'Single Cell', url: 'https://iwc.galaxyproject.org/?filter=Single%20Cell' }, { text: 'Transcriptomics', url: 'https://iwc.galaxyproject.org/?filter=Transcriptomics' }, { text: 'Variant Calling', url: 'https://iwc.galaxyproject.org/?filter=Variant%20Calling' }, { text: 'Virology', url: 'https://iwc.galaxyproject.org/?filter=Virology' }, { text: 'VGP', url: 'https://iwc.galaxyproject.org/?filter=VGP' }]">
+    <section class="slide slide-wordcloud" data-section="galaxy" data-topics="[{ text: 'Amplicon', url: 'https://iwc.galaxyproject.org/?filter=Amplicon' }, { text: 'Bacterial Genomics', url: 'https://iwc.galaxyproject.org/?filter=Bacterial%20Genomics' }, { text: 'Epigenetics', url: 'https://iwc.galaxyproject.org/?filter=Epigenetics' }, { text: 'Genome Assembly', url: 'https://iwc.galaxyproject.org/?filter=Genome%20Assembly' }, { text: 'Genome Annotation', url: 'https://iwc.galaxyproject.org/?filter=Genome%20Annotation' }, { text: 'Imaging', url: 'https://iwc.galaxyproject.org/?filter=Imaging' }, { text: 'Metabolomics', url: 'https://iwc.galaxyproject.org/?filter=Metabolomics' }, { text: 'Microbiome', url: 'https://iwc.galaxyproject.org/?filter=Microbiome' }, { text: 'Proteomics', url: 'https://iwc.galaxyproject.org/?filter=Proteomics' }, { text: 'Single Cell', url: 'https://iwc.galaxyproject.org/?filter=Single%20Cell' }, { text: 'Transcriptomics', url: 'https://iwc.galaxyproject.org/?filter=Transcriptomics' }, { text: 'Variant Calling', url: 'https://iwc.galaxyproject.org/?filter=Variant%20Calling' }, { text: 'Virology', url: 'https://iwc.galaxyproject.org/?filter=Virology' }, { text: 'VGP', url: 'https://iwc.galaxyproject.org/?filter=VGP' }]">
       <h1 class="slide-title">Galaxy = 100s of workflows</h1>
       <p class="slide-subtitle">Community-curated, production-ready</p>
       <div class="wordcloud-container"></div>
     </section>
 
     <!-- Slide 9: Ways to use Galaxy -->
-    <section class="slide slide-intro" data-section="intro">
+    <section class="slide slide-intro" data-section="galaxy">
       <h1 class="slide-title">Ways to use Galaxy</h1>
       <p class="slide-subtitle">GUI, API, LLMs (soon!)</p>
       <img class="slide-image" src="images/slide09.png" alt="Ways to use Galaxy">
     </section>
 
     <!-- Slide 10: Run programmatically -->
-    <section class="slide slide-intro" data-section="intro">
+    <section class="slide slide-intro" data-section="galaxy">
       <h1 class="slide-title">Run programmatically</h1>
       <p class="slide-subtitle">Against our infrastructure!</p>
       <img class="slide-image" src="images/slide10.png" alt="Run programmatically">
     </section>
 
     <!-- Slide 11: Globally distributed -->
-    <section class="slide slide-intro" data-section="intro">
+    <section class="slide slide-intro" data-section="galaxy">
       <h1 class="slide-title">Globally distributed</h1>
       <p class="slide-subtitle">Use the one closer to you!</p>
       <img class="slide-image" src="images/slide11.png" alt="Globally distributed">
     </section>
 
     <!-- Slide 12: Part of large initiatives -->
-    <section class="slide slide-ecosystem" data-section="platforms">
+    <section class="slide slide-ecosystem" data-section="projects">
       <h1 class="slide-title">Part of large initiatives</h1>
       <p class="slide-subtitle"></p>
       <div class="ecosystem-grid">
@@ -1563,14 +1625,14 @@
     </section>
 
     <!-- Slide 13: AnVIL -->
-    <section class="slide slide-intro" data-section="platforms">
+    <section class="slide slide-intro" data-section="projects">
       <h1 class="slide-title">AnVIL</h1>
       <p class="slide-subtitle">NHGRI's Analysis, Visualization, and Informatics Lab-Space</p>
       <img class="slide-image" src="images/slide13.png" alt="AnVIL">
     </section>
 
     <!-- Slide 14: BRC Analytics -->
-    <section class="slide slide-sunburst" data-section="platforms">
+    <section class="slide slide-sunburst" data-section="projects">
       <h1 class="slide-title">BRC Analytics</h1>
       <p class="slide-subtitle">Pathogen bioinformatics powered by Galaxy</p>
       <div class="sunburst-wrapper">
@@ -1605,14 +1667,14 @@
     </section>
 
     <!-- Slide 15: CFDE Cloud Workspace -->
-    <section class="slide slide-intro" data-section="platforms">
+    <section class="slide slide-intro" data-section="projects">
       <h1 class="slide-title">CFDE Cloud Workspace</h1>
       <p class="slide-subtitle">Tools for analyses of protected datasets</p>
       <img class="slide-image" src="images/slide15.png" alt="CFDE Cloud Workspace">
     </section>
 
     <!-- Slide 16: VGP: Sequencing Vertebrate Diversity -->
-    <section class="slide slide-imagegrid" data-section="platforms">
+    <section class="slide slide-imagegrid" data-section="projects">
       <h1 class="slide-title">VGP: Sequencing Vertebrate Diversity</h1>
       <p class="slide-subtitle">600 assemblies and counting</p>
       <div class="image-grid grid-large">
@@ -2330,7 +2392,7 @@
   </div>
 
   <!-- Controls Hint -->
-  <div class="controls-hint">
+  <div class="controls-hint" id="controls-hint">
     <kbd>Space</kbd> pause &nbsp; <kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate
   </div>
 
@@ -2688,8 +2750,15 @@
 
         this.currentIndex = 0;
         this.isPlaying = true;
+        this.autoMode = true;
         this.progressInterval = null;
         this.progress = 0;
+
+        // Mode toggle elements
+        this.autoModeToggle = document.getElementById('auto-mode');
+        this.modeLabel = document.getElementById('mode-label');
+        this.timingControl = document.getElementById('timing-control');
+        this.controlsHint = document.getElementById('controls-hint');
 
         this.init();
       }
@@ -2710,6 +2779,11 @@
 
         // Keyboard controls
         document.addEventListener('keydown', (e) => this.handleKeydown(e));
+
+        // Mode toggle
+        if (this.autoModeToggle) {
+          this.autoModeToggle.addEventListener('change', () => this.toggleAutoMode());
+        }
 
         // Masthead navigation
         this.navLinks.forEach(link => {
@@ -2733,7 +2807,10 @@
         switch (e.code) {
           case 'Space':
             e.preventDefault();
-            this.togglePlayPause();
+            // Only toggle play/pause in auto mode
+            if (this.autoMode) {
+              this.togglePlayPause();
+            }
             break;
           case 'ArrowRight':
             this.next();
@@ -2742,7 +2819,7 @@
             this.prev();
             break;
           case 'Escape':
-            if (!this.isPlaying) this.play();
+            if (this.autoMode && !this.isPlaying) this.play();
             break;
         }
       }
@@ -2842,6 +2919,12 @@
       startAutoplay() {
         this.stopAutoplay();
 
+        // Don't autoplay in manual mode
+        if (!this.autoMode) {
+          this.progressBar.style.width = '0%';
+          return;
+        }
+
         this.progress = 0;
         this.progressBar.style.width = '0%';
 
@@ -2866,6 +2949,29 @@
 
         if (this.isPlaying) {
           this.startAutoplay();
+        }
+      }
+
+      toggleAutoMode() {
+        this.autoMode = this.autoModeToggle.checked;
+        this.modeLabel.textContent = this.autoMode ? 'Auto' : 'Manual';
+        this.timingControl.classList.toggle('manual-mode', !this.autoMode);
+
+        // Update controls hint
+        if (this.controlsHint) {
+          this.controlsHint.innerHTML = this.autoMode
+            ? '<kbd>Space</kbd> pause &nbsp; <kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate'
+            : '<kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate';
+        }
+
+        if (this.autoMode) {
+          // Switching to auto mode - start autoplay
+          this.isPlaying = true;
+          this.startAutoplay();
+        } else {
+          // Switching to manual mode - stop autoplay
+          this.stopAutoplay();
+          this.progressBar.style.width = '0%';
         }
       }
     }

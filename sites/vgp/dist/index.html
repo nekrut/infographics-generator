@@ -180,6 +180,63 @@
       text-align: right;
     }
 
+    /* Mode Toggle Switch */
+    .mode-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .mode-toggle input {
+      display: none;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 36px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 9px;
+      transition: background 0.2s ease;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 14px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .mode-toggle input:checked + .toggle-switch {
+      background: var(--color-accent);
+    }
+
+    .mode-toggle input:checked + .toggle-switch::after {
+      transform: translateX(18px);
+      background: white;
+    }
+
+    .toggle-label {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      min-width: 32px;
+    }
+
+    .timing-control.manual-mode .timing-slider,
+    .timing-control.manual-mode .timing-value {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
     /* ========================================
        Slide Container
        ======================================== */
@@ -1458,7 +1515,12 @@
       <a class="masthead-link" data-section="scale">Scale</a>
       <a class="masthead-link" data-section="resources">Resources</a>
     </div>
-    <div class="timing-control">
+    <div class="timing-control" id="timing-control">
+      <label class="mode-toggle">
+        <input type="checkbox" id="auto-mode" checked>
+        <span class="toggle-switch"></span>
+        <span class="toggle-label" id="mode-label">Auto</span>
+      </label>
       <input type="range" class="timing-slider" id="timing-slider" min="3" max="30" value="8" step="1" title="Change slide duration">
       <span class="timing-value" id="timing-value">8s</span>
     </div>
@@ -1957,7 +2019,7 @@
   </div>
 
   <!-- Controls Hint -->
-  <div class="controls-hint">
+  <div class="controls-hint" id="controls-hint">
     <kbd>Space</kbd> pause &nbsp; <kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate
   </div>
 
@@ -4329,8 +4391,15 @@
 
         this.currentIndex = 0;
         this.isPlaying = true;
+        this.autoMode = true;
         this.progressInterval = null;
         this.progress = 0;
+
+        // Mode toggle elements
+        this.autoModeToggle = document.getElementById('auto-mode');
+        this.modeLabel = document.getElementById('mode-label');
+        this.timingControl = document.getElementById('timing-control');
+        this.controlsHint = document.getElementById('controls-hint');
 
         this.init();
       }
@@ -4351,6 +4420,11 @@
 
         // Keyboard controls
         document.addEventListener('keydown', (e) => this.handleKeydown(e));
+
+        // Mode toggle
+        if (this.autoModeToggle) {
+          this.autoModeToggle.addEventListener('change', () => this.toggleAutoMode());
+        }
 
         // Masthead navigation
         this.navLinks.forEach(link => {
@@ -4375,7 +4449,10 @@
         switch (e.code) {
           case 'Space':
             e.preventDefault();
-            this.togglePlayPause();
+            // Only toggle play/pause in auto mode
+            if (this.autoMode) {
+              this.togglePlayPause();
+            }
             break;
           case 'ArrowRight':
             this.next();
@@ -4384,7 +4461,7 @@
             this.prev();
             break;
           case 'Escape':
-            if (!this.isPlaying) this.play();
+            if (this.autoMode && !this.isPlaying) this.play();
             break;
         }
       }
@@ -4489,6 +4566,12 @@
       startAutoplay() {
         this.stopAutoplay();
 
+        // Don't autoplay in manual mode
+        if (!this.autoMode) {
+          this.progressBar.style.width = '0%';
+          return;
+        }
+
         this.progress = 0;
         this.progressBar.style.width = '0%';
 
@@ -4513,6 +4596,29 @@
 
         if (this.isPlaying) {
           this.startAutoplay();
+        }
+      }
+
+      toggleAutoMode() {
+        this.autoMode = this.autoModeToggle.checked;
+        this.modeLabel.textContent = this.autoMode ? 'Auto' : 'Manual';
+        this.timingControl.classList.toggle('manual-mode', !this.autoMode);
+
+        // Update controls hint
+        if (this.controlsHint) {
+          this.controlsHint.innerHTML = this.autoMode
+            ? '<kbd>Space</kbd> pause &nbsp; <kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate'
+            : '<kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate';
+        }
+
+        if (this.autoMode) {
+          // Switching to auto mode - start autoplay
+          this.isPlaying = true;
+          this.startAutoplay();
+        } else {
+          // Switching to manual mode - stop autoplay
+          this.stopAutoplay();
+          this.progressBar.style.width = '0%';
         }
       }
     }
