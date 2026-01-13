@@ -503,11 +503,13 @@ ${linksHTML}
 function generateQrSlide(slide, activeClass) {
   const imgHTML = slide.image ?
     `<img class="qr-code" src="${slide.image.src}" alt="${slide.image.alt}">` : '';
+  const subtitleHTML = slide.subtitle ? `<p class="slide-subtitle">${slide.subtitle}</p>` : '';
 
   return `
     <!-- Slide ${slide.index + 1}: ${slide.title} -->
     <section class="slide slide-qr${activeClass}" data-section="${slide.section}">
       <h1 class="slide-title">${slide.title}</h1>
+      ${subtitleHTML}
       ${imgHTML}
     </section>`;
 }
