@@ -393,3 +393,11 @@ Vertebrate Genomes Project
 > type: qr
 
 ![QR Code](images/qr-pag-2026.svg)
+
+---
+
+# [community] PAG33 training link
+> type: qr
+> You need to create an account first
+
+![QR Code](images/qr-pag33-training.svg)
