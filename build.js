@@ -449,7 +449,7 @@ ${panelsHTML}
 }
 
 function generateGalaxiesSlide(slide, activeClass) {
-  const descHTML = slide.paragraphs.map(p => `<p>${p}</p>`).join('\n        ');
+  const descHTML = slide.paragraphs.map(p => `<p>${marked.parseInline(p)}</p>`).join('\n        ');
 
   return `
     <!-- Slide ${slide.index + 1}: ${slide.title} -->
