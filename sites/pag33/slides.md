@@ -51,7 +51,7 @@ masthead:
 ---
 
 # [intro] Galaxy = 1,000s of tools
-> Galaxy serves thousands of open source analysis tools and is tightly integrated with BioConda and BioContainer communities
+> Galaxy serves thousands of open-source analysis tools and is tightly integrated with BioConda and BioContainers communities
 
 | Stat | Label |
 |------|-------|
@@ -63,14 +63,14 @@ masthead:
 ---
 
 # [intro] Galaxy = 1,000s of tools
-> All tools have consistent interface
+> All tools have a consistent interface
 
 ![Run a tool in Galaxy](images/run-tool.png)
 
 ---
 
 # [intro] Galaxy = 100s of workflows
-> Community curated, production ready
+> Community-curated, production-ready
 
 ![Run a workflow in Galaxy](images/run-wf.png)
 
@@ -78,7 +78,7 @@ masthead:
 
 # [intro] Galaxy = 100s of workflows
 > type: wordcloud
-> Community curated, production ready
+> Community-curated, production-ready
 
 - [Amplicon](https://iwc.galaxyproject.org/?filter=Amplicon)
 - [Bacterial Genomics](https://iwc.galaxyproject.org/?filter=Bacterial%20Genomics)
@@ -238,7 +238,7 @@ Vertebrate Genomes Project
 - [Evolution](https://training.galaxyproject.org/training-material/topics/evolution/)
 - [SARS-CoV-2](https://training.galaxyproject.org/training-material/topics/variant-analysis/)
 - [FAIR Data](https://training.galaxyproject.org/training-material/topics/fair/)
-- [Visualisation](https://training.galaxyproject.org/training-material/topics/visualisation/)
+- [Visualization](https://training.galaxyproject.org/training-material/topics/visualisation/)
 - [Computational Chemistry](https://training.galaxyproject.org/training-material/topics/computational-chemistry/)
 - [Materials Science](https://training.galaxyproject.org/training-material/topics/materials-science/)
 - [One Health](https://training.galaxyproject.org/training-material/topics/one-health/)
