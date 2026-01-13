@@ -21,6 +21,7 @@ const OUTPUT_FILE = path.join(OUTPUT_DIR, 'index.html');
 const SLIDE_TYPES = {
   stats: /\|\s*Stat\s*\|\s*Label\s*\|/i,
   split: /^>\s*split/m,
+  text: /^>\s*type:\s*text/m,
   wordcloud: /^>\s*type:\s*wordcloud/m,
   scatter: /^>\s*type:\s*scatter/m,
   barchart: /^>\s*type:\s*barchart/m,
@@ -69,7 +70,7 @@ function parseSlide(content, index) {
   const blockquotes = content.match(/^>\s*(.+)$/gm) || [];
   for (const bq of blockquotes) {
     const text = bq.replace(/^>\s*/, '').trim();
-    if (!text.match(/^(type:|split|background:|data:)/i)) {
+    if (!text.match(/^(type:|split|stats:|lists:|background:|data:)/i)) {
       slide.subtitle = text;
       break;
     }
@@ -78,6 +79,8 @@ function parseSlide(content, index) {
   // Detect slide type
   if (SLIDE_TYPES.stats.test(content)) {
     slide.type = 'stats';
+    slide.vertical = /^>\s*stats:\s*vertical/m.test(content);
+    slide.lists = /^>\s*stats:\s*lists/m.test(content);
     // Parse stats table
     const tableMatch = content.match(/\|[^\n]+\|\n\|[-|\s]+\|\n([\s\S]*?)(?=\n\n|$)/);
     if (tableMatch) {
@@ -124,6 +127,7 @@ function parseSlide(content, index) {
     }
   } else if (SLIDE_TYPES.imagegrid.test(content)) {
     slide.type = 'imagegrid';
+    slide.gridLarge = /^>\s*grid:\s*large/m.test(content);
     // Parse image list from markdown image syntax ![alt](src)
     const imageMatches = content.matchAll(/!\[([^\]]*)\]\(([^)]+)\)/g);
     slide.images = [];
@@ -186,6 +190,11 @@ function parseSlide(content, index) {
     if (imgMatch) {
       slide.image = { alt: imgMatch[1], src: imgMatch[2] };
     }
+  } else if (SLIDE_TYPES.text.test(content)) {
+    slide.type = 'text';
+    // Parse paragraphs for large centered text display
+    const paragraphs = content.match(/^(?!>|#|\||!\[)[^\n]+$/gm);
+    slide.paragraphs = paragraphs?.filter(p => p.trim()) || [];
   } else {
     // Default: intro slide with image
     slide.type = 'intro';
@@ -232,6 +241,8 @@ function generateSlideHTML(slide) {
       return generateLinksSlide(slide, activeClass);
     case 'qr':
       return generateQrSlide(slide, activeClass);
+    case 'text':
+      return generateTextSlide(slide, activeClass);
     default:
       return generateIntroSlide(slide, activeClass);
   }
@@ -239,7 +250,9 @@ function generateSlideHTML(slide) {
 
 function generateStatsSlide(slide, activeClass) {
   const colors = ['orange', 'blue', 'green', 'yellow', 'red', 'dark'];
-  const gridClass = slide.stats.length === 4 ? 'four-col' :
+  const gridClass = slide.lists ? 'lists' :
+                    slide.vertical ? 'vertical' :
+                    slide.stats.length === 4 ? 'four-col' :
                     slide.stats.length === 2 ? 'two-col' : '';
 
   const statsHTML = slide.stats.map((stat, i) => `
@@ -298,11 +311,16 @@ function generateSplitSlide(slide, activeClass) {
 }
 
 function generateWordcloudSlide(slide, activeClass) {
+  const subtitleHTML = slide.subtitle ? `<p class="slide-subtitle">${slide.subtitle}</p>` : '';
+  const topics = slide.items.map(item =>
+    `{ text: '${item.text.replace(/'/g, "\\'")}', url: '${item.url}' }`
+  ).join(', ');
   return `
     <!-- Slide ${slide.index + 1}: ${slide.title} -->
-    <section class="slide slide-wordcloud${activeClass}" data-section="${slide.section}">
+    <section class="slide slide-wordcloud${activeClass}" data-section="${slide.section}" data-topics="[${topics}]">
       <h1 class="slide-title">${slide.title}</h1>
-      <div id="wordcloud-container"></div>
+      ${subtitleHTML}
+      <div class="wordcloud-container"></div>
     </section>`;
 }
 
@@ -328,6 +346,7 @@ function generateBarchartSlide(slide, activeClass) {
 }
 
 function generateImageGridSlide(slide, activeClass) {
+  const gridClass = slide.gridLarge ? ' grid-large' : '';
   const imagesHTML = slide.images.map(img =>
     `<div class="grid-image-item">
         <img src="${img.src}" alt="${img.alt}" loading="lazy">
@@ -340,7 +359,7 @@ function generateImageGridSlide(slide, activeClass) {
     <section class="slide slide-imagegrid${activeClass}" data-section="${slide.section}">
       <h1 class="slide-title">${slide.title}</h1>
       <p class="slide-subtitle">${slide.subtitle}</p>
-      <div class="image-grid">
+      <div class="image-grid${gridClass}">
       ${imagesHTML}
       </div>
     </section>`;
@@ -493,24 +512,26 @@ function generateQrSlide(slide, activeClass) {
     </section>`;
 }
 
+function generateTextSlide(slide, activeClass) {
+  const paragraphsHTML = slide.paragraphs.map(p =>
+    `<p class="text-slide-paragraph">${marked.parseInline(p)}</p>`).join('\n      ');
+
+  return `
+    <!-- Slide ${slide.index + 1}: ${slide.title} -->
+    <section class="slide slide-text${activeClass}" data-section="${slide.section}">
+      <h1 class="slide-title">${slide.title}</h1>
+      <div class="text-slide-content">
+      ${paragraphsHTML}
+      </div>
+    </section>`;
+}
+
 // Generate masthead links
 function generateMastheadLinks(masthead) {
   return masthead.map((item, i) => {
     const activeClass = i === 0 ? ' active' : '';
     return `<a class="masthead-link${activeClass}" data-section="${item.section}">${item.name}</a>`;
   }).join('\n      ');
-}
-
-// Generate wordcloud topics JavaScript
-function generateWordcloudTopics(slides) {
-  const wordcloudSlide = slides.find(s => s.type === 'wordcloud');
-  if (!wordcloudSlide || !wordcloudSlide.items.length) {
-    return '[]';
-  }
-  const topics = wordcloudSlide.items.map(item =>
-    `{ text: '${item.text}', url: '${item.url}' }`
-  ).join(',\n      ');
-  return `[\n      ${topics}\n    ]`;
 }
 
 // Copy directory recursively
@@ -563,7 +584,6 @@ function build() {
   // Generate HTML
   const mastheadHTML = generateMastheadLinks(frontMatter.masthead || []);
   const slidesHTML = slides.map(generateSlideHTML).join('\n');
-  const wordcloudTopics = generateWordcloudTopics(slides);
 
   // Load scatter data if exists
   const scatterDataPath = path.join(siteDir, 'scatter-data.json');
@@ -575,7 +595,6 @@ function build() {
   // Replace placeholders
   template = template.replace('{{MASTHEAD_LINKS}}', mastheadHTML);
   template = template.replace('{{SLIDES}}', slidesHTML);
-  template = template.replace('{{WORDCLOUD_TOPICS}}', wordcloudTopics);
   template = template.replace('{{SCATTER_DATA}}', scatterData);
 
   // Create output directory

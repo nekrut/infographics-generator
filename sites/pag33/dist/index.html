@@ -1,0 +1,2879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galaxy Project</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    /* ========================================
+       Apple-Style Design System
+       ======================================== */
+
+    :root {
+      /* Colors from usegalaxy.org */
+      --color-primary: #2c3143;
+      --color-accent: #FFD700;
+      --color-text-light: #f8f9fa;
+      --color-text-dark: #1d1d1f;
+      --color-bg-light: #ffffff;
+      --color-bg-subtle: #f5f5f7;
+      --color-border: rgba(0, 0, 0, 0.1);
+
+      /* Galaxy Paired colormap */
+      --color-orange: #fe7f02;
+      --color-orange-light: #fdbf6f;
+      --color-blue: #2077b3;
+      --color-blue-light: #a3cbdf;
+      --color-green: #74c376;
+      --color-green-light: #9fd99a;
+      --color-red: #e31a1e;
+      --color-red-light: #fb9998;
+      --color-yellow: #ffd602;
+
+      /* Typography */
+      --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+      /* Transitions */
+      --transition-slide: 0.6s ease-out;
+      --transition-fast: 0.2s ease;
+
+      /* Spacing */
+      --spacing-xl: 80px;
+      --spacing-lg: 48px;
+      --spacing-md: 24px;
+      --spacing-sm: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--color-bg-light);
+      color: var(--color-text-dark);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background 0.6s ease;
+    }
+
+    body.wordcloud-active {
+      background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
+    }
+
+    /* ========================================
+       Masthead Navigation
+       ======================================== */
+
+    .masthead {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      background: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-lg);
+      z-index: 1000;
+    }
+
+    .masthead-logo {
+      position: absolute;
+      left: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-text-light);
+      letter-spacing: -0.5px;
+    }
+
+    .masthead-logo img {
+      height: 32px;
+      width: auto;
+    }
+
+    .masthead-nav {
+      display: flex;
+      gap: var(--spacing-lg);
+    }
+
+    .masthead-link {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .masthead-link:hover {
+      color: var(--color-accent);
+    }
+
+    .masthead-link.active {
+      color: var(--color-text-light);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Timing Control Slider */
+    .timing-control {
+      position: absolute;
+      right: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .timing-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 80px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .timing-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      background: var(--color-accent);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .timing-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .timing-slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      background: var(--color-accent);
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+    }
+
+    .timing-value {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+      min-width: 28px;
+      text-align: right;
+    }
+
+    /* ========================================
+       Slide Container
+       ======================================== */
+
+    .slides-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding-top: 52px;
+    }
+
+    .slide {
+      position: absolute;
+      top: 52px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-slide), visibility var(--transition-slide);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-xl);
+      overflow: hidden;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ========================================
+       Slide Layouts
+       ======================================== */
+
+    /* Intro Slides Layout */
+    .slide-intro {
+      flex-direction: column;
+      text-align: center;
+      background: var(--color-bg-subtle);
+    }
+
+    .slide-intro .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text-dark);
+    }
+
+    .slide-intro .slide-subtitle {
+      font-size: 24px;
+      font-weight: 400;
+      color: #86868b;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .slide-intro .slide-image {
+      max-width: 90%;
+      max-height: 65vh;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    /* Stats Layout */
+    .slide-stats {
+      flex-direction: column;
+      text-align: center;
+      background: var(--color-bg-subtle);
+    }
+
+    .slide-stats .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-dark);
+    }
+
+    .slide-stats .slide-subtitle {
+      font-size: 21px;
+      font-weight: 400;
+      color: #86868b;
+      margin-bottom: var(--spacing-lg);
+      max-width: 700px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
+      max-width: 900px;
+    }
+
+    .stats-grid.two-col {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 600px;
+    }
+
+    .stats-grid.four-col {
+      grid-template-columns: repeat(4, 1fr);
+      max-width: 1000px;
+    }
+
+    .stats-grid.vertical {
+      grid-template-columns: 1fr;
+      max-width: 1000px;
+      gap: var(--spacing-md);
+    }
+
+    .stats-grid.vertical .stat-card {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      align-items: center;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-lg) var(--spacing-xl);
+      text-align: left;
+    }
+
+    .stats-grid.vertical .stat-number {
+      font-size: 28px;
+      margin-bottom: 0;
+      text-align: left;
+    }
+
+    .stats-grid.vertical .stat-label {
+      font-size: 25px;
+      text-align: left;
+    }
+
+    /* Lists style - compact cards with larger text */
+    .stats-grid.lists {
+      grid-template-columns: 1fr;
+      max-width: 1000px;
+      gap: var(--spacing-sm);
+    }
+
+    .stats-grid.lists .stat-card {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-sm) var(--spacing-lg);
+      text-align: left;
+    }
+
+    .stats-grid.lists .stat-number {
+      font-size: 31px;
+      margin-bottom: 0;
+      text-align: left;
+    }
+
+    .stats-grid.lists .stat-label {
+      font-size: 28px;
+      text-align: left;
+    }
+
+    .stat-card {
+      background: var(--color-bg-light);
+      border-radius: 18px;
+      padding: var(--spacing-lg) var(--spacing-md);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+      border-top: 5px solid var(--card-color, var(--color-primary));
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card:nth-child(1) { --card-color: #fe7f02; }
+    .stat-card:nth-child(2) { --card-color: #2077b3; }
+    .stat-card:nth-child(3) { --card-color: #74c376; }
+    .stat-card:nth-child(4) { --card-color: #ffd602; }
+    .stat-card:nth-child(5) { --card-color: #e31a1e; }
+    .stat-card:nth-child(6) { --card-color: #2c3143; }
+
+    .stat-number {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      color: var(--card-color, var(--color-primary));
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #86868b;
+      font-weight: 500;
+    }
+
+    /* Split Layout */
+    .slide-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-xl);
+      max-width: 1400px;
+      width: 100%;
+    }
+
+    .slide-split.reverse {
+      direction: rtl;
+    }
+
+    .slide-split.reverse > * {
+      direction: ltr;
+    }
+
+    .slide-split .content-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 var(--spacing-md);
+    }
+
+    .slide-split .slide-title {
+      font-size: 44px;
+      font-weight: 600;
+      letter-spacing: -1.5px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-dark);
+    }
+
+    .slide-split .slide-text {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #1d1d1f;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .slide-split .slide-highlight {
+      font-size: 16px;
+      color: var(--color-primary);
+      font-weight: 500;
+      padding: var(--spacing-md);
+      background: var(--color-bg-subtle);
+      border-radius: 12px;
+      border-left: 4px solid var(--color-accent);
+    }
+
+    .slide-split .image-side {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide-split .image-side img {
+      max-width: 100%;
+      max-height: 65vh;
+      border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Center Layout */
+    .slide-center {
+      flex-direction: column;
+      text-align: center;
+      background: var(--color-bg-subtle);
+    }
+
+    .slide-center .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-dark);
+    }
+
+    .slide-center .slide-subtitle {
+      font-size: 21px;
+      font-weight: 400;
+      color: #86868b;
+      margin-bottom: var(--spacing-lg);
+      max-width: 700px;
+    }
+
+    .slide-center .center-image {
+      max-width: 90%;
+      max-height: 55vh;
+      border-radius: 12px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Ecosystem Card Layout */
+    .slide-ecosystem {
+      flex-direction: column;
+      text-align: center;
+      background: linear-gradient(135deg, var(--color-primary) 0%, #1a1f2e 100%);
+    }
+
+    .slide-ecosystem .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text-light);
+    }
+
+    .slide-ecosystem .slide-subtitle {
+      font-size: 21px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: var(--spacing-lg);
+      max-width: 700px;
+    }
+
+    .ecosystem-stats {
+      display: flex;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .ecosystem-stat {
+      text-align: center;
+    }
+
+    .ecosystem-stat-number {
+      font-size: 48px;
+      font-weight: 600;
+      color: var(--color-accent);
+      letter-spacing: -2px;
+    }
+
+    .ecosystem-stat-label {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .ecosystem-description {
+      font-size: 18px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 800px;
+      text-align: center;
+    }
+
+    .ecosystem-logo {
+      width: auto;
+      height: 100px;
+      max-width: 300px;
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ecosystem-logo img {
+      max-height: 100px;
+      max-width: 300px;
+      object-fit: contain;
+    }
+
+    /* Ecosystem Grid Layout */
+    .ecosystem-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-md);
+      max-width: 1200px;
+    }
+
+    .ecosystem-panel {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: var(--spacing-md);
+      text-align: center;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .ecosystem-panel:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .ecosystem-panel .panel-logo {
+      height: 70px;
+      margin-bottom: var(--spacing-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .ecosystem-panel .panel-logo img {
+      max-height: 50px;
+      max-width: 150px;
+      object-fit: contain;
+    }
+
+    .ecosystem-panel .panel-logo img[alt="TPV"] {
+      max-height: 80px;
+      max-width: 200px;
+    }
+
+    .ecosystem-panel .panel-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--color-text-light);
+      margin-bottom: 8px;
+    }
+
+    .ecosystem-panel .panel-description {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.4;
+    }
+
+    /* Word Cloud Layout */
+    .slide-wordcloud {
+      background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
+      flex-direction: column;
+      padding: 30px 50px;
+    }
+
+    .slide-wordcloud .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text-light);
+      z-index: 10;
+      position: relative;
+    }
+
+    .slide-wordcloud .slide-subtitle {
+      font-size: 24px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: var(--spacing-lg);
+      z-index: 10;
+      position: relative;
+    }
+
+    .wordcloud-container {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 24px;
+      max-width: 1400px;
+      width: 95%;
+    }
+
+    .wordcloud-word {
+      padding: 24px 21px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.3s ease;
+      font-weight: 500;
+      font-family: var(--font-family);
+      text-decoration: none;
+      text-align: center;
+      font-size: 24px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .wordcloud-word:hover {
+      transform: scale(1.08);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .wordcloud-word.sparkle {
+      animation: sparkle 0.5s ease-in-out;
+    }
+
+    @keyframes sparkle {
+      0%, 100% {
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: none;
+      }
+      50% {
+        background: var(--sparkle-color, rgba(255, 215, 0, 0.4));
+        box-shadow: 0 0 20px var(--sparkle-color, rgba(255, 215, 0, 0.5));
+      }
+    }
+
+    /* Global Instances - Background Image Layout */
+    .slide-galaxies {
+      background-color: var(--color-primary);
+      background-image: url('images/galaxies.svg');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .slide-galaxies .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-text-light);
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+    }
+
+    .slide-galaxies .slide-subtitle {
+      font-size: 21px;
+      font-weight: 400;
+      color: var(--color-text-light);
+      margin-bottom: var(--spacing-lg);
+      max-width: 800px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    }
+
+    .slide-galaxies .galaxies-description {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--color-text-light);
+      max-width: 700px;
+      text-align: center;
+      background: rgba(44, 49, 67, 0.5);
+      padding: var(--spacing-lg);
+      border-radius: 16px;
+    }
+
+    /* ========================================
+       Links Slide
+       ======================================== */
+
+    .slide-links {
+      background: var(--color-bg-light);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide-links .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-primary);
+    }
+
+    .slide-links .slide-subtitle {
+      font-size: 24px;
+      color: #666;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-md);
+      max-width: 1200px;
+      width: 90%;
+    }
+
+    .link-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-lg) var(--spacing-md);
+      background: var(--color-bg-subtle);
+      border-radius: 16px;
+      text-decoration: none;
+      transition: var(--transition-fast);
+      border: 2px solid transparent;
+    }
+
+    .link-card:hover {
+      background: var(--color-primary);
+      border-color: var(--color-accent);
+    }
+
+    .link-card:hover .link-label,
+    .link-card:hover .link-url {
+      color: var(--color-text-light);
+    }
+
+    .link-label {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 8px;
+    }
+
+    .link-url {
+      font-size: 18px;
+      color: var(--color-blue);
+      word-break: break-all;
+      text-align: center;
+    }
+
+    /* ========================================
+       QR Code Slide
+       ======================================== */
+
+    .slide-qr {
+      background: var(--color-bg-light);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .slide-qr .slide-title {
+      font-size: 64px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-lg);
+      color: var(--color-primary);
+    }
+
+    .slide-qr .qr-code {
+      width: 400px;
+      height: 400px;
+      max-width: 50vh;
+      max-height: 50vh;
+    }
+
+    /* ========================================
+       Text Slide (Large Centered Text)
+       ======================================== */
+
+    .slide-text {
+      background: var(--color-bg-subtle);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .slide-text .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-lg);
+      color: var(--color-text-dark);
+    }
+
+    .slide-text .text-slide-content {
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+
+    .slide-text .text-slide-paragraph {
+      font-size: 32px;
+      line-height: 1.5;
+      color: var(--color-text-dark);
+      font-weight: 500;
+    }
+
+    .slide-text .text-slide-paragraph strong {
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+      .slide-text .slide-title {
+        font-size: 28px;
+      }
+
+      .slide-text .text-slide-paragraph {
+        font-size: 20px;
+      }
+    }
+
+    /* ========================================
+       Progress Bar
+       ======================================== */
+
+    .progress-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(0, 0, 0, 0.1);
+      z-index: 1001;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--color-accent);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ========================================
+       Controls
+       ======================================== */
+
+    .controls-hint {
+      position: fixed;
+      bottom: var(--spacing-md);
+      right: var(--spacing-md);
+      font-size: 12px;
+      color: #86868b;
+      background: var(--color-bg-light);
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      opacity: 0.8;
+      transition: opacity var(--transition-fast);
+      z-index: 1001;
+    }
+
+    .controls-hint:hover {
+      opacity: 1;
+    }
+
+    .controls-hint kbd {
+      display: inline-block;
+      background: var(--color-bg-subtle);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: var(--font-family);
+      font-size: 11px;
+      margin: 0 2px;
+    }
+
+    .slide-dots {
+      position: fixed;
+      bottom: var(--spacing-md);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 1001;
+    }
+
+    .slide-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .slide-dot.active {
+      background: var(--color-primary);
+      transform: scale(1.25);
+    }
+
+    .slide-dot:hover {
+      background: var(--color-accent);
+    }
+
+    .pause-indicator {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 20px 40px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 500;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+      pointer-events: none;
+      z-index: 1002;
+    }
+
+    .pause-indicator.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* ========================================
+       Slide Counter
+       ======================================== */
+
+    .slide-counter {
+      position: fixed;
+      bottom: var(--spacing-md);
+      left: var(--spacing-md);
+      font-size: 12px;
+      color: #86868b;
+      background: var(--color-bg-light);
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      z-index: 1001;
+    }
+
+    /* ========================================
+       Responsive Design
+       ======================================== */
+
+    @media (max-width: 768px) {
+      :root {
+        --spacing-xl: 40px;
+        --spacing-lg: 24px;
+        --spacing-md: 16px;
+      }
+
+      .masthead {
+        height: 44px;
+        gap: var(--spacing-md);
+      }
+
+      .masthead-logo img {
+        height: 24px;
+      }
+
+      .masthead-nav {
+        gap: 8px;
+      }
+
+      .masthead-link {
+        font-size: 11px;
+        padding: 6px 10px;
+      }
+
+      .slide {
+        padding: var(--spacing-lg);
+        padding-top: 60px;
+      }
+
+      .slide-intro .slide-title {
+        font-size: 28px;
+      }
+
+      .slide-intro .slide-subtitle {
+        font-size: 16px;
+      }
+
+      .slide-intro .slide-image img {
+        max-height: 40vh;
+      }
+
+      .slide-stats .slide-title {
+        font-size: 32px;
+      }
+
+      .slide-stats .slide-subtitle {
+        font-size: 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+      }
+
+      .stats-grid.four-col {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat-card {
+        padding: var(--spacing-md) var(--spacing-sm);
+      }
+
+      .stat-number {
+        font-size: 32px;
+      }
+
+      .stat-label {
+        font-size: 12px;
+      }
+
+      .slide-split {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+      }
+
+      .slide-split .slide-title {
+        font-size: 28px;
+      }
+
+      .slide-split .slide-text {
+        font-size: 15px;
+      }
+
+      .slide-split .image-side img {
+        max-height: 35vh;
+      }
+
+      .slide-wordcloud .slide-title {
+        font-size: 28px;
+      }
+
+      .wordcloud-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .wordcloud-word {
+        font-size: 13px;
+        padding: 10px 8px;
+      }
+
+      .slide-dots {
+        gap: 4px;
+      }
+
+      .slide-dot {
+        width: 6px;
+        height: 6px;
+      }
+
+      .controls-hint {
+        display: none;
+      }
+
+      .slide-links .slide-title {
+        font-size: 28px;
+      }
+
+      .links-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+      }
+
+      .link-card {
+        padding: var(--spacing-md);
+      }
+
+      .link-name {
+        font-size: 14px;
+      }
+
+      .link-url {
+        font-size: 11px;
+      }
+
+      .slide-qr .slide-title {
+        font-size: 28px;
+      }
+
+      .slide-qr .qr-image img {
+        max-width: 200px;
+      }
+
+      .slide-counter {
+        font-size: 10px;
+        padding: 6px 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .masthead-nav {
+        display: none;
+      }
+
+      .slide-intro .slide-title {
+        font-size: 22px;
+      }
+
+      .slide-stats .slide-title {
+        font-size: 24px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stat-number {
+        font-size: 28px;
+      }
+
+      .slide-split .slide-title {
+        font-size: 22px;
+      }
+
+      .wordcloud-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+
+      .wordcloud-word {
+        font-size: 11px;
+        padding: 8px 6px;
+      }
+
+      .links-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ========================================
+       Sunburst Slide
+       ======================================== */
+
+    .slide-sunburst {
+      background: #ffffff;
+      flex-direction: column;
+      padding: 30px 50px;
+    }
+
+    .slide-sunburst .slide-title {
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-primary);
+      color: var(--color-text-light);
+    }
+
+    .slide-sunburst .slide-subtitle {
+      font-size: 24px;
+      color: rgba(0, 0, 0, 0.6);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .sunburst-wrapper {
+      display: flex;
+      gap: var(--spacing-lg);
+      align-items: flex-start;
+      justify-content: center;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    #sunburst-container {
+      flex: 0 0 auto;
+      width: 500px;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #sunburst-panel {
+      flex: 0 0 300px;
+      color: var(--color-primary);
+    }
+
+    .sunburst-panel-card {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+      padding: var(--spacing-md);
+    }
+
+    .sunburst-panel-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: var(--spacing-md);
+      color: rgba(0, 0, 0, 0.6);
+    }
+
+    .sunburst-panel-header a {
+      color: var(--color-accent);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sunburst-panel-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .sunburst-panel-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    .sunburst-back-btn {
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .sunburst-back-btn:hover {
+      opacity: 1;
+    }
+
+    .sunburst-children-list {
+      max-height: 350px;
+      overflow-y: auto;
+    }
+
+    .sunburst-child-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .sunburst-child-item:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .sunburst-child-name {
+      flex: 1;
+      font-size: 14px;
+      color: var(--color-primary);
+    }
+
+    .sunburst-child-count {
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    .sunburst-hint {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.5);
+      text-align: center;
+      margin-top: var(--spacing-md);
+    }
+
+    /* Image Grid Slide */
+    .slide-imagegrid {
+      background: linear-gradient(135deg, #1a1f2e 0%, var(--color-primary) 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 30px 30px;
+    }
+
+    .slide-imagegrid .slide-title {
+      font-size: 38px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      margin-bottom: 8px;
+      color: var(--color-text-light);
+    }
+
+    .slide-imagegrid .slide-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 20px;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 4px;
+      max-width: 1200px;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .image-grid.grid-large {
+      grid-template-columns: repeat(10, 1fr);
+      gap: 8px;
+      max-width: 1100px;
+    }
+
+    .grid-image-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 6px;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+
+    .grid-image-item:hover {
+      transform: scale(1.1);
+      z-index: 10;
+    }
+
+    .grid-image-item img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    .grid-image-label {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .slide-imagegrid .slide-title {
+        font-size: 24px;
+      }
+      .image-grid {
+        grid-template-columns: repeat(8, 1fr);
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Masthead -->
+  <nav class="masthead">
+    <div class="masthead-logo">
+      <img src="favicon.svg" alt="Galaxy">
+    </div>
+    <div class="masthead-nav">
+      <a class="masthead-link active" data-section="intro">Intro</a>
+      <a class="masthead-link" data-section="platforms">Platforms</a>
+      <a class="masthead-link" data-section="impact">Impact</a>
+      <a class="masthead-link" data-section="community">Community</a>
+    </div>
+    <div class="timing-control">
+      <input type="range" class="timing-slider" id="timing-slider" min="3" max="30" value="8" step="1">
+      <span class="timing-value" id="timing-value">8s</span>
+    </div>
+  </nav>
+
+  <!-- Slides -->
+  <div class="slides-container">
+
+
+    <!-- Slide 1: Galaxy Workshop -->
+    <section class="slide slide-intro active" data-section="intro">
+      <h1 class="slide-title">Galaxy Workshop</h1>
+      <p class="slide-subtitle">Michael Schatz, Anton Nekrutenko, Delphine Lariviere, Mentewab Ayalew, Skyy Lewis, Nonie Shuford, Michelle Savage</p>
+      <img class="slide-image" src="images/slide01.png" alt="Galaxy Logo">
+    </section>
+
+    <!-- Slide 2: Agenda -->
+    <section class="slide slide-stats" data-section="intro">
+      <h1 class="slide-title">Agenda</h1>
+      <p class="slide-subtitle"></p>
+      <div class="stats-grid lists">
+
+        <div class="stat-card orange">
+          <div class="stat-number">Intro to Galaxy</div>
+          <div class="stat-label">Michael Schatz, Anton Nekrutenko</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-number">Genome Assembly</div>
+          <div class="stat-label">Delphine Lariviere</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-number">Microbiome Research</div>
+          <div class="stat-label">Mentewab Ayalew, Skyy Lewis, Nonie Shuford</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-number">Machine Learning</div>
+          <div class="stat-label">Michelle Savage</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Galaxy is a Universe -->
+    <section class="slide slide-intro" data-section="intro">
+      <h1 class="slide-title">Galaxy is a Universe</h1>
+      <p class="slide-subtitle"></p>
+      <img class="slide-image" src="images/slide03.png" alt="Galaxy Architecture">
+    </section>
+
+    <!-- Slide 4: Galaxy is free, it is powerful and it scales! -->
+    <section class="slide slide-stats" data-section="intro">
+      <h1 class="slide-title">Galaxy is free, it is powerful and it scales!</h1>
+      <p class="slide-subtitle">Analyze your genomic, metagenomic, proteomic, metabolomic data in one place.</p>
+      <div class="stats-grid ">
+
+        <div class="stat-card orange">
+          <div class="stat-number">750,000</div>
+          <div class="stat-label">jobs per month</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-number">400,000+</div>
+          <div class="stat-label">registered users</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-number">1,500</div>
+          <div class="stat-label">concurrent users</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-number">$2,000,000+</div>
+          <div class="stat-label">free compute / year</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-number">10,000+</div>
+          <div class="stat-label">analysis tools</div>
+        </div>
+        <div class="stat-card dark">
+          <div class="stat-number">22,000+</div>
+          <div class="stat-label">citations</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Galaxy = 1,000s of tools -->
+    <section class="slide slide-stats" data-section="intro">
+      <h1 class="slide-title">Galaxy = 1,000s of tools</h1>
+      <p class="slide-subtitle">Galaxy serves thousands of open source analysis tools and is tightly integrated with BioConda and BioContainer communities</p>
+      <div class="stats-grid four-col">
+
+        <div class="stat-card orange">
+          <div class="stat-number">11,699</div>
+          <div class="stat-label">BioConda packages</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-number">30,722</div>
+          <div class="stat-label">CondaForge packages</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-number">12,333</div>
+          <div class="stat-label">BioContainers</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-number">10,676</div>
+          <div class="stat-label">Galaxy wrappers</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Galaxy = 1,000s of tools -->
+    <section class="slide slide-intro" data-section="intro">
+      <h1 class="slide-title">Galaxy = 1,000s of tools</h1>
+      <p class="slide-subtitle">All tools have consistent interface</p>
+      <img class="slide-image" src="images/run-tool.png" alt="Run a tool in Galaxy">
+    </section>
+
+    <!-- Slide 7: Galaxy = 100s of workflows -->
+    <section class="slide slide-intro" data-section="intro">
+      <h1 class="slide-title">Galaxy = 100s of workflows</h1>
+      <p class="slide-subtitle">Community curated, production ready</p>
+      <img class="slide-image" src="images/run-wf.png" alt="Run a workflow in Galaxy">
+    </section>
+
+    <!-- Slide 8: Galaxy = 100s of workflows -->
+    <section class="slide slide-wordcloud" data-section="intro" data-topics="[{ text: 'Amplicon', url: 'https://iwc.galaxyproject.org/?filter=Amplicon' }, { text: 'Bacterial Genomics', url: 'https://iwc.galaxyproject.org/?filter=Bacterial%20Genomics' }, { text: 'Epigenetics', url: 'https://iwc.galaxyproject.org/?filter=Epigenetics' }, { text: 'Genome Assembly', url: 'https://iwc.galaxyproject.org/?filter=Genome%20Assembly' }, { text: 'Genome Annotation', url: 'https://iwc.galaxyproject.org/?filter=Genome%20Annotation' }, { text: 'Imaging', url: 'https://iwc.galaxyproject.org/?filter=Imaging' }, { text: 'Metabolomics', url: 'https://iwc.galaxyproject.org/?filter=Metabolomics' }, { text: 'Microbiome', url: 'https://iwc.galaxyproject.org/?filter=Microbiome' }, { text: 'Proteomics', url: 'https://iwc.galaxyproject.org/?filter=Proteomics' }, { text: 'Single Cell', url: 'https://iwc.galaxyproject.org/?filter=Single%20Cell' }, { text: 'Transcriptomics', url: 'https://iwc.galaxyproject.org/?filter=Transcriptomics' }, { text: 'Variant Calling', url: 'https://iwc.galaxyproject.org/?filter=Variant%20Calling' }, { text: 'Virology', url: 'https://iwc.galaxyproject.org/?filter=Virology' }, { text: 'VGP', url: 'https://iwc.galaxyproject.org/?filter=VGP' }]">
+      <h1 class="slide-title">Galaxy = 100s of workflows</h1>
+      <p class="slide-subtitle">Community curated, production ready</p>
+      <div class="wordcloud-container"></div>
+    </section>
+
+    <!-- Slide 9: Ways to use Galaxy -->
+    <section class="slide slide-intro" data-section="intro">
+      <h1 class="slide-title">Ways to use Galaxy</h1>
+      <p class="slide-subtitle">GUI, API, LLMs (soon!)</p>
+      <img class="slide-image" src="images/slide09.png" alt="Ways to use Galaxy">
+    </section>
+
+    <!-- Slide 10: Run programmatically -->
+    <section class="slide slide-intro" data-section="intro">
+      <h1 class="slide-title">Run programmatically</h1>
+      <p class="slide-subtitle">Against our infrastructure!</p>
+      <img class="slide-image" src="images/slide10.png" alt="Run programmatically">
+    </section>
+
+    <!-- Slide 11: Globally distributed -->
+    <section class="slide slide-intro" data-section="intro">
+      <h1 class="slide-title">Globally distributed</h1>
+      <p class="slide-subtitle">Use the one closer to you!</p>
+      <img class="slide-image" src="images/slide11.png" alt="Globally distributed">
+    </section>
+
+    <!-- Slide 12: Part of large initiatives -->
+    <section class="slide slide-ecosystem" data-section="platforms">
+      <h1 class="slide-title">Part of large initiatives</h1>
+      <p class="slide-subtitle"></p>
+      <div class="ecosystem-grid">
+
+        <div class="ecosystem-panel">
+          <div class="panel-logo"><img src="images/anvil-logo.png" alt="AnVIL"></div>
+          <div class="panel-title">AnVIL</div>
+          <div class="panel-description">NHGRI cloud platform</div>
+        </div>
+        <div class="ecosystem-panel">
+          <div class="panel-logo"><img src="images/brc-logo.svg" alt="BRC-Analytics"></div>
+          <div class="panel-title">BRC-Analytics</div>
+          <div class="panel-description">Pathogen bioinformatics</div>
+        </div>
+        <div class="ecosystem-panel">
+          <div class="panel-logo"><img src="images/cfde-logo.png" alt="CFDE"></div>
+          <div class="panel-title">CFDE</div>
+          <div class="panel-description">Common Fund Data Ecosystem</div>
+        </div>
+        <div class="ecosystem-panel">
+          <div class="panel-logo"><img src="images/vgp-logo.png" alt="VGP"></div>
+          <div class="panel-title">VGP</div>
+          <div class="panel-description">Vertebrate Genomes Project</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 13: AnVIL -->
+    <section class="slide slide-intro" data-section="platforms">
+      <h1 class="slide-title">AnVIL</h1>
+      <p class="slide-subtitle">NHGRI's Analysis, Visualization, and Informatics Lab-Space</p>
+      <img class="slide-image" src="images/slide13.png" alt="AnVIL">
+    </section>
+
+    <!-- Slide 14: BRC Analytics -->
+    <section class="slide slide-sunburst" data-section="platforms">
+      <h1 class="slide-title">BRC Analytics</h1>
+      <p class="slide-subtitle">Pathogen bioinformatics powered by Galaxy</p>
+      <div class="sunburst-wrapper">
+        <div id="sunburst-container"></div>
+        <div id="sunburst-panel">
+          <div class="sunburst-panel-card">
+            <div class="sunburst-panel-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+              </svg>
+              <a id="sunburst-browse-link" href="https://brc-analytics.org/organisms" target="_blank">Browse All Assemblies</a>
+            </div>
+            <div class="sunburst-panel-title-row">
+              <h4 class="sunburst-panel-title">Subcategories</h4>
+              <div id="sunburst-back-btn" class="sunburst-back-btn" style="display: none;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div id="sunburst-children-list" class="sunburst-children-list"></div>
+          </div>
+          <p id="sunburst-hint" class="sunburst-hint">Click the visualization to explore available assemblies</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 15: CFDE Cloud Workspace -->
+    <section class="slide slide-intro" data-section="platforms">
+      <h1 class="slide-title">CFDE Cloud Workspace</h1>
+      <p class="slide-subtitle">Tools for analyses of protected datasets</p>
+      <img class="slide-image" src="images/slide15.png" alt="CFDE Cloud Workspace">
+    </section>
+
+    <!-- Slide 16: VGP: Sequencing Vertebrate Diversity -->
+    <section class="slide slide-imagegrid" data-section="platforms">
+      <h1 class="slide-title">VGP: Sequencing Vertebrate Diversity</h1>
+      <p class="slide-subtitle">grid: large</p>
+      <div class="image-grid grid-large">
+      <div class="grid-image-item">
+        <img src="images/species/Abramis_brama_300x300.jpg" alt="Abramis brama" loading="lazy">
+        <span class="grid-image-label">Abramis brama</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Acanthisitta_chloris_300x300.jpg" alt="Acanthisitta chloris" loading="lazy">
+        <span class="grid-image-label">Acanthisitta chloris</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Acanthopagrus_latus_300x300.jpg" alt="Acanthopagrus latus" loading="lazy">
+        <span class="grid-image-label">Acanthopagrus latus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Acomys_russatus_300x300.jpg" alt="Acomys russatus" loading="lazy">
+        <span class="grid-image-label">Acomys russatus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Alca_torda_300x300.jpg" alt="Alca torda" loading="lazy">
+        <span class="grid-image-label">Alca torda</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Amblyraja_radiata_300x300.jpg" alt="Amblyraja radiata" loading="lazy">
+        <span class="grid-image-label">Amblyraja radiata</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Ammospiza_caudacuta_300x300.jpg" alt="Ammospiza caudacuta" loading="lazy">
+        <span class="grid-image-label">Ammospiza caudacuta</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Anguilla_anguilla_300x300.jpg" alt="Anguilla anguilla" loading="lazy">
+        <span class="grid-image-label">Anguilla anguilla</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Antennarius_maculatus_300x300.jpg" alt="Antennarius maculatus" loading="lazy">
+        <span class="grid-image-label">Antennarius maculatus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Apus_apus_300x300.jpg" alt="Apus apus" loading="lazy">
+        <span class="grid-image-label">Apus apus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Argentina_silus_300x300.jpg" alt="Argentina silus" loading="lazy">
+        <span class="grid-image-label">Argentina silus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Ascidiella_aspersa_300x300.jpg" alt="Ascidiella aspersa" loading="lazy">
+        <span class="grid-image-label">Ascidiella aspersa</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Aythya_ferina_300x300.jpg" alt="Aythya ferina" loading="lazy">
+        <span class="grid-image-label">Aythya ferina</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Barbus_barbus_300x300.jpg" alt="Barbus barbus" loading="lazy">
+        <span class="grid-image-label">Barbus barbus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Borostomias_antarcticus_300x300.jpg" alt="Borostomias antarcticus" loading="lazy">
+        <span class="grid-image-label">Borostomias antarcticus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Bucephala_clangula_300x300.jpg" alt="Bucephala clangula" loading="lazy">
+        <span class="grid-image-label">Bucephala clangula</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Callithrix_jacchus_300x300.jpg" alt="Callithrix jacchus" loading="lazy">
+        <span class="grid-image-label">Callithrix jacchus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Candoia_aspera_300x300.jpg" alt="Candoia aspera" loading="lazy">
+        <span class="grid-image-label">Candoia aspera</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Carcharodon_carcharias_300x300.jpg" alt="Carcharodon carcharias" loading="lazy">
+        <span class="grid-image-label">Carcharodon carcharias</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Cervus_elaphus_300x300.jpg" alt="Cervus elaphus" loading="lazy">
+        <span class="grid-image-label">Cervus elaphus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Chelmon_rostratus_300x300.jpg" alt="Chelmon rostratus" loading="lazy">
+        <span class="grid-image-label">Chelmon rostratus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Chiroxiphia_lanceolata_300x300.jpg" alt="Chiroxiphia lanceolata" loading="lazy">
+        <span class="grid-image-label">Chiroxiphia lanceolata</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Ciconia_maguari_300x300.jpg" alt="Ciconia maguari" loading="lazy">
+        <span class="grid-image-label">Ciconia maguari</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Cnephaeus_nilssonii_300x300.jpg" alt="Cnephaeus nilssonii" loading="lazy">
+        <span class="grid-image-label">Cnephaeus nilssonii</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Coregonus_lavaretus_300x300.jpg" alt="Coregonus lavaretus" loading="lazy">
+        <span class="grid-image-label">Coregonus lavaretus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Cottoperca_gobio_300x300.jpg" alt="Cottoperca gobio" loading="lazy">
+        <span class="grid-image-label">Cottoperca gobio</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Cynocephalus_volans_300x300.jpg" alt="Cynocephalus volans" loading="lazy">
+        <span class="grid-image-label">Cynocephalus volans</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Dendropsophus_ebraccatus_300x300.jpg" alt="Dendropsophus ebraccatus" loading="lazy">
+        <span class="grid-image-label">Dendropsophus ebraccatus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Diceros_bicornis_300x300.jpg" alt="Diceros bicornis" loading="lazy">
+        <span class="grid-image-label">Diceros bicornis</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Dryobates_pubescens_300x300.jpg" alt="Dryobates pubescens" loading="lazy">
+        <span class="grid-image-label">Dryobates pubescens</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Electrona_antarctica_300x300.jpg" alt="Electrona antarctica" loading="lazy">
+        <span class="grid-image-label">Electrona antarctica</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Elgaria_multicarinata_300x300.jpg" alt="Elgaria multicarinata" loading="lazy">
+        <span class="grid-image-label">Elgaria multicarinata</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Equus_caballus_300x300.jpg" alt="Equus caballus" loading="lazy">
+        <span class="grid-image-label">Equus caballus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Erpetoichthys_calabaricus_300x300.jpg" alt="Erpetoichthys calabaricus" loading="lazy">
+        <span class="grid-image-label">Erpetoichthys calabaricus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Eubalaena_glacialis_300x300.jpg" alt="Eubalaena glacialis" loading="lazy">
+        <span class="grid-image-label">Eubalaena glacialis</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Falco_biarmicus_300x300.jpg" alt="Falco biarmicus" loading="lazy">
+        <span class="grid-image-label">Falco biarmicus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Gadus_morhua_300x300.jpg" alt="Gadus morhua" loading="lazy">
+        <span class="grid-image-label">Gadus morhua</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Gastrophryne_carolinensis_300x300.jpg" alt="Gastrophryne carolinensis" loading="lazy">
+        <span class="grid-image-label">Gastrophryne carolinensis</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Geotrypetes_seraphini_300x300.jpg" alt="Geotrypetes seraphini" loading="lazy">
+        <span class="grid-image-label">Geotrypetes seraphini</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Gobius_niger_300x300.jpg" alt="Gobius niger" loading="lazy">
+        <span class="grid-image-label">Gobius niger</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Grus_americana_300x300.jpg" alt="Grus americana" loading="lazy">
+        <span class="grid-image-label">Grus americana</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Harpia_harpyja_300x300.jpg" alt="Harpia harpyja" loading="lazy">
+        <span class="grid-image-label">Harpia harpyja</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Heptranchias_perlo_300x300.jpg" alt="Heptranchias perlo" loading="lazy">
+        <span class="grid-image-label">Heptranchias perlo</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Hippopotamus_amphibius_300x300.jpg" alt="Hippopotamus amphibius" loading="lazy">
+        <span class="grid-image-label">Hippopotamus amphibius</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Hydrolagus_colliei_300x300.jpg" alt="Hydrolagus colliei" loading="lazy">
+        <span class="grid-image-label">Hydrolagus colliei</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Hyperoodon_ampullatus_300x300.jpg" alt="Hyperoodon ampullatus" loading="lazy">
+        <span class="grid-image-label">Hyperoodon ampullatus</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Labrus_bergylta_300x300.jpg" alt="Labrus bergylta" loading="lazy">
+        <span class="grid-image-label">Labrus bergylta</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Lampetra_fluviatilis_300x300.jpg" alt="Lampetra fluviatilis" loading="lazy">
+        <span class="grid-image-label">Lampetra fluviatilis</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Lemur_catta_300x300.jpg" alt="Lemur catta" loading="lazy">
+        <span class="grid-image-label">Lemur catta</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/species/Leucopleurus_acutus_300x300.jpg" alt="Leucopleurus acutus" loading="lazy">
+        <span class="grid-image-label">Leucopleurus acutus</span>
+      </div>
+      </div>
+    </section>
+
+    <!-- Slide 17: Wide variety of training topics -->
+    <section class="slide slide-wordcloud" data-section="community" data-topics="[{ text: 'Genomics', url: 'https://training.galaxyproject.org/training-material/topics/genome-annotation/' }, { text: 'Transcriptomics', url: 'https://training.galaxyproject.org/training-material/topics/transcriptomics/' }, { text: 'Proteomics', url: 'https://training.galaxyproject.org/training-material/topics/proteomics/' }, { text: 'Metabolomics', url: 'https://training.galaxyproject.org/training-material/topics/metabolomics/' }, { text: 'Single Cell', url: 'https://training.galaxyproject.org/training-material/topics/single-cell/' }, { text: 'Variant Analysis', url: 'https://training.galaxyproject.org/training-material/topics/variant-analysis/' }, { text: 'Sequence Analysis', url: 'https://training.galaxyproject.org/training-material/topics/sequence-analysis/' }, { text: 'Assembly', url: 'https://training.galaxyproject.org/training-material/topics/assembly/' }, { text: 'Epigenetics', url: 'https://training.galaxyproject.org/training-material/topics/epigenetics/' }, { text: 'Microbiome', url: 'https://training.galaxyproject.org/training-material/topics/microbiome/' }, { text: 'Machine Learning', url: 'https://training.galaxyproject.org/training-material/topics/statistics/' }, { text: 'Imaging', url: 'https://training.galaxyproject.org/training-material/topics/imaging/' }, { text: 'Climate', url: 'https://training.galaxyproject.org/training-material/topics/climate/' }, { text: 'Ecology', url: 'https://training.galaxyproject.org/training-material/topics/ecology/' }, { text: 'Evolution', url: 'https://training.galaxyproject.org/training-material/topics/evolution/' }, { text: 'SARS-CoV-2', url: 'https://training.galaxyproject.org/training-material/topics/variant-analysis/' }, { text: 'FAIR Data', url: 'https://training.galaxyproject.org/training-material/topics/fair/' }, { text: 'Visualisation', url: 'https://training.galaxyproject.org/training-material/topics/visualisation/' }, { text: 'Computational Chemistry', url: 'https://training.galaxyproject.org/training-material/topics/computational-chemistry/' }, { text: 'Materials Science', url: 'https://training.galaxyproject.org/training-material/topics/materials-science/' }, { text: 'One Health', url: 'https://training.galaxyproject.org/training-material/topics/one-health/' }, { text: 'Plants', url: 'https://training.galaxyproject.org/training-material/topics/plants/' }, { text: 'Synthetic Biology', url: 'https://training.galaxyproject.org/training-material/topics/synthetic-biology/' }, { text: 'Data Science', url: 'https://training.galaxyproject.org/training-material/topics/data-science/' }, { text: 'Annotation', url: 'https://training.galaxyproject.org/training-material/topics/genome-annotation/' }, { text: 'RNA-seq', url: 'https://training.galaxyproject.org/training-material/topics/transcriptomics/' }, { text: 'ChIP-seq', url: 'https://training.galaxyproject.org/training-material/topics/epigenetics/' }, { text: 'ATAC-seq', url: 'https://training.galaxyproject.org/training-material/topics/epigenetics/' }, { text: 'Metagenomics', url: 'https://training.galaxyproject.org/training-material/topics/metagenomics/' }]">
+      <h1 class="slide-title">Wide variety of training topics</h1>
+      <p class="slide-subtitle">https://training.galaxyproject.org</p>
+      <div class="wordcloud-container"></div>
+    </section>
+
+    <!-- Slide 18: 2026 Galaxy Community Conference (GCC2026) -->
+    <section class="slide slide-intro" data-section="community">
+      <h1 class="slide-title">2026 Galaxy Community Conference (GCC2026)</h1>
+      <p class="slide-subtitle">June 22-24, 2026 | Clermont-Ferrand, France</p>
+      <img class="slide-image" src="images/gcc2026.jpg" alt="GCC2026">
+    </section>
+
+    <!-- Slide 19: Galaxy Training Academy 2026 -->
+    <section class="slide slide-intro" data-section="community">
+      <h1 class="slide-title">Galaxy Training Academy 2026</h1>
+      <p class="slide-subtitle">May 18-22, 2026 | Global Online Event</p>
+      <img class="slide-image" src="images/slide21.png" alt="GTA2026">
+    </section>
+
+    <!-- Slide 20: Galaxy is a community! -->
+    <section class="slide slide-imagegrid" data-section="community">
+      <h1 class="slide-title">Galaxy is a community!</h1>
+      <p class="slide-subtitle">Contributors from Galaxy, GTN, and Tools-IUC</p>
+      <div class="image-grid">
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_1.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_2.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_3.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_4.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_5.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_6.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_7.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_8.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_9.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_10.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_11.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_12.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_13.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_14.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_15.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_16.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_17.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_18.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_19.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_20.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_21.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_22.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_23.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_24.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_25.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_26.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_27.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_28.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_29.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_30.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_31.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_32.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_33.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_34.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_35.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_36.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_37.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_38.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_39.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_40.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_41.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_42.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_43.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_44.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_45.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_46.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_47.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_48.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_49.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_50.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_51.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_52.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_53.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_54.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_55.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_56.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_57.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_58.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_59.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_60.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_61.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_62.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_63.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_64.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_65.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_66.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_67.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_68.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_69.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_70.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_71.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_72.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_73.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_74.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_75.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_76.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_77.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_78.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_79.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_80.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_81.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_82.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_83.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_84.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_85.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_86.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_87.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_88.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_89.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_90.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_91.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_92.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_93.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_94.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_95.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_96.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_97.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_98.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_99.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_100.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_101.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_102.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_103.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_104.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_105.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_106.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_107.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_108.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_109.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_110.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_111.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_112.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_113.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_114.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      <div class="grid-image-item">
+        <img src="images/avatars/avatar_115.jpg" alt="Avatar" loading="lazy">
+        <span class="grid-image-label">Avatar</span>
+      </div>
+      </div>
+    </section>
+
+    <!-- Slide 21: gxy.io/pag-2026 -->
+    <section class="slide slide-qr" data-section="community">
+      <h1 class="slide-title">gxy.io/pag-2026</h1>
+      <img class="qr-code" src="images/qr-pag-2026.svg" alt="QR Code">
+    </section>
+
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+
+  <!-- Slide Dots -->
+  <div class="slide-dots"></div>
+
+  <!-- Slide Counter -->
+  <div class="slide-counter">
+    <span class="current">1</span> / <span class="total">9</span>
+  </div>
+
+  <!-- Controls Hint -->
+  <div class="controls-hint">
+    <kbd>Space</kbd> pause &nbsp; <kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate
+  </div>
+
+  <!-- Pause Indicator -->
+  <div class="pause-indicator">Paused</div>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <script>
+    /* ========================================
+       Word Cloud Generator
+       ======================================== */
+
+    const wordcloudGeneratedSlides = new Set();
+
+    function generateWordCloud(slideElement) {
+      if (!slideElement) return;
+      const slideIndex = slideElement.dataset.section + '-' + Array.from(document.querySelectorAll('.slide')).indexOf(slideElement);
+      if (wordcloudGeneratedSlides.has(slideIndex)) return;
+
+      const container = slideElement.querySelector('.wordcloud-container');
+      if (!container) return;
+
+      const topicsAttr = slideElement.dataset.topics;
+      if (!topicsAttr) return;
+
+      let topics;
+      try {
+        topics = eval(topicsAttr);
+      } catch (e) {
+        console.error('Failed to parse wordcloud topics:', e);
+        return;
+      }
+
+      wordcloudGeneratedSlides.add(slideIndex);
+      container.innerHTML = '';
+
+      // Galaxy colors for sparkle effect
+      const sparkleColors = [
+        'rgba(254, 127, 2, 0.5)',   // orange
+        'rgba(32, 119, 179, 0.5)',  // blue
+        'rgba(116, 195, 118, 0.5)', // green
+        'rgba(255, 214, 2, 0.5)',   // yellow
+        'rgba(227, 26, 30, 0.5)',   // red
+        'rgba(163, 203, 223, 0.5)', // light blue
+        'rgba(253, 191, 111, 0.5)'  // light orange
+      ];
+
+      // Create grid of words
+      topics.forEach((topic, index) => {
+        const word = document.createElement('a');
+        word.className = 'wordcloud-word';
+        word.textContent = topic.text;
+        word.href = topic.url;
+        word.target = '_blank';
+        word.rel = 'noopener noreferrer';
+
+        container.appendChild(word);
+      });
+
+      // Add sparkle animation to random cells
+      const words = container.querySelectorAll('.wordcloud-word');
+
+      function addSparkle() {
+        // Remove existing sparkles
+        words.forEach(w => w.classList.remove('sparkle'));
+
+        // Pick 4-6 random words to sparkle
+        const numSparkles = 4 + Math.floor(Math.random() * 3);
+        const indices = new Set();
+        while (indices.size < numSparkles && words.length > 0) {
+          indices.add(Math.floor(Math.random() * words.length));
+        }
+
+        indices.forEach(i => {
+          const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+          words[i].style.setProperty('--sparkle-color', color);
+          words[i].classList.add('sparkle');
+        });
+      }
+
+      // Initial sparkle
+      addSparkle();
+
+      // Rotate sparkles every 0.5 seconds
+      setInterval(addSparkle, 500);
+    }
+
+    // Add float animation keyframes (kept for compatibility)
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    /* ========================================
+       Sunburst Generator
+       ======================================== */
+
+    const ROMA_CYCLIC = [
+      "#733957", "#843d3b", "#97552c", "#b07f33", "#ccb65e", "#d5db9a",
+      "#bae0c3", "#86c8cf", "#599ec5", "#4f73ab", "#604c81", "#723959"
+    ].reverse();
+
+    let sunburstData = null;
+    let sunburstGenerated = false;
+
+    fetch('ncbi-taxa-tree.json')
+      .then(response => response.json())
+      .then(data => { sunburstData = data; })
+      .catch(err => console.log('Sunburst data not available:', err));
+
+    function generateSunburst() {
+      if (sunburstGenerated || !sunburstData) return;
+      const container = document.getElementById('sunburst-container');
+      if (!container) return;
+      sunburstGenerated = true;
+
+      const width = 500;
+      const height = width;
+      const radius = (width - 10) / 2;
+      const DEPTH = 4;
+
+      const svg = d3.select(container)
+        .append('svg')
+        .attr('viewBox', [-width / 2, -height / 2, width, width])
+        .style('font', "10px sans-serif");
+
+      const baseColor = d3.scaleOrdinal(ROMA_CYCLIC);
+
+      const hierarchyData = d3.hierarchy(sunburstData)
+        .sum(d => (d.children.length === 0 ? 1 : 0))
+        .sort((a, b) => (a.data.name < b.data.name ? -1 : 1));
+
+      const rootChildren = hierarchyData.children || [];
+      baseColor.range(getEquidistantColors(ROMA_CYCLIC, rootChildren.length));
+
+      const root = d3.partition()
+        .size([2 * Math.PI, hierarchyData.height + 1])(hierarchyData);
+
+      root.each(d => {
+        d.current = { x0: d.x0, x1: d.x1, y0: d.y0, y1: d.y1 };
+        d.target = { x0: d.x0, x1: d.x1, y0: d.y0, y1: d.y1 };
+      });
+
+      let currentRoot = root;
+
+      const arc = d3.arc()
+        .startAngle(d => d.x0)
+        .endAngle(d => d.x1)
+        .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
+        .padRadius(radius)
+        .innerRadius(d => (Math.min(d.y0, DEPTH) * radius) / DEPTH)
+        .outerRadius(d => (Math.min(d.y1, DEPTH) * radius) / DEPTH - 0.5);
+
+      function getNodeColor(d, rootNode) {
+        const relativeDepth = d.depth - rootNode.depth;
+        if (relativeDepth === 0) return '#f5f5f7';
+        if (relativeDepth === 1) return baseColor(d.data.name);
+        const rootChild = findRootChild(d, rootNode);
+        if (!rootChild) return '#ccc';
+        const baseColorHsl = d3.hsl(baseColor(rootChild.data.name));
+        return d3.hsl(baseColorHsl.h, Math.max(0, baseColorHsl.s - 0.1 * (relativeDepth - 1)), Math.min(1, baseColorHsl.l + 0.05 * (relativeDepth - 1))).toString();
+      }
+
+      function findRootChild(node, rootNode) {
+        if (node === rootNode) return null;
+        const ancestors = node.ancestors();
+        for (let i = 0; i < ancestors.length; i++) {
+          if (ancestors[i].parent === rootNode) return ancestors[i];
+        }
+        return null;
+      }
+
+      function isVisible(d, rootNode, targetDepth) {
+        return d.ancestors().indexOf(rootNode) >= 0 && d.depth - targetDepth <= DEPTH - 1;
+      }
+
+      const path = svg.append('g')
+        .selectAll('path')
+        .data(root.descendants().slice(1))
+        .join('path')
+        .attr('fill', d => getNodeColor(d, root))
+        .attr('fill-opacity', d => isVisible(d, root, 0) ? 1 : 0)
+        .attr('d', d => arc(d.current))
+        .style('cursor', 'pointer')
+        .style('stroke', '#333')
+        .style('stroke-width', '1px')
+        .on('click', clicked);
+
+      const label = svg.append('g')
+        .attr('pointer-events', 'none')
+        .attr('text-anchor', 'middle')
+        .selectAll('text')
+        .data(root.descendants().slice(1))
+        .join('text')
+        .attr('fill-opacity', d => isVisible(d, root, 0) && ((d.current.x1 - d.current.x0) / (2 * Math.PI)) >= 0.01 ? 1 : 0)
+        .attr('dy', '0.35em')
+        .attr('transform', d => labelTransform(d))
+        .text(d => d.data.name);
+
+      function labelTransform(d) {
+        const angle = ((d.current.x0 + d.current.x1) / 2) * (180 / Math.PI);
+        let r = ((Math.min(d.current.y0, DEPTH) + Math.min(d.current.y1, DEPTH)) / 2) * (radius / DEPTH);
+        if (d.parent === currentRoot) r += 10;
+        return `rotate(${angle - 90}) translate(${r},0) rotate(${angle < 180 ? 0 : 180})`;
+      }
+
+      const centerGroup = svg.append('g');
+      centerGroup.append('image')
+        .attr('x', -50).attr('y', -50).attr('width', 100).attr('height', 100)
+        .attr('href', 'images/brc-logo.svg')
+        .attr('id', 'sunburst-center-logo');
+
+      svg.append('circle')
+        .attr('r', radius / DEPTH)
+        .attr('fill', 'transparent')
+        .style('cursor', 'pointer')
+        .on('click', (event) => { if (currentRoot && currentRoot.parent) clicked(event, currentRoot.parent); });
+
+      const browseLink = document.getElementById('sunburst-browse-link');
+      const backBtn = document.getElementById('sunburst-back-btn');
+      const childrenList = document.getElementById('sunburst-children-list');
+      const hint = document.getElementById('sunburst-hint');
+
+      // Rank to filter key mapping
+      const rankMap = {
+        isolate: 'taxonomicLevelIsolate',
+        serotype: 'taxonomicLevelSerotype',
+        strain: 'taxonomicLevelStrain',
+        species: 'taxonomicLevelSpecies',
+        genus: 'taxonomicLevelGenus',
+        family: 'taxonomicLevelFamily',
+        order: 'taxonomicLevelOrder',
+        class: 'taxonomicLevelClass',
+        phylum: 'taxonomicLevelPhylum',
+        kingdom: 'taxonomicLevelKingdom',
+        domain: 'taxonomicLevelDomain',
+        realm: 'taxonomicLevelRealm'
+      };
+
+      function createFilterUrl(rank, name) {
+        if (!rank || !name) return 'https://brc-analytics.org/organisms';
+        const categoryKey = rankMap[rank.toLowerCase()];
+        if (!categoryKey) return 'https://brc-analytics.org/organisms';
+        const filter = [{ categoryKey, value: [name] }];
+        return `https://brc-analytics.org/data/assemblies?filter=${encodeURIComponent(JSON.stringify(filter))}`;
+      }
+
+      function updatePanel(node) {
+        if (!browseLink || !childrenList) return;
+        const isRoot = node.depth === 0;
+        if (isRoot) {
+          browseLink.textContent = 'Browse All Assemblies';
+          browseLink.href = 'https://brc-analytics.org/organisms';
+        } else {
+          const count = node.data.assembly_count;
+          const suffix = count > 1 ? 'ies' : 'y';
+          browseLink.textContent = `View ${count} Assembl${suffix} for ${node.data.name}`;
+          browseLink.href = createFilterUrl(node.data.rank, node.data.name);
+        }
+        if (backBtn) backBtn.style.display = isRoot ? 'none' : 'flex';
+        if (hint) hint.style.display = isRoot ? 'block' : 'none';
+        childrenList.innerHTML = '';
+        (node.children || []).forEach(child => {
+          const item = document.createElement('div');
+          item.className = 'sunburst-child-item';
+          item.innerHTML = `<span class="sunburst-child-name">${child.data.name}</span><span class="sunburst-child-count">(${child.data.assembly_count})</span>`;
+          item.addEventListener('click', () => clicked(null, child));
+          childrenList.appendChild(item);
+        });
+      }
+
+      if (backBtn) backBtn.addEventListener('click', () => { if (currentRoot && currentRoot.parent) clicked(null, currentRoot.parent); });
+
+      function clicked(event, p) {
+        currentRoot = p;
+        document.getElementById('sunburst-center-logo').style.opacity = p.depth === 0 ? 1 : 0;
+        updatePanel(p);
+        if (p.children && p.children.length > 0) baseColor.range(getEquidistantColors(ROMA_CYCLIC, p.children.length));
+        root.each(d => {
+          d.target = {
+            x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+            x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+            y0: Math.max(0, d.y0 - p.depth),
+            y1: Math.max(0, d.y1 - p.depth)
+          };
+        });
+        path.transition().duration(750)
+          .tween('data', d => { const i = d3.interpolate(d.current, d.target); return t => { d.current = i(t); }; })
+          .attrTween('d', d => () => arc(d.current) || '')
+          .attr('fill', d => getNodeColor(d, p))
+          .attr('fill-opacity', d => isVisible(d, currentRoot, p.depth) ? 1 : 0);
+        label.transition().duration(750)
+          .tween('data', d => { const i = d3.interpolate(d.current, d.target); return t => { d.current = i(t); }; })
+          .attrTween('transform', d => () => labelTransform(d))
+          .attrTween('fill-opacity', d => () => isVisible(d, currentRoot, p.depth) && ((d.current.x1 - d.current.x0) / (2 * Math.PI)) >= 0.01 ? '1' : '0');
+      }
+
+      updatePanel(root);
+    }
+
+    function getEquidistantColors(colorMap, count) {
+      if (count <= 0) return [];
+      if (count === 1) return [colorMap[0]];
+      if (count <= colorMap.length) {
+        const result = [];
+        const step = colorMap.length / count;
+        for (let i = 0; i < count; i++) result.push(colorMap[Math.floor(i * step)]);
+        return result;
+      }
+      const result = [];
+      const colorScale = d3.scaleLinear()
+        .domain(d3.range(0, 1, 1 / (colorMap.length - 1)).concat([1]))
+        .range(colorMap)
+        .interpolate(d3.interpolateRgb.gamma(2.2));
+      for (let i = 0; i < count; i++) result.push(colorScale(i / (count - 1)));
+      return result;
+    }
+
+    /* ========================================
+       Slideshow Controller
+       ======================================== */
+
+    const CONFIG = {
+      interval: 8000,
+      transitionDuration: 600,
+      loop: true
+    };
+
+    // Timing slider control
+    const timingSlider = document.getElementById('timing-slider');
+    const timingValue = document.getElementById('timing-value');
+
+    if (timingSlider && timingValue) {
+      timingSlider.addEventListener('input', (e) => {
+        const seconds = parseInt(e.target.value);
+        CONFIG.interval = seconds * 1000;
+        timingValue.textContent = seconds + 's';
+      });
+    }
+
+    class Slideshow {
+      constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.dotsContainer = document.querySelector('.slide-dots');
+        this.navLinks = document.querySelectorAll('.masthead-link');
+        this.progressBar = document.querySelector('.progress-bar');
+        this.pauseIndicator = document.querySelector('.pause-indicator');
+        this.counterCurrent = document.querySelector('.slide-counter .current');
+        this.counterTotal = document.querySelector('.slide-counter .total');
+
+        this.currentIndex = 0;
+        this.isPlaying = true;
+        this.progressInterval = null;
+        this.progress = 0;
+
+        this.init();
+      }
+
+      init() {
+        // Generate dots
+        this.slides.forEach((_, index) => {
+          const dot = document.createElement('div');
+          dot.className = `slide-dot${index === 0 ? ' active' : ''}`;
+          dot.dataset.slide = index;
+          dot.addEventListener('click', () => this.goToSlide(index));
+          this.dotsContainer.appendChild(dot);
+        });
+        this.dots = document.querySelectorAll('.slide-dot');
+
+        // Update counter
+        this.counterTotal.textContent = this.slides.length;
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => this.handleKeydown(e));
+
+        // Masthead navigation
+        this.navLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            const section = link.dataset.section;
+            const slideIndex = [...this.slides].findIndex(
+              slide => slide.dataset.section === section
+            );
+            if (slideIndex !== -1) this.goToSlide(slideIndex);
+          });
+        });
+
+        // Generate sunburst when that slide becomes active
+        this.generateSunburstOnce = false;
+
+        // Start autoplay
+        this.startAutoplay();
+      }
+
+      handleKeydown(e) {
+        switch (e.code) {
+          case 'Space':
+            e.preventDefault();
+            this.togglePlayPause();
+            break;
+          case 'ArrowRight':
+            this.next();
+            break;
+          case 'ArrowLeft':
+            this.prev();
+            break;
+          case 'Escape':
+            if (!this.isPlaying) this.play();
+            break;
+        }
+      }
+
+      goToSlide(index) {
+        if (index < 0 || index >= this.slides.length) return;
+
+        // Update slides
+        this.slides[this.currentIndex].classList.remove('active');
+        this.slides[index].classList.add('active');
+
+        // Update body background for wordcloud slide
+        if (this.slides[index].classList.contains('slide-wordcloud')) {
+          document.body.classList.add('wordcloud-active');
+        } else {
+          document.body.classList.remove('wordcloud-active');
+        }
+
+        // Update dots
+        this.dots[this.currentIndex].classList.remove('active');
+        this.dots[index].classList.add('active');
+
+        // Update masthead
+        const section = this.slides[index].dataset.section;
+        this.navLinks.forEach(link => {
+          link.classList.toggle('active', link.dataset.section === section);
+        });
+
+        // Update counter
+        this.counterCurrent.textContent = index + 1;
+
+        this.currentIndex = index;
+
+        // Generate word cloud if on that slide
+        if (this.slides[index].classList.contains('slide-wordcloud')) {
+          const slideEl = this.slides[index];
+          setTimeout(() => generateWordCloud(slideEl), 100);
+        }
+
+        // Generate sunburst if on that slide
+        if (this.slides[index].classList.contains('slide-sunburst') && !this.generateSunburstOnce) {
+          setTimeout(generateSunburst, 100);
+          this.generateSunburstOnce = true;
+        }
+
+        // Reset progress
+        this.resetProgress();
+      }
+
+      next() {
+        let nextIndex = this.currentIndex + 1;
+        if (nextIndex >= this.slides.length) {
+          nextIndex = CONFIG.loop ? 0 : this.slides.length - 1;
+        }
+        this.goToSlide(nextIndex);
+      }
+
+      prev() {
+        let prevIndex = this.currentIndex - 1;
+        if (prevIndex < 0) {
+          prevIndex = CONFIG.loop ? this.slides.length - 1 : 0;
+        }
+        this.goToSlide(prevIndex);
+      }
+
+      getCurrentDuration() {
+        const slide = this.slides[this.currentIndex];
+        return parseInt(slide.dataset.duration) || CONFIG.interval;
+      }
+
+      togglePlayPause() {
+        if (this.isPlaying) {
+          this.pause();
+        } else {
+          this.play();
+        }
+      }
+
+      play() {
+        this.isPlaying = true;
+        this.pauseIndicator.classList.remove('visible');
+        this.startAutoplay();
+      }
+
+      pause() {
+        this.isPlaying = false;
+        this.pauseIndicator.classList.add('visible');
+        this.stopAutoplay();
+
+        setTimeout(() => {
+          if (!this.isPlaying) {
+            this.pauseIndicator.classList.remove('visible');
+          }
+        }, 1000);
+      }
+
+      startAutoplay() {
+        this.stopAutoplay();
+
+        this.progress = 0;
+        this.progressBar.style.width = '0%';
+
+        const duration = this.getCurrentDuration();
+        this.progressInterval = setInterval(() => {
+          this.progress += 100 / (duration / 100);
+          this.progressBar.style.width = `${this.progress}%`;
+
+          if (this.progress >= 100) {
+            this.next();
+          }
+        }, 100);
+      }
+
+      stopAutoplay() {
+        clearInterval(this.progressInterval);
+      }
+
+      resetProgress() {
+        this.progress = 0;
+        this.progressBar.style.width = '0%';
+
+        if (this.isPlaying) {
+          this.startAutoplay();
+        }
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      new Slideshow();
+    });
+  </script>
+</body>
+</html>
