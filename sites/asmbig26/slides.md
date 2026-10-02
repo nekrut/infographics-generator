@@ -100,9 +100,9 @@ Everyone is welcome: four online meetings a year, a Matrix chat room, hackathons
 # [micro] From bacterial isolates to answers
 > split
 
-**Assemble** with Shovill, SPAdes, Flye or Unicycler; **annotate** with Bakta or Prokka; call variants with Snippy or Clair3.
+**Assemble** with Shovill, SPAdes, Flye or Unicycler; **annotate** with Bakta or Prokka; **call variants** with Snippy or Clair3.
 
-**Detect antimicrobial resistance** with AMRFinderPlus, CARD/RGI, ResFinder and ABRicate; type strains with MLST and cgMLST; build pangenomes with PPanGGOLiN; mine biosynthetic gene clusters with antiSMASH.
+**Detect antimicrobial resistance** with AMRFinderPlus, CARD/RGI, ResFinder and ABRicate; **type strains** with MLST and cgMLST; **build pangenomes** with PPanGGOLiN; **mine biosynthetic gene clusters** with antiSMASH.
 
 ::: highlight
 Genomics, transcriptomics and proteomics of microbial isolates in one reproducible environment.
