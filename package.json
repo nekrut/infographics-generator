@@ -4,7 +4,8 @@
   "description": "Framework for generating promotional slideshow sites",
   "scripts": {
     "build": "node build.js",
-    "build:what_is_galaxy": "node build.js sites/what_is_galaxy"
+    "build:what_is_galaxy": "node build.js sites/what_is_galaxy",
+    "build:asmbig26": "node build.js sites/asmbig26"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
