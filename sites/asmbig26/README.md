@@ -32,4 +32,7 @@ cp -r sites/asmbig26/dist ~/git/infographics/asmbig26
 Lab stats (315+ tool suites, 115+ workflows, 170+ reference genomes, 11 TB)
 and publication counts (2,908 / 836 / 593, through December 2025) come from
 the microGalaxy SIG page; the global Galaxy stats on slide 1 are shared with
-`what_is_galaxy`.
+`what_is_galaxy`. Logan numbers (87 Pb, 38 M accessions, 99.5%) are from
+the Logan v1.2 release notes (December 2025 freeze) at
+https://github.com/IndexThePlanet/Logan, and the 25 LexicMap indexes were
+counted from the `lexicmap_index` data table on usegalaxy.org in October 2026.

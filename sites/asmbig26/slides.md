@@ -183,6 +183,43 @@ Metatranscriptomics and metaproteomics too, with visualization in Krona, Pavian,
 
 ---
 
+# [workflows] Logan: the entire SRA, assembled
+> Every public sequencing run through December 2025, searchable in Galaxy and BRC-Analytics
+
+| Stat | Label |
+|------|-------|
+| 87 | petabases of raw reads assembled |
+| 38M | sequencing experiments |
+| 99.5% | of the SRA covered |
+| 25 | LexicMap indexes on usegalaxy.org |
+
+---
+
+# [workflows] Search the SRA by sequence, not metadata
+> stats: lists
+> Paste a sequence and find every public experiment that contains it. Metadata search exists elsewhere; this does not.
+
+| Stat | Label |
+|------|-------|
+| LexicMap | Your gene vs. millions of genomes, aligned |
+| Logan indexes | Bacterial, viral, metagenomic or human SRA |
+| Then analyze | Matching SRA runs flow into Galaxy workflows |
+
+---
+
+# [workflows] Questions you can now ask the whole SRA
+> stats: lists
+> Examples from the LexicMap and Logan papers
+
+| Stat | Label |
+|------|-------|
+| 7.9M runs | Which public samples carry my AMR gene? |
+| 52 kb plasmid | Has my outbreak plasmid been seen elsewhere? |
+| HHV-6 | Is a virus hiding in clinical datasets? |
+| 200M homologs | Is there a better version of my enzyme? |
+
+---
+
 # [workflows] Galaxy in the microbial sciences
 > Peer-reviewed publications using Galaxy for microbiology, through December 2025
 
@@ -263,3 +300,11 @@ Free, public Galaxy servers with a microbiology-focused interface on three conti
 > microbiology.usegalaxy.org
 
 ![QR Code](images/qr-microlab.svg)
+
+---
+
+# [community] Galaxy @ ASM BIG 2026
+> type: qr
+> galaxyproject.org/events/2026-10-11-asm
+
+![QR Code](images/qr-asm-event.svg)
