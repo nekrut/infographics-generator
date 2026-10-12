@@ -197,13 +197,14 @@ Metatranscriptomics and metaproteomics too, with visualization in Krona, Pavian,
 
 # [workflows] Search the SRA by sequence, not metadata
 > stats: lists
-> Paste a sequence and find every public experiment that contains it. Metadata search exists elsewhere; this does not.
+> Paste a sequence, find every public experiment that contains it. One database, three tools, all on usegalaxy.org.
 
 | Stat | Label |
 |------|-------|
-| LexicMap | Your gene vs. millions of genomes, aligned |
-| Logan indexes | Bacterial, viral, metagenomic or human SRA |
-| Then analyze | Matching SRA runs flow into Galaxy workflows |
+| Logan | The database: the entire SRA, assembled |
+| kmindex | k-mer hits across all samples, in seconds |
+| LexicMap | BLAST-grade alignment to millions of genomes |
+| Logan Protein | Protein-level search using embeddings |
 
 ---
 
