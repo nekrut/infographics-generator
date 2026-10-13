@@ -304,6 +304,14 @@ Free, public Galaxy servers with a microbiology-focused interface on three conti
 
 ---
 
+# [community] User Defined Tools: join the closed beta
+> type: qr
+> udt-signup.galaxyproject.org
+
+![QR Code](images/qr-udt-signup.svg)
+
+---
+
 # [community] Galaxy @ ASM BIG 2026
 > type: qr
 > galaxyproject.org/events/2026-10-11-asm
