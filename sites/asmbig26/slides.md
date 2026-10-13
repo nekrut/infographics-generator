@@ -304,6 +304,14 @@ Free, public Galaxy servers with a microbiology-focused interface on three conti
 
 ---
 
+# [community] Orbit: Galaxy's AI research harness
+> type: qr
+> github.com/galaxyproject/loom/releases
+
+![QR Code](images/qr-orbit.svg)
+
+---
+
 # [community] User Defined Tools: join the closed beta
 > type: qr
 > udt-signup.galaxyproject.org
